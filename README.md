@@ -38,7 +38,7 @@ There are two methods to install and use PhraseVault:
 1. Ensure you have Python and PyInstaller installed on your system.
 2. Clone or download the repository.
 3. Open a command prompt or terminal window in the repository folder.
-4. Run the following command: `pyinstaller --onefile main.py`
+4. Run the following command: `pyinstaller --onefile --noconsole --icon=icon.ico main.py`
 5. After the build is complete, navigate to the `dist` folder and launch the `main` executable.
 
 ## Usage

@@ -1,6 +1,7 @@
 __pycache__/
 venv/
 build/
+dist/phrasevault.sqlite
 *.pyc
 *.pyo
 *.pyd

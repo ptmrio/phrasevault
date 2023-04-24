@@ -1,16 +1,16 @@
 import os
+import time
 import tkinter as tk
 import pyperclip
 import queue
 import threading
 import pystray
-import pyautogui
 from tkinter import ttk, messagebox
 from PIL import Image
 from ttkthemes import ThemedTk
 from database import *
 from pynput import keyboard
-
+from pynput.keyboard import Controller
 
 db_name = "phrasevault.sqlite"
 table_name = "phrases"
@@ -32,6 +32,8 @@ def center_window(window):
 class PhraseVault(ThemedTk):
     def __init__(self):
         super().__init__()
+        
+        self.keyboard_controller = Controller()
 
         self.set_theme("arc")
         self.title("PhraseVault")
@@ -149,7 +151,9 @@ class PhraseVault(ThemedTk):
             self.update_list()
             self.minimize_to_tray()
 
-            app.after(100, pyautogui.write(entry['expanded_text']))
+            time.sleep(0.1)
+            app.after(100, app.keyboard_controller.type, entry['expanded_text'])
+
 
     def add_phrase(self):
         add_phrase_window = AddEditPhraseWindow(self)
