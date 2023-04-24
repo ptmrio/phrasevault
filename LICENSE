@@ -1,9 +1,56 @@
-LICENSE
+PhraseVault Custom License
+===========================
 
-You a free to use this software for:
- Private use
- 
-You need to buy a software license for:
- Commercial use
- - 1 Seat, annual payment: https://buy.stripe.com/bIY8yofKxfhx9sQ146
- - 1 Seat, Lifetime: https://buy.stripe.com/dR6bKAgOBb1hdJ65kl
+The PhraseVault software and its source code ("Software") are protected by copyright law and international treaties. Unauthorized reproduction or distribution of the Software, or any portion of it, may result in severe civil and criminal penalties, and will be prosecuted to the maximum extent possible under the law.
+
+Open Source and Security
+------------------------
+The Software is open source by design. This allows users to inspect the code, build the Software themselves, or use the distributed executable file for maximum security, especially when dealing with sensitive information. However, being open source does not grant the right to use the Software for commercial purposes without purchasing a commercial license.
+
+Private Use License
+-------------------
+You are granted a non-exclusive, non-transferable license to use the Software for personal, non-commercial purposes. You are not allowed to distribute or sublicense the Software without prior written consent from the copyright holder.
+
+Commercial Use License
+----------------------
+For commercial use of the Software, you must purchase a commercial license. The commercial license options are as follows:
+
+1. Per Seat, annual payment: https://buy.stripe.com/bIY8yofKxfhx9sQ146
+2. Per Seat, Lifetime: https://buy.stripe.com/dR6bKAgOBb1hdJ65kl
+
+By purchasing a commercial license, you are granted a non-exclusive, non-transferable license to use the Software for commercial purposes, subject to the terms and conditions of the commercial license agreement.
+
+Third-Party Packages, Licenses and Acknowledgment
+---------------------------------
+
+This software uses the following third-party packages, and you must comply with their respective licenses:
+
+- tkinter: Python Software Foundation License (https://docs.python.org/3/license.html)
+- ttkthemes: GNU General Public License v3 (https://github.com/TkinterEP/ttkthemes/blob/master/LICENSE.md)
+- Pillow: The Python Imaging Library (PIL) License (https://github.com/python-pillow/Pillow/blob/master/LICENSE)
+- pystray: MIT License (https://github.com/moses-palmer/pystray/blob/master/COPYING.LGPL)
+- pyperclip: BSD 2-Clause "Simplified" License (https://github.com/asweigart/pyperclip/blob/master/LICENSE.txt)
+- pyautogui: BSD 3-Clause "New" or "Revised" License (https://github.com/asweigart/pyautogui/blob/master/LICENSE.txt)
+- pynput: MIT License (https://github.com/moses-palmer/pynput/blob/master/COPYING.LGPL)
+- SQLite: Public Domain (https://www.sqlite.org/copyright.html)
+
+Please refer to the respective package repositories for the full license texts and any additional terms or requirements.
+
+We extend our gratitude to the authors of the above packages for their invaluable contributions and dedication to the open-source community. The copyright holder hereby grants a free lifetime commercial license to each of the past, present, and future contributors of these open-source packages.
+
+Restrictions
+------------
+You may not:
+
+1. Modify, adapt, translate, or create derivative works based on the Software.
+2. Reverse engineer, decompile, disassemble, or otherwise attempt to discover the source code of the Software.
+3. Rent, lease, sublicense, or transfer the Software or any rights in the Software.
+4. Remove or alter any proprietary notices, labels, or marks on the Software.
+
+Disclaimer of Warranty
+-----------------------
+The Software is provided "AS IS" without warranty of any kind, either express or implied, including, but not limited to, the implied warranties of merchantability, fitness for a particular purpose, and non-infringement.
+
+Limitation of Liability
+------------------------
+In no event shall the copyright holder be liable for any damages whatsoever, including, without limitation, damages for loss of business profits, business interruption, loss of business information, or any other pecuniary loss arising out of the use or inability to use the Software, even if the copyright holder has been advised of the possibility of such damages.
