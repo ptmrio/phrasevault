@@ -68,3 +68,12 @@ def db_increment_usage_count(conn, table_name, entry_id):
                         dateLastUsed = CURRENT_TIMESTAMP 
                       WHERE id = ?""", (entry_id,))
     conn.commit()
+
+
+def db_search_entry_by_phrase(conn, table, phrase):
+    cursor = conn.cursor()
+    cursor.execute(
+        f"SELECT * FROM {table} WHERE phrase = ?", (phrase,))
+    row = cursor.fetchone()
+
+    return row_to_entry(row) if row else None
