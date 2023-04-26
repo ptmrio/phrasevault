@@ -29,7 +29,7 @@ There are two methods to install and use PhraseVault:
 
 1. Download the [ZIP](https://github.com/ptmrio/phrasevault/archive/refs/heads/main.zip) file from the repository.
 2. Extract the contents of the ZIP file.
-3. Navigate to the `dist` folder and launch `main.exe`.
+3. Navigate to the `dist` folder and launch `phrausevault.exe`.
 
 *Note: Windows SmartScreen may block the application. To bypass this, click on "More Info" and then "Run Anyway" when prompted.*
 
@@ -38,11 +38,11 @@ There are two methods to install and use PhraseVault:
 1. Ensure you have Python and PyInstaller installed on your system.
 2. Clone or download the repository.
 3. Open a command prompt or terminal window in the repository folder.
-4. Run the following command: `pyinstaller --onefile --noconsole --icon=icon.ico main.py`
-5. After the build is complete, navigate to the `dist` folder and launch the `main` executable.
+4. Run the following command: `pyinstaller --onefile --noconsole --icon=icon.ico phrasevault.py`
+5. After the build is complete, navigate to the `dist` folder and launch the `phrausevault.exe` executable.
 
 ## Usage
 
-Once the application is running, you can add, edit, and manage your phrases using the intuitive interface. To quickly insert a phrase into another application, simply double-click on the desired phrase in the list, or press Enter when it is highlighted. The phrase will be automatically copied to the clipboard and pasted into the active application.
+Once the application is running, you can add, edit, and manage your phrases using the intuitive interface. To quickly insert a phrase into another application, press the hotkey `CTRL + .` and search to filter the list. Now simply double-click on an entry or press enter. The phrase will be automatically pasted into the active application.
 
 PhraseVault is best stored in a cloud drive for easy access and sharing with other users within a company. Simply copy and rename the `dist` folder to your preferred cloud storage service, such as Google Drive or OneDrive. This way, you can easily share the application with your team, and everyone can benefit from the stored phrases.
