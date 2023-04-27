@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 import tkinter as tk
 import pyperclip
@@ -20,6 +21,17 @@ db_conn = create_connection(db_name)
 create_table(db_conn, table_name)
 
 
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+
 def center_window(window):
     window.update_idletasks()
     width = window.winfo_width()
@@ -30,9 +42,8 @@ def center_window(window):
     y = (screen_height // 2) - (height // 2)
     window.geometry(f"{width}x{height}+{x}+{y}")
 
+
 # Main Interface
-
-
 class PhraseVault(ThemedTk):
     def __init__(self):
         super().__init__()
@@ -44,7 +55,7 @@ class PhraseVault(ThemedTk):
         self.geometry("500x300")
         self.resizable(False, False)
         self.protocol("WM_DELETE_WINDOW", self.minimize_to_tray)
-        self.iconbitmap(os.path.abspath("icon.ico"))
+        self.iconbitmap(resource_path("icon.ico"))
         self.bind("<Escape>", self.minimize_to_tray)
 
         center_window(self)
@@ -196,7 +207,7 @@ class AddEditPhraseWindow(tk.Toplevel):
 
         self.geometry("480x300")
         self.resizable(False, False)
-        self.iconbitmap(os.path.abspath("icon.ico"))
+        self.iconbitmap(resource_path("icon.ico"))
 
         center_window(self)
 
@@ -273,7 +284,7 @@ if __name__ == "__main__":
 
     center_window(app)
 
-    tray_image = Image.open(os.path.abspath("tray_icon.png"))
+    tray_image = Image.open(resource_path("tray_icon.png"))
 
     app.tray_icon = pystray.Icon("PhraseVault", tray_image, "PhraseVault", menu=pystray.Menu(
         pystray.MenuItem('Toggle (Ctrl + .)',

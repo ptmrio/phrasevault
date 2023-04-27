@@ -8,7 +8,7 @@ a = Analysis(
     ['phrasevault.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('tray_icon.png', '.'), ('icon.ico', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

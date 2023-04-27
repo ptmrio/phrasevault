@@ -25,21 +25,21 @@ Use Discount Code `EARLY50` to get 50% off any license, including lifetime. This
 
 There are two methods to install and use PhraseVault:
 
-### Method 1: Download the ZIP file
+### Method 1: Download the EXE file
 
-1. Download the [ZIP](https://github.com/ptmrio/phrasevault/archive/refs/heads/main.zip) file from the repository.
-2. Extract the contents of the ZIP file.
-3. Navigate to the `dist` folder and launch `phrausevault.exe`.
+1. Download the [phrasevault.exe](https://github.com/ptmrio/phrasevault/raw/main/dist/phrasevault.exe) file from the repository.
+1. Save the file to a folder on your computer, preferably in a cloud drive for easy access and sharing.
+1. Open `phrausevault.exe` by double clicking or pressing enter.
 
 *Note: Windows SmartScreen may block the application. To bypass this, click on "More Info" and then "Run Anyway" when prompted.*
 
 ### Method 2: Build it yourself using PyInstaller (recommended for maximum security)
 
 1. Ensure you have Python and PyInstaller installed on your system.
-2. Clone or download the repository.
-3. Open a command prompt or terminal window in the repository folder.
-4. Run the following command: `pyinstaller --onefile --noconsole --icon=icon.ico phrasevault.py`
-5. After the build is complete, navigate to the `dist` folder and launch the `phrausevault.exe` executable.
+1. Clone or download the repository.
+1. Open a command prompt or terminal window in the repository folder.
+1. Run the following command: `pyinstaller --onefile --noconsole --icon=icon.ico --add-data "tray_icon.png;." --add-data "icon.ico;." phrasevault.py`
+1. After the build is complete, navigate to the `dist` folder and launch the `phrausevault.exe` executable.
 
 ## Usage
 
