@@ -3,9 +3,9 @@ import sys
 import time
 import tkinter as tk
 import pyperclip
-import queue
 import threading
 import pystray
+import queue
 from tkinter import ttk, messagebox
 from tkinter.font import nametofont
 from tkinter.scrolledtext import ScrolledText
@@ -23,7 +23,6 @@ db_name = "phrasevault.sqlite"
 table_name = "phrases"
 db_conn = create_connection(db_name)
 create_table(db_conn, table_name)
-
 
 
 def resource_path(relative_path):
@@ -94,13 +93,11 @@ class PhraseVault(ThemedTk):
         self.context_menu = tk.Menu(self, tearoff=0)
 
         self.context_menu.add_command(label="Edit", command=self.edit_entry)
-        self.context_menu.add_command(label="Copy", command=self.copy_entry)
+        self.context_menu.add_command(label="Copy to clipboard", command=self.copy_entry)
         self.context_menu.add_command(
             label="Delete", command=self.delete_entry)
 
         self.update_list()
-
-        self.search_entry.focus()
 
     def on_search_enter_key(self, event):
         if self.listbox.size() > 0:
@@ -147,6 +144,13 @@ class PhraseVault(ThemedTk):
             action = self.queue.get()
             if action == 'deiconify':
                 self.deiconify()
+                app.after(100, lambda: app.lift())
+                app.after(100, lambda: app.attributes('-topmost', True))
+                app.after(100, lambda: app.focus_force())
+                app.after(100, lambda: app.search_var.set(''))
+                app.after(100, lambda: app.search_entry.focus_force())
+            elif action == 'withdraw':
+                self.minimize_to_tray()
         self.after(100, self.process_queue)
 
     def update_list(self, *args):
@@ -160,11 +164,11 @@ class PhraseVault(ThemedTk):
         self.listbox.selection_set(0)
         self.listbox.activate(0)
 
-
     def write_expanded_text(self, event):
         selected_index = self.listbox.curselection()
         if selected_index:
-            entry_id = db_search_entries(db_conn, table_name, self.search_var.get())[selected_index[0]][0]
+            entry_id = db_search_entries(db_conn, table_name, self.search_var.get())[
+                selected_index[0]][0]
             entry = db_fetch_entry(db_conn, table_name, entry_id)
             db_increment_usage_count(db_conn, table_name, entry_id)
             self.update_list()
@@ -175,7 +179,6 @@ class PhraseVault(ThemedTk):
             app.after(100, app.keyboard_controller.press, 'v')
             app.after(100, app.keyboard_controller.release, 'v')
             app.after(100, app.keyboard_controller.release, Key.ctrl)
-
 
     def add_phrase(self):
         add_phrase_window = AddEditPhraseWindow(self)
@@ -194,6 +197,7 @@ class PhraseVault(ThemedTk):
         self.open_add_edit_phrase_windows.clear()
 
     def minimize_to_tray(self, event=None):
+        app.attributes('-topmost', False)
         self.close_all_add_edit_phrase_windows()
         self.withdraw()
 
@@ -246,6 +250,8 @@ class AddEditPhraseWindow(tk.Toplevel):
             entry = db_fetch_entry(db_conn, table_name, self.entry_id)
             self.phrase_var.set(entry['phrase'])
             self.expanded_text_entry.insert(tk.END, entry['expanded_text'])
+        
+        self.phrase_entry.focus_force()
 
     def save_phrase(self):
         phrase = self.phrase_var.get()
@@ -267,13 +273,10 @@ class AddEditPhraseWindow(tk.Toplevel):
 
 
 def toggle_main_window():
-    if app.state() == 'withdrawn':
+    if app.state() == 'withdrawn' or app.state() == 'iconic':
         app.queue.put('deiconify')
-        center_window(app)
-        app.attributes('-topmost', True)
-        app.after(100, app.search_entry.focus_set)
     else:
-        app.minimize_to_tray()
+        app.queue.put('withdraw')
 
 
 def on_quit(icon, action):
@@ -297,10 +300,14 @@ if __name__ == "__main__":
                          toggle_main_window, default=True),
         pystray.MenuItem('Quit', on_quit)))
 
-    app.after(100, app.search_entry.focus_set)
-
     tray_icon_thread = threading.Thread(target=app.tray_icon.run)
     tray_icon_thread.start()
+
+    app.deiconify()
+    app.after(100, lambda: app.lift())
+    app.after(100, lambda: app.attributes('-topmost', True))
+    app.after(100, lambda: app.focus_force())
+    app.after(100, lambda: app.search_entry.focus_force())
 
     with keyboard.GlobalHotKeys({'<ctrl>+.': toggle_main_window}) as hotkey_listener:
         app.mainloop()
