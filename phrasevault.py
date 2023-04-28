@@ -13,7 +13,7 @@ from PIL import Image
 from ttkthemes import ThemedTk
 from database import *
 from pynput import keyboard
-from pynput.keyboard import Controller
+from pynput.keyboard import Controller, Key
 
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -160,19 +160,22 @@ class PhraseVault(ThemedTk):
         self.listbox.selection_set(0)
         self.listbox.activate(0)
 
+
     def write_expanded_text(self, event):
         selected_index = self.listbox.curselection()
         if selected_index:
-            entry_id = db_search_entries(db_conn, table_name, self.search_var.get())[
-                selected_index[0]][0]
+            entry_id = db_search_entries(db_conn, table_name, self.search_var.get())[selected_index[0]][0]
             entry = db_fetch_entry(db_conn, table_name, entry_id)
             db_increment_usage_count(db_conn, table_name, entry_id)
             self.update_list()
             self.minimize_to_tray()
-
+            pyperclip.copy(entry['expanded_text'])
             time.sleep(0.1)
-            app.after(100, app.keyboard_controller.type,
-                      entry['expanded_text'])
+            app.after(100, app.keyboard_controller.press, Key.ctrl)
+            app.after(100, app.keyboard_controller.press, 'v')
+            app.after(100, app.keyboard_controller.release, 'v')
+            app.after(100, app.keyboard_controller.release, Key.ctrl)
+
 
     def add_phrase(self):
         add_phrase_window = AddEditPhraseWindow(self)
