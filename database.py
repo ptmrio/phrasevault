@@ -1,8 +1,15 @@
+import sys
+import os
 import sqlite3
 
 
 def create_connection(db_name):
-    conn = sqlite3.connect(db_name)
+    if getattr(sys, 'frozen', False):
+        application_path = os.path.dirname(sys.executable)
+    elif __file__:
+        application_path = os.path.dirname(__file__)
+    db_path = os.path.join(application_path, db_name)
+    conn = sqlite3.connect(db_path)
     return conn
 
 

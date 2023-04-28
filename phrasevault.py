@@ -15,16 +15,19 @@ from database import *
 from pynput import keyboard
 from pynput.keyboard import Controller
 
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+
 db_name = "phrasevault.sqlite"
 table_name = "phrases"
 db_conn = create_connection(db_name)
 create_table(db_conn, table_name)
 
 
+
 def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
     try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = sys._MEIPASS
     except Exception:
         base_path = os.path.abspath(".")
