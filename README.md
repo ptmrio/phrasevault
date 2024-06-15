@@ -5,24 +5,31 @@ A powerful and user-friendly tool designed to help you manage and utilize your f
 ## Use Cases
 
 ### Office Work
+
 PhraseVault is an ideal companion for business professionals who deal with repetitive text tasks. Whether you're drafting emails, creating reports, or filling out forms, PhraseVault allows you to:
+
 - Quickly search for and insert pre-defined email templates.
 - Store and manage frequently used phrases and signatures.
 - Ensure consistency and save time by avoiding retyping common text.
 
 ### Coding and Development
+
 For developers, PhraseVault provides an efficient way to manage code snippets and reusable components. You can:
+
 - Store and quickly access snippets of code.
 - Maintain a library of reusable code blocks.
 - Reduce errors and increase productivity by using pre-tested code.
 
 ### Working with AI Tools
+
 PhraseVault is also excellent for storing and managing prompts for AI tools like **ChatGPT** and **MidJourney**. You can:
+
 - Keep a library of effective prompts for various AI tools.
 - Quickly insert prompts into your workflow.
 - Experiment with and refine prompts for better AI interactions.
 
 ## Key Features
+
 - **Quick Phrase Search and Insertion**: Easily find and insert phrases with a few keystrokes.
 - **Easy Phrase Management**: Add, edit, delete, and copy phrases with dedicated buttons.
 - **Theme Support**: Choose between light and dark themes to match your preference.
@@ -34,23 +41,23 @@ Whether you are a business professional looking to automate repetitive email tas
 
 ## License
 
-This project is licensed under the PhraseVault License. For detailed licensing terms, see the [LICENSE](link_to_license_file) file. Below is a summary of what you can and cannot do under this license:
+This project is licensed under the PhraseVault License. For detailed licensing terms, see the [LICENSE](https://github.com/ptmrio/phrasevault/blob/main/LICENSE.md) file. Below is a summary of what you can and cannot do under this license:
 
-| What You Can't Do                                            | What You Can Do                                               |
-|--------------------------------------------------------------|---------------------------------------------------------------|
-| ❌ Use without purchase (commercial or private)              | ✅ Download freely                                             |
-| ❌ Distribute modified or unmodified versions                | ✅ Inspect the source code freely                              |
-| ❌ Use the provider's name, logo, or trademarks without permission | ✅ Fork for inspection or personal use after purchase          |
-| ❌ Sub-license or resell                                      | ✅ Modify for personal use after purchase                      |
+| What You Can't Do                                                  | What You Can Do                                       |
+| ------------------------------------------------------------------ | ----------------------------------------------------- |
+| ❌ Use without purchase (commercial or private)                    | ✅ Download freely                                    |
+| ❌ Distribute modified or unmodified versions                      | ✅ Inspect the source code freely                     |
+| ❌ Use the provider's name, logo, or trademarks without permission | ✅ Fork for inspection or personal use after purchase |
+| ❌ Sub-license or resell                                           | ✅ Modify for personal use after purchase             |
 
 ## Preamble
 
 PhraseVault's mission is to empower users with efficient phrase management tools while fostering the entrepreneurial spirit of software creators. Our software is open and transparent, yet requires a one-time, lifetime license purchase for full use. This license is intended to protect our intellectual property while providing users with the freedom to inspect and modify the code for personal use after purchase.
 
 ## Table of Contents
+
 - [Getting Started](#getting-started)
 - [Usage](#usage)
-- [Screenshots](#screenshots)
 - [Troubleshooting](#troubleshooting)
 - [FAQs](#faqs)
 - [License](#license)
@@ -59,14 +66,17 @@ PhraseVault's mission is to empower users with efficient phrase management tools
 ## Getting Started
 
 ### Prerequisites
+
 - Windows 10 or later
 
 ### Installation Instructions
-1. **Download the Installer**: Visit the [releases page](https://github.com/ptmrio/phrasevault/releases) on GitHub and download the latest `.exe` installer.
+
+1. **Download the Installer**: Visit [phrasevault.app](https://phrasevault.app) and download the latest `.exe` installer.
 2. **Run the Installer**: Double-click the downloaded `.exe` file and follow the on-screen instructions to install PhraseVault.
 3. **Launch the Application**: After installation, launch PhraseVault from the Start Menu or desktop shortcut.
 
 ### Quick Start
+
 1. Open PhraseVault using `Ctrl + .`
 2. Search for your desired phrase
 3. Press `Enter` to insert it
@@ -74,6 +84,7 @@ PhraseVault's mission is to empower users with efficient phrase management tools
 ## Usage
 
 ### Basic Usage Instructions
+
 - **Open the App**: Use the shortcut `Ctrl + .` to open the PhraseVault window.
 - **Search for a Phrase**: Start typing in the search bar to quickly find the phrase you need.
 - **Select the Desired Phrase**: Press the arrow down key to navigate through the search results and select the desired phrase.
@@ -87,15 +98,13 @@ PhraseVault's mission is to empower users with efficient phrase management tools
 - **Theme Selection**: Choose between light and dark themes to match your preference.
 - **Database Location**: You can freely choose the location of the database file, allowing it to be stored on a cloud drive (such as Google Drive, Dropbox, etc.) for easy access and synchronization across devices.
 
-## Screenshots
-![Screenshot 1](link_to_screenshot1.png)
-![Screenshot 2](link_to_screenshot2.png)
-
 ## Troubleshooting
+
 - **Issue**: PhraseVault does not open with the shortcut.
   - **Solution**: Ensure that the application is running in the background. Restart the app if necessary.
 
 ## FAQs
+
 - **How do I purchase a license?**
   - Visit [phrasevault.app](https://phrasevault.app) and follow the purchase instructions.
 - **Can I use PhraseVault without purchasing a license?**
@@ -104,7 +113,9 @@ PhraseVault's mission is to empower users with efficient phrase management tools
   - Go to the settings within the app and select your preferred database location, such as a cloud drive.
 
 ## License
-This project is licensed under the PhraseVault License. For detailed licensing terms, see the [LICENSE](link_to_license_file) file.
+
+This project is licensed under the PhraseVault License. For detailed licensing terms, see the [LICENSE](https://github.com/ptmrio/phrasevault/blob/main/LICENSE.md) file.
 
 ## Contact and Support
-For support, please visit our [support page](https://phrasevault.app/support) or open an issue on [GitHub](https://github.com/ptmrio/phrasevault/issues).
+
+For support, please visit our [Contact page](https://ptmr.io/impressum) or open an issue on [GitHub](https://github.com/ptmrio/phrasevault/issues).
