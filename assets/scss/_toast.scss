@@ -1,0 +1,30 @@
+// Toast notification
+.toast {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: var(--color-white);
+    text-align: center;
+    border-radius: var(--spacer);
+    padding: var(--spacer);
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: calc(3 * var(--spacer));
+    font-size: 1.0625rem;
+
+    &.show {
+        visibility: visible;
+        animation:
+            fadein 0.5s,
+            fadeout 0.5s 2.5s;
+    }
+
+    &.danger {
+        background-color: var(--color-danger);
+    }
+    &.success {
+        background-color: var(--color-success);
+    }
+}

@@ -1,0 +1,265 @@
+@import "_reset";
+
+// Custom Properties
+:root {
+    --spacer: 10px;
+    --rem: 1rem; // Base unit of 16px
+
+    // Color Palette
+    --color-primary-100: hsl(5, 68%, 90%);
+    --color-primary-200: hsl(5, 68%, 80%);
+    --color-primary-300: hsl(5, 68%, 70%);
+    --color-primary-400: hsl(5, 68%, 60%);
+    --color-primary-500: hsl(5, 68%, 58%); // Base
+    --color-primary-600: hsl(5, 68%, 40%);
+    --color-primary-700: hsl(5, 68%, 30%);
+    --color-primary-800: hsl(5, 68%, 20%);
+    --color-primary-900: hsl(5, 68%, 10%);
+
+    --color-secondary-100: hsl(210, 10%, 90%);
+    --color-secondary-200: hsl(210, 10%, 80%);
+    --color-secondary-300: hsl(210, 10%, 70%);
+    --color-secondary-400: hsl(210, 10%, 60%);
+    --color-secondary-500: hsl(210, 10%, 50%); // Base
+    --color-secondary-600: hsl(210, 10%, 40%);
+    --color-secondary-700: hsl(210, 10%, 30%);
+    --color-secondary-800: hsl(210, 10%, 20%);
+    --color-secondary-900: hsl(210, 10%, 10%);
+
+    --color-tertiary-100: hsl(210, 10%, 85%);
+    --color-tertiary-200: hsl(210, 10%, 70%);
+    --color-tertiary-300: hsl(210, 10%, 60%);
+    --color-tertiary-400: hsl(210, 10%, 50%);
+    --color-tertiary-500: hsl(210, 10%, 40%); // Base
+    --color-tertiary-600: hsl(210, 10%, 30%);
+    --color-tertiary-700: hsl(210, 10%, 25%);
+    --color-tertiary-800: hsl(210, 10%, 20%);
+    --color-tertiary-900: hsl(210, 10%, 15%);
+
+    --color-white: #ffffff;
+    --color-white-translucent: rgba(255, 255, 255, 0.55);
+    --color-success: #4caf50;
+    --color-danger: #f44336;
+}
+
+// Light theme
+[data-theme="light"] {
+    --color-background-body: var(--color-white);
+    --color-background: var(--color-secondary-100);
+    --color-background-highlight: var(--color-primary-200);
+    --color-border: var(--color-secondary-200);
+    --color-text: var(--color-secondary-800);
+    --scrollbar-color-thumb: var(--color-secondary-200);
+    --scrollbar-color-track: var(--color-tertiary-200);
+}
+
+// Dark theme
+[data-theme="dark"] {
+    --color-background-body: var(--color-tertiary-600);
+    --color-background: var(--color-tertiary-700);
+    --color-background-highlight: var(--color-primary-400);
+    --color-border: var(--color-tertiary-800);
+    --color-text: var(--color-white);
+    --scrollbar-color-thumb: var(--color-tertiary-600);
+    --scrollbar-color-track: var(--color-tertiary-700);
+}
+
+// Common styles
+html {
+    font-size: var(--rem); // Base font size
+}
+
+body,
+html {
+    font-family: Arial, sans-serif;
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: var(--color-background-body);
+    color: var(--color-text);
+}
+
+/* General reset for SVG icons to ensure consistent styling */
+.icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Style for buttons containing SVG icons */
+button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25em 0.5em;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    border-radius: calc(var(--spacer) / 2);
+    font: inherit;
+
+    &:has(svg) {
+        gap: 0.33em;
+        color: currentColor;
+    }
+
+    svg {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    &:focus-within {
+        outline: none;
+        box-shadow: 0 0 0 2px var(--color-primary-200);
+    }
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+    }
+}
+
+#app {
+    padding: var(--spacer);
+    height: 100%;
+    display: flex;
+    gap: var(--spacer);
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#search {
+    flex: 0 0 auto;
+    font: inherit;
+    width: 100%;
+    padding: var(--spacer);
+    border-radius: var(--spacer);
+    border: 1px solid var(--color-border);
+}
+
+#phrase-list {
+    flex: 1 1 auto;
+    list-style: none;
+    padding: 0 0 calc(10 * var(--spacer)) 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-color-thumb) var(--scrollbar-color-track);
+    gap: var(--spacer);
+
+    li {
+        position: relative;
+        padding: var(--spacer);
+        margin-bottom: var(--spacer);
+        display: flex;
+        
+        justify-content: space-between;
+        align-items: center;
+
+        border-radius: var(--spacer);
+        background-color: var(--color-background);
+
+        &:focus-within {
+            outline: none;
+            border-radius: var(--spacer);
+            background-color: var(--color-background-highlight);
+        }
+
+        .phrase-list-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: calc(2 * var(--spacer));
+            flex-grow: 1;
+        }
+
+        .buttons {
+            display: flex;
+            align-items: center;
+
+            .copy-button,
+            .edit-button,
+            .three-dots {
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: calc(var(--spacer) / 2);
+                display: flex;
+                align-items: center;
+
+                &:hover {
+                    background-color: var(--color-primary-600);
+                    border-radius: 5px;
+                }
+
+                img {
+                    width: 1rem;
+                    height: 1rem;
+                }
+            }
+        }
+
+        .menu {
+            display: none;
+            position: absolute;
+            top: 50%;
+            right: calc(2.4 * var(--spacer));
+            background-color: var(--color-background-body);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            z-index: 1;
+            overflow: hidden;
+
+            .menu-item {
+                padding: var(--spacer);
+                cursor: pointer;
+
+                &:hover {
+                    filter: brightness(1.1);
+                }
+
+                &[data-action="delete"] {
+                    background-color: var(--color-danger);
+                    color: var(--color-white);
+                }
+
+                &[data-action="edit"] {
+                    background-color: var(--color-primary-500);
+                    color: var(--color-white);
+                }
+            }
+        }
+    }
+}
+
+#add-phrase {
+    position: fixed;
+    bottom: calc(2 * var(--spacer));
+    right: calc(2.5 * var(--spacer));
+    background-color: var(--color-primary-500);
+    color: var(--color-white);
+    border: none;
+    border-radius: 50%;
+    width: calc(3 * var(--rem));
+    height: calc(3 * var(--rem));
+    font-size: calc(2.4 * var(--spacer));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+        background-color: var(--color-primary-600);
+    }
+}
+
+@import "_modal";
+@import "_toast";
+@import "_animations";

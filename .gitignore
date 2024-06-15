@@ -1,0 +1,5 @@
+# Node modules
+node_modules/
+
+# Exclude everything in the dist folder except the .exe file
+dist/*
