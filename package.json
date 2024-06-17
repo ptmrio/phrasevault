@@ -41,7 +41,6 @@
     "files": [
       "src/**/*",
       "assets/**/*",
-      "node_modules/**/*",
       "package.json",
       "templates/**/*"
     ],
@@ -73,7 +72,8 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
-      "license": "LICENSE.md"
+      "license": "LICENSE.md",
+      "include": "installer.nsh"
     },
     "forceCodeSigning": false
   }
