@@ -1,4 +1,4 @@
-// Example usage: yarn version-bump 1.0.0 "Release 1.0.0"
+// Example usage: yarn version-bump "v" "CommitMsg"
 
 import fs from 'fs';
 import { exec } from 'child_process';
