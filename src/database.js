@@ -89,6 +89,21 @@ ipcMain.on('search-phrases', (event, searchText) => {
     });
 });
 
+ipcMain.on('get-phrase-by-id', (event, id) => {
+    checkDatabaseAccessibility(accessible => {
+        if (!accessible) {
+            return;
+        }
+        db.get(`SELECT * FROM phrases WHERE id = ?`, [id], (err, row) => {
+            if (err) {
+                console.error(err.message);
+                return;
+            }
+            event.reply('phrase-to-insert', row);
+        });
+    });
+});
+
 ipcMain.on('add-phrase', (event, { newPhrase, newExpandedText }) => {
     checkDatabaseAccessibility(accessible => {
         if (!accessible) {

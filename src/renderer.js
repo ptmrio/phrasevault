@@ -286,6 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.electron.receive('phrase-to-insert', (phrase) => {
+        console.log('Inserting text:', phrase.expanded_text);
         window.electron.send('insert-text', phrase.expanded_text);
     });
 
