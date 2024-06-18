@@ -1,6 +1,6 @@
 {
   "name": "phrasevault",
-  "version": "v2.0.1",
+  "version": "2.0.1",
   "description": "A phrase management tool",
   "main": "src/main.js",
   "type": "module",
