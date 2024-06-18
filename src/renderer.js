@@ -5,7 +5,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('phraseModal');
     const closeButton = document.querySelector('.close');
 
-    // Apply theme based on system preference
+    const applyTranslations = () => {
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            const attribute = el.getAttribute('data-i18n-attribute');
+            if (attribute) {
+                el.setAttribute(attribute, window.i18n.t(key));
+            } else {
+                el.innerText = window.i18n.t(key);
+            }
+        });
+    };
+
+    window.electron.receive('change-language', (lng) => {
+        window.i18n.changeLanguage(lng);
+        applyTranslations();
+    });
+
+    applyTranslations();
+
     const applyTheme = (theme) => {
         if (theme === 'system') {
             const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
@@ -24,6 +42,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.electron.receive('set-theme', (theme) => {
         applyTheme(theme);
+    });
+
+    const updateDbStatus = (available) => {
+        const status = document.querySelector('#db-status');
+        const statusIndicator = status.querySelector('#db-status-indicator');
+        const statusText = status.querySelector('#db-status-text');
+        if (available) {
+            statusText.innerText = window.i18n.t('Database loaded');
+            statusIndicator.style.color = 'green';
+        } else {
+            statusText.innerText = window.i18n.t('Waiting for database');
+            statusIndicator.style.color = 'orange';
+            phraseList.innerHTML = '<li class="loading">' + window.i18n.t('Loading...') + '</li>';
+        }
+    };
+
+    window.electron.receive('database-status', (data) => {
+        updateDbStatus(data);
+    });
+
+    window.electron.receive('database-error', (error) => {
+        console.log('Database error:', error);
+        const status = document.querySelector('#db-status');
+        const statusIndicator = status.querySelector('#db-status-indicator');
+        const statusText = status.querySelector('#db-status-text');
+        statusText.innerText = window.i18n.t('Database error');
+        statusIndicator.style.color = 'red';
     });
 
     const debouncedUpdateList = debounce(updateList, 300);
@@ -75,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
         closeModal();
     });
 
-
     window.addEventListener('click', (e) => {
         if (e.target === modal) {
             modal.style.display = 'none';
@@ -115,13 +159,13 @@ document.addEventListener('DOMContentLoaded', () => {
             li.innerHTML = `
                 <span class="phrase-list-text"><strong>${phrase.phrase}</strong> - ${phrase.expanded_text}</span>
                 <div class="buttons">
-                    <button class="copy-button" data-action="copy" data-id="${phrase.id}" title="Copy"><svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-copy"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" /><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" /></svg></button>
-                    <button class="edit-button" data-action="edit" data-id="${phrase.id}" title="Edit"><svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-edit"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg></button>
-                    <button class="three-dots" title="More"><svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-dots-vertical"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /></svg></button>
+                    <button class="copy-button" data-action="copy" data-id="${phrase.id}" title="${window.i18n.t('Copy to clipboard')}"><svg class="icon"><use href="#icon-copy"></use></svg></button>
+                    <button class="edit-button" data-action="edit" data-id="${phrase.id}" title="${window.i18n.t('Edit Phrase')}"><svg class="icon"><use href="#icon-edit"></use></svg></button>
+                    <button class="three-dots" title="${window.i18n.t('More')}"><svg class="icon"><use href="#icon-dots-vertical"></use></svg></button>
                 </div>
                 <div class="menu">
                     <div class="menu-item" data-action="delete" data-id="${phrase.id}" style="background-color: red; color: white; display: flex; gap: 5px;">
-                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-trash"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg> <span>Delete</span>
+                        <svg class="icon"><use href="#icon-trash"></use></svg> <span>${window.i18n.t('Delete Phrase')}</span>
                     </div>
                 </div>
             `;
@@ -152,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             li.querySelector('.copy-button').addEventListener('click', () => {
                 window.electron.send('copy-to-clipboard', phrase.expanded_text);
-                showToast('Copied to clipboard', 'success');
+                showToast(window.i18n.t('Copied to clipboard'), 'success');
             });
 
             li.querySelector('.edit-button').addEventListener('click', () => {
@@ -205,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = idInput.value;
 
         if (!newPhrase.trim()) {
-            showToast('Phrase cannot be empty', 'danger');
+            showToast(window.i18n.t('Phrase cannot be empty'), 'danger');
             return;
         }
 

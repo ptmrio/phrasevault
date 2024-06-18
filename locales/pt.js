@@ -1,0 +1,42 @@
+const pt = {
+    translation: {
+        'Search...': 'Pesquisar...',
+        'Save': 'Salvar',
+        'Add Phrase': 'Adicionar Frase',
+        'Copy to clipboard': 'Copiar para a área de transferência',
+        'Edit Phrase': 'Editar Frase',
+        'Delete Phrase': 'Excluir Frase',
+        'More': 'Mais',
+        'File': 'Arquivo',
+        'View': 'Visualizar',
+        'Language': 'Idioma',
+        'Purchase': 'Compra',
+        'Help': 'Ajuda',
+        'New Database': 'Novo Banco de Dados',
+        'Open Database': 'Abrir Banco de Dados',
+        'Recent Databases': 'Bancos de Dados Recentes',
+        'Quit': 'Sair',
+        'Light Theme': 'Tema Claro',
+        'Dark Theme': 'Tema Escuro',
+        'System Preference': 'Preferência do Sistema',
+        'English': 'Inglês',
+        'Spanish': 'Espanhol',
+        'Portuguese': 'Português',
+        'French': 'Francês',
+        'German': 'Alemão',
+        'Italian': 'Italiano',
+        'Purchased - Thank you': 'Comprado - Obrigado',
+        'Buy License': 'Comprar Licença',
+        'I Have Already Bought': 'Já Comprei',
+        'Documentation': 'Documentação',
+        'Report Issue': 'Reportar Problema',
+        'View License Agreement': 'Ver Acordo de Licença',
+        'Show Phrase Database File': 'Mostrar Arquivo de Banco de Dados de Frases',
+        'Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!': 'Desenvolver e manter o PhraseVault leva tempo e esforço. Por favor, considere apoiar o projeto comprando uma licença. Confiamos em você para ser honesto. Obrigado!',
+        'Confirm Purchase': 'Confirmar Compra',
+        'I have purchased a license': 'Eu comprei uma licença',
+        'No': 'Não'
+    }
+};
+
+export default pt;

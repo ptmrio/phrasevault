@@ -1,0 +1,42 @@
+const en = {
+    translation: {
+        'Search...': 'Cerca...',
+        'Save': 'Salva',
+        'Add Phrase': 'Aggiungi Frase',
+        'Copy to clipboard': 'Copia negli appunti',
+        'Edit Phrase': 'Modifica Frase',
+        'Delete Phrase': 'Elimina Frase',
+        'More': 'Altro',
+        'File': 'File',
+        'View': 'Visualizza',
+        'Language': 'Lingua',
+        'Purchase': 'Acquista',
+        'Help': 'Aiuto',
+        'New Database': 'Nuovo Database',
+        'Open Database': 'Apri Database',
+        'Recent Databases': 'Database Recenti',
+        'Quit': 'Esci',
+        'Light Theme': 'Tema Chiaro',
+        'Dark Theme': 'Tema Scuro',
+        'System Preference': 'Preferenza di Sistema',
+        'English': 'Inglese',
+        'Spanish': 'Spagnolo',
+        'Portuguese': 'Portoghese',
+        'French': 'Francese',
+        'German': 'Tedesco',
+        'Italian': 'Italiano',
+        'Purchased - Thank you': 'Acquistato - Grazie',
+        'Buy License': 'Compra Licenza',
+        'I Have Already Bought': 'Ho Già Comprato',
+        'Documentation': 'Documentazione',
+        'Report Issue': 'Segnala Problema',
+        'View License Agreement': 'Vedi Accordo di Licenza',
+        'Show Phrase Database File': 'Mostra File del Database delle Frasi',
+        'Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!': 'Sviluppare e mantenere PhraseVault richiede tempo e impegno. Si prega di considerare di sostenere il progetto acquistando una licenza. Ci fidiamo di te per essere onesto. Grazie!',
+        'Confirm Purchase': 'Conferma Acquisto',
+        'I have purchased a license': 'Ho acquistato una licenza',
+        'No': 'No'
+    }
+};
+
+export default en;

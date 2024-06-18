@@ -1,6 +1,10 @@
-const fs = require('fs');
-const { exec } = require('child_process');
-const packageJson = require('./package.json');
+// Example usage: yarn version-bump 1.0.0 "Release 1.0.0"
+
+import fs from 'fs';
+import { exec } from 'child_process';
+
+// Read the package.json file
+const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 
 // Get the new version and commit message from command line arguments
 const newVersion = process.argv[2];

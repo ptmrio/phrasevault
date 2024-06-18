@@ -1,14 +1,28 @@
-const { app, Menu, globalShortcut, BrowserWindow, ipcMain, clipboard, shell, dialog } = require('electron');
-const { windowManager } = require('node-window-manager');
-const { createWindow, createTray } = require('./window');
-const path = require('path');
-const fs = require('fs');
-const state = require('./state');
-const { exec } = require('child_process');
+
+import { app, Menu, globalShortcut, BrowserWindow, ipcMain, clipboard } from 'electron';
+import { windowManager } from 'node-window-manager';
+import { createWindow, createTray } from './window.js';
+import path from 'path';
+import state from './state.js';
+import db, { checkDatabaseAccessibility } from './database.js';
+import { exec } from 'child_process';
+import { createTemplate } from './menu.js';
+import i18n, { availableLanguages } from './i18n.js';
+import EventEmitter from 'events';
+import { fileURLToPath } from 'url';
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+class DatabaseEvents extends EventEmitter {}
+const databaseEvents = new DatabaseEvents();
 
 let previousWindow;
 let mainWindow;
 let tray;
+
+global.databaseEvents = databaseEvents;
 global.isQuitting = false;
 
 process.on('uncaughtException', (error) => {
@@ -19,6 +33,7 @@ process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
+
 function setTheme(theme) {
     if (mainWindow && mainWindow.webContents) {
         mainWindow.webContents.send('set-theme', theme);
@@ -26,26 +41,43 @@ function setTheme(theme) {
     state.setConfig({ theme });
 }
 
-function updateRecentFilesMenu() {
-    const config = state.getConfig();
-    const recentFilesMenu = config.recentFiles.map(file => ({
-        label: file,
-        click: () => {
-            state.setConfig({ dbPath: file });
-            mainWindow.webContents.send('db-location-changed', file);
-            app.relaunch();
-            app.exit();
-        }
-    }));
-    return recentFilesMenu;
+function setLanguage(lng) {
+    state.setConfig({ language: lng });
+    state.setConfig({ showOnStartup: true });
+    app.relaunch();
+    app.exit();
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+    
+    const config = state.getConfig();
+    let languageToUse = config.language;
+    
+    if (!languageToUse || typeof languageToUse !== 'string') {
+        const { osLocaleSync } = await import('os-locale');
+        const systemLocale = osLocaleSync();
+        const systemLanguage = systemLocale.split('-')[0].toLowerCase(); 
+
+        if (availableLanguages.includes(systemLanguage)) {
+            languageToUse = systemLanguage;
+        } else {
+            languageToUse = 'en'; 
+        }
+
+        state.setConfig({ language: languageToUse });
+    }
+
+    // Update the i18n language setting
+    i18n.changeLanguage(languageToUse);
+
     mainWindow = createWindow();
     tray = createTray();
 
-    const config = state.getConfig();
-    setTheme(config.theme);
+    // send change language to renderer
+    mainWindow.webContents.on('did-finish-load', () => {
+        setTheme(config.theme);
+        mainWindow.webContents.send('change-language', config.language);
+    });
 
     globalShortcut.register('CommandOrControl+Shift+I', () => {
         mainWindow.webContents.toggleDevTools();
@@ -60,6 +92,9 @@ app.whenReady().then(() => {
 
     mainWindow.webContents.on('before-input-event', (event, input) => {
         if (input.key === 'Escape') {
+            
+            // todo: prevent if modal is open (or menubar?)
+
             mainWindow.hide();
             if (tray && !state.getBalloonShown()) {
                 tray.displayBalloon({
@@ -75,120 +110,7 @@ app.whenReady().then(() => {
         }
     });
 
-    const template = [
-        {
-            label: 'File',
-            submenu: [
-                {
-                    label: 'New Database',
-                    click: () => {
-                        const options = {
-                            title: 'Create New Database',
-                            defaultPath: 'phrasevault.sqlite',
-                            buttonLabel: 'Create',
-                            filters: [
-                                { name: 'SQLite Database', extensions: ['sqlite'] }
-                            ]
-                        };
-
-                        dialog.showSaveDialog(mainWindow, options).then(result => {
-                            if (!result.canceled && result.filePath) {
-                                const newDbPath = result.filePath.endsWith('.sqlite') ? result.filePath : result.filePath + '.sqlite';
-                                fs.writeFileSync(newDbPath, '');
-                                state.setConfig({ dbPath: newDbPath });
-                                state.addRecentFile(newDbPath);
-                                mainWindow.webContents.send('db-location-changed', newDbPath);
-                                app.relaunch();
-                                app.exit();
-                            }
-                        }).catch(err => {
-                            console.error('Failed to create new database:', err);
-                        });
-                    }
-                },
-                {
-                    label: 'Open Database',
-                    click: () => {
-                        const options = {
-                            title: 'Open Database',
-                            buttonLabel: 'Open',
-                            filters: [
-                                { name: 'SQLite Database', extensions: ['sqlite'] }
-                            ],
-                            properties: ['openFile']
-                        };
-
-                        dialog.showOpenDialog(mainWindow, options).then(result => {
-                            if (!result.canceled && result.filePaths.length > 0) {
-                                const selectedPath = result.filePaths[0];
-                                console.log('Selected Database Path:', selectedPath); // Debugging line
-                                state.setConfig({ dbPath: selectedPath });
-                                state.addRecentFile(selectedPath);
-                                mainWindow.webContents.send('db-location-changed', selectedPath);
-                                app.relaunch();
-                                app.exit();
-                            }
-                        }).catch(err => {
-                            console.error('Failed to open database:', err);
-                        });
-                    }
-                },
-                {
-                    label: 'Recent Databases',
-                    submenu: updateRecentFilesMenu()
-                },
-                {
-                    label: 'Quit', click: () => {
-                        global.isQuitting = true;
-                        app.quit();
-                    }
-                },
-            ]
-        },
-        {
-            label: 'View',
-            submenu: [
-                { label: 'Light Theme', click: () => setTheme('light') },
-                { label: 'Dark Theme', click: () => setTheme('dark') },
-                { label: 'System Preference', click: () => setTheme('system') },
-            ]
-        },
-        {
-            label: 'Purchase',
-            submenu: [
-                { label: 'Free for Personal', click: () => require('electron').shell.openExternal('https://phrasevault.app/') },
-                { label: 'Buy Commercial License', click: () => require('electron').shell.openExternal('https://phrasevault.app/') },
-                {
-                    label: 'I Have Already Bought', click: () => {
-                        state.setConfig({ purchased: true });
-                        app.relaunch();
-                        app.exit();
-                    }
-                }
-            ]
-        },
-        {
-            label: 'Help',
-            submenu: [
-                { label: 'Documentation', click: () => require('electron').shell.openExternal('https://phrasevault.app/#faq') },
-                { label: 'Report Issue', click: () => require('electron').shell.openExternal('https://github.com/ptmrio/phrasevault/issues') },
-                { label: 'View License Agreement', click: () => require('electron').shell.openExternal('https://github.com/ptmrio/phrasevault/blob/main/LICENSE') },
-                {
-                    label: 'Show Phrase Database File', click: () => {
-                        const dbPath = state.getConfig().dbPath || path.join(app.getPath('userData'), 'phrasevault.sqlite');
-                        shell.showItemInFolder(dbPath);
-                    }
-                },
-                { label: `Version ${app.getVersion()}`, enabled: false }
-            ]
-        }
-    ];
-
-    if (config.purchased) {
-        template[2].submenu.unshift({ label: 'Purchased - Thank you', enabled: false });
-    }
-
-    const menu = Menu.buildFromTemplate(template);
+    const menu = Menu.buildFromTemplate(createTemplate(mainWindow, setTheme, setLanguage));
     Menu.setApplicationMenu(menu);
 
     app.on('activate', () => {
@@ -230,29 +152,38 @@ app.whenReady().then(() => {
                         } catch (error) {
                             console.error('Failed to restore original clipboard content:', error);
                         }
-                    }, 200);
+                    }, 100);
                 });
-            }, 300);
+            }, 10);
         }, 100);
     });
 
-    ipcMain.on('get-theme', (event) => {
-        event.returnValue = state.getConfig().theme;
-    });
+});
 
-    ipcMain.on('set-theme', (event, theme) => {
-        setTheme(theme);
-    });
+databaseEvents.on('database-status', (statusData) => {
+    if (mainWindow && mainWindow.webContents) {
+        mainWindow.webContents.send('database-status', statusData);
+    }
+});
 
-    app.on('will-quit', () => {
-        globalShortcut.unregisterAll();
-    });
 
-    app.on('window-all-closed', () => {
-        if (process.platform !== 'darwin') {
-            app.quit();
-        }
-    });
+ipcMain.on('get-theme', (event) => {
+    event.returnValue = state.getConfig().theme;
+});
 
-    require('./database');
+ipcMain.on('set-theme', (event, theme) => {
+    setTheme(theme);
+});
+
+app.on('will-quit', () => {
+    globalShortcut.unregisterAll();
+});
+
+app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
+    else {
+        backend.clearMainBindings(ipcMain);
+    }
 });

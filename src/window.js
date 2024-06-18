@@ -1,29 +1,44 @@
-const { BrowserWindow, app, Tray, Menu } = require('electron');
-const path = require('path');
-const state = require('./state');
+import { BrowserWindow, app, Tray, Menu, ipcMain } from 'electron';
+import backend from "i18next-electron-fs-backend";
+import path from 'path';
+import fs from 'fs';
+import state from './state.js';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 let mainWindow;
 let tray = null;
 
 // Create the main application window
-function createWindow() {
+export function createWindow() {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
         show: false,
         icon: path.join(__dirname, '../assets/img/tray_icon.png'),
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js'),
+            preload: path.join(__dirname, 'preload.mjs'),
             contextIsolation: true,
-            enableRemoteModule: true,
+            enableRemoteModule: false,
             nodeIntegration: false,
+            sandbox: false,
         },
     });
+
+    backend.mainBindings(ipcMain, mainWindow, fs);
 
     mainWindow.loadFile(path.join(__dirname, '../templates/index.html'));
 
     mainWindow.once('ready-to-show', () => {
-        mainWindow.hide();
+        if (state.getConfig().showOnStartup === true) {
+            mainWindow.show();
+            state.setConfig({ showOnStartup: false })
+        }
+        else {
+            mainWindow.hide();
+        }
         if (tray && !state.getBalloonShown()) {
             tray.displayBalloon({
                 icon: path.join(__dirname, '../assets/img/tray_icon.png'),
@@ -53,7 +68,7 @@ function createWindow() {
 }
 
 // Create the system tray icon and menu
-function createTray() {
+export function createTray() {
     tray = new Tray(path.join(__dirname, '../assets/img/tray_icon.png'));
     tray.setToolTip('PhraseVault is running in the background. Press Ctrl+. to show/hide.');
 
@@ -85,4 +100,4 @@ function createTray() {
     return tray;
 }
 
-module.exports = { createWindow, createTray, mainWindow, tray };
+export { mainWindow, tray };

@@ -10,16 +10,75 @@
 </head>
 
 <body>
-    <div id="app">
-        <input type="text" id="search" placeholder="Search..." />
-        <ul id="phrase-list"></ul>
-        <button id="add-phrase" aria-label="Add Phrase">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-plus">
+
+    <div style="display: hidden;">
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+            <symbol id="icon-x" viewBox="0 0 24 24">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M18 6l-12 12" />
+                <path d="M6 6l12 12" />
+            </symbol>
+            <symbol id="icon-plus" viewBox="0 0 24 24">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <path d="M12 5l0 14" />
                 <path d="M5 12l14 0" />
+            </symbol>
+            <symbol id="icon-copy" viewBox="0 0 24 24">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
+                <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
+            </symbol>
+            <symbol id="icon-edit" viewBox="0 0 24 24">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+                <path d="M16 5l3 3" />
+            </symbol>
+            <symbol id="icon-dots-vertical" viewBox="0 0 24 24">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                <path d="M12 19m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                <path d="M12 5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+            </symbol>
+            <symbol id="icon-trash" viewBox="0 0 24 24">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M4 7l16 0" />
+                <path d="M10 11l0 6" />
+                <path d="M14 11l0 6" />
+                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+            </symbol>
+            <symbol id="icon-floppy" viewBox="0 0 24 24" fill="none">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2" />
+                <path d="M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                <path d="M14 4l0 4l-6 0l0 -4" />
+            </symbol>
+            <symbol id="icon-circle-filled" viewBox="0 0 24 24" fill="currentColor">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+            </symbol>
+        </svg>
+    </div>
+
+    <div id="app">
+        <input type="text" id="search" placeholder="" data-i18n="Search..." data-i18n-attribute="placeholder" />
+        <ul id="phrase-list"></ul>
+        <button id="add-phrase" aria-label="" data-i18n="Add Phrase" data-i18n-attribute="aria-label">
+            <svg class="icon">
+                <use href="#icon-plus"></use>
             </svg>
         </button>
+
+        <div id="db-status">
+            <span id="db-status-indicator">
+                <svg class="icon">
+                    <use href="#icon-circle-filled"></use>
+                </svg>
+            </span>
+            <span id="db-status-text"></span> 
+        
+        </div>
     </div>
 
     <div id="phraseModal" class="modal">
@@ -27,10 +86,8 @@
             <div class="modal-header">
                 <h2 id="modal-title">Add/Edit Phrase</h2>
                 <button class="close">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-x">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M18 6l-12 12" />
-                        <path d="M6 6l12 12" />
+                    <svg class="icon">
+                        <use href="#icon-x"></use>
                     </svg>
                 </button>
             </div>
@@ -38,12 +95,9 @@
             <textarea id="expandedTextInput" placeholder="Expanded Text"></textarea>
             <input type="hidden" id="idInput">
             <button id="saveButton">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-device-floppy">
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                    <path d="M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2" />
-                    <path d="M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                    <path d="M14 4l0 4l-6 0l0 -4" />
-                </svg> <span>Save</span></button>
+                <svg class="icon">
+                    <use href="#icon-floppy"></use>
+                </svg> <span data-i18n="Save"></span></button>
         </div>
     </div>
 

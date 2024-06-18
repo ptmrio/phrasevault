@@ -128,7 +128,6 @@ button {
 
 #app {
     padding: var(--spacer);
-    height: 100%;
     display: flex;
     gap: var(--spacer);
     flex-direction: column;
@@ -147,11 +146,11 @@ button {
 #phrase-list {
     flex: 1 1 auto;
     list-style: none;
-    padding: 0 0 calc(10 * var(--spacer)) 0;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-color-thumb) var(--scrollbar-color-track);
     gap: var(--spacer);
+    padding-bottom: calc(4 * var(--spacer));
 
     li {
         position: relative;
@@ -240,8 +239,8 @@ button {
 
 #add-phrase {
     position: fixed;
-    bottom: calc(2 * var(--spacer));
-    right: calc(2.5 * var(--spacer));
+    bottom: var(--spacer);
+    right: var(--spacer);
     background-color: var(--color-primary-500);
     color: var(--color-white);
     border: none;
@@ -258,6 +257,35 @@ button {
     &:hover {
         background-color: var(--color-primary-600);
     }
+}
+
+#db-status {
+    position: fixed;
+    opacity: 0.69;
+
+    bottom: var(--spacer);
+    left: var(--spacer);
+    display: flex;
+    gap: calc(var(--spacer) / 2);
+    align-items: center;
+
+    background-color: var(--color-background-body);
+    border-radius: var(--spacer);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    padding: var(--spacer) var(--spacer) calc(var(--spacer) - 0.2em) var(--spacer);
+    color: var(--color-secondary-500);
+    font-size: calc(0.8 * var(--rem));
+
+    transition: opacity 0.2s ease-in-out;
+
+    &:hover {
+        opacity: 1;
+    }
+
+    #db-status-indicator {
+        transform: translateY(-0.2em);
+    }
+
 }
 
 @import "_modal";

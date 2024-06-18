@@ -3,12 +3,12 @@
   "version": "2.0.0",
   "description": "A phrase management tool",
   "main": "src/main.js",
+  "type": "module",
   "scripts": {
-    "start": "sass assets/scss/style.scss assets/css/style.css && electron .",
+    "start": "electron .",
     "build": "electron-builder",
-    "watch": "sass assets/scss/style.scss assets/css/style.css && electronmon .",
+    "watch": "electronmon .",
     "version-bump": "node version.js",
-    "rebuild": "npx electron-rebuild",
     "postinstall": "electron-builder install-app-deps"
   },
   "keywords": [
@@ -22,8 +22,13 @@
   "author": "Petermeir Web Solutions",
   "license": "PhraseVault License - See LICENSE.md",
   "dependencies": {
+    "electron-json-storage": "^4.6.0",
+    "i18next": "^23.11.5",
+    "i18next-electron-fs-backend": "^3.0.2",
+    "i18next-electron-language-detector": "^0.0.10",
     "node-key-sender": "^1.0.11",
     "node-window-manager": "^2.2.4",
+    "os-locale": "^6.0.2",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {

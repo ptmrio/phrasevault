@@ -1,32 +1,15 @@
-const { contextBridge, ipcRenderer } = require('electron');
+import { contextBridge, ipcRenderer } from 'electron';
+import i18n from "./i18n.js";
 
-// List of valid channels for IPC communication
+
 const validChannels = [
-    'search-phrases',
-    'add-phrase',
-    'edit-phrase',
-    'delete-phrase',
-    'copy-to-clipboard',
-    'increment-usage',
-    'insert-text',
-    'phrases-list',
-    'phrase-added',
-    'phrase-edited',
-    'phrase-deleted',
-    'clipboard-updated',
-    'usage-incremented',
-    'get-phrase-by-id',
-    'phrase-to-insert',
-    'focus-search',
-    'get-theme',
-    'set-theme',
-    'toast-message',
-    'save-success',
-    'open-db-location-dialog',
-    'db-location-changed',
+    'search-phrases', 'add-phrase', 'edit-phrase', 'delete-phrase', 'copy-to-clipboard', 'increment-usage',
+    'insert-text', 'phrases-list', 'phrase-added', 'phrase-edited', 'phrase-deleted', 'clipboard-updated',
+    'usage-incremented', 'get-phrase-by-id', 'phrase-to-insert', 'focus-search', 'get-theme', 'set-theme',
+    'toast-message', 'save-success', 'open-db-location-dialog', 'change-language',
+    'database-status', 'database-error'
 ];
 
-// Expose ipcRenderer to the renderer process
 contextBridge.exposeInMainWorld('electron', {
     send: (channel, data) => {
         if (validChannels.includes(channel)) {
@@ -48,4 +31,9 @@ contextBridge.exposeInMainWorld('electron', {
             ipcRenderer.removeAllListeners(channel);
         }
     }
+});
+
+contextBridge.exposeInMainWorld('i18n', {
+    t: i18n.t.bind(i18n),
+    changeLanguage: i18n.changeLanguage.bind(i18n),
 });

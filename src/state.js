@@ -1,11 +1,12 @@
-const fs = require('fs');
-const path = require('path');
-const { app } = require('electron');
+import fs from 'fs';
+import path from 'path';
+import { app } from 'electron';
 
 let config = {
     theme: 'system',
     purchased: false,
     dbPath: path.join(app.getPath('userData'), 'phrasevault.sqlite'),
+    showOnStartup: true,
     recentFiles: []
 };
 
@@ -56,7 +57,15 @@ function setBalloonShown(value) {
 
 loadConfig();
 
-module.exports = {
+export {
+    getConfig,
+    setConfig,
+    addRecentFile,
+    getBalloonShown,
+    setBalloonShown,
+};
+
+export default {
     getConfig,
     setConfig,
     addRecentFile,
