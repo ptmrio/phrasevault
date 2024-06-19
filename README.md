@@ -45,7 +45,7 @@ This project is licensed under the PhraseVault License. For detailed licensing t
 
 | What You Can't Do                                                  | What You Can Do                                       |
 | ------------------------------------------------------------------ | ----------------------------------------------------- |
-| ❌ Use without purchase (commercial or private)                    | ✅ Download freely                                    |
+| ❌ Use without purchase (commercial or private)                    | ✅ Download freely and try for free (maximum 14 days) |
 | ❌ Distribute modified or unmodified versions                      | ✅ Inspect the source code freely                     |
 | ❌ Use the provider's name, logo, or trademarks without permission | ✅ Fork for inspection or personal use after purchase |
 | ❌ Sub-license or resell                                           | ✅ Modify for personal use after purchase             |

@@ -4,6 +4,7 @@ import state from './state.js';
 import path from 'path';
 import i18n from './i18n.js';
 import db, { initializeDatabase } from './database.js';
+import Winreg from 'winreg';
 
 function updateRecentFilesMenu(mainWindow) {
     const config = state.getConfig();
@@ -83,6 +84,37 @@ export function createTemplate(mainWindow, setTheme, setLanguage) {
                     submenu: updateRecentFilesMenu(mainWindow)
                 },
                 {
+                    label: state.getConfig().autostart ? i18n.t('Disable Autostart') : i18n.t('Enable Autostart'),
+                    click: () => {
+                        const newAutostartSetting = !(state.getConfig().autostart);
+                        state.setConfig({ autostart: newAutostartSetting });
+                        if (newAutostartSetting) {
+                            const regKey = new Winreg({
+                                hive: Winreg.HKCU,
+                                key: '\\Software\\Microsoft\\Windows\\CurrentVersion\\Run'
+                            });
+                            regKey.set('PhraseVault', Winreg.REG_SZ, app.getPath('exe'), (err) => {
+                                if (err) {
+                                    console.error('Failed to set autostart:', err);
+                                }
+                            });
+                        } else {
+                            const regKey = new Winreg({
+                                hive: Winreg.HKCU,
+                                key: '\\Software\\Microsoft\\Windows\\CurrentVersion\\Run'
+                            });
+                            regKey.remove('PhraseVault', (err) => {
+                                if (err) {
+                                    console.error('Failed to remove autostart:', err);
+                                }
+                            });
+                        }
+                        state.setConfig({ showOnStartup: true });
+                        app.relaunch();
+                        app.exit();
+                    }
+                },
+                {
                     label: i18n.t('Quit'), click: () => {
                         global.isQuitting = true;
                         app.quit();
@@ -145,7 +177,7 @@ export function createTemplate(mainWindow, setTheme, setLanguage) {
                 { label: i18n.t('View License Agreement'), click: () => shell.openExternal('https://github.com/ptmrio/phrasevault/blob/main/LICENSE') },
                 {
                     label: i18n.t('Show Phrase Database File'), click: () => {
-
+                        const dbPath = state.getConfig().dbPath;
                         // check if file exists
                         if (fs.existsSync(state.getConfig().dbPath)) {
                             shell.showItemInFolder(dbPath);

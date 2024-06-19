@@ -51,6 +51,17 @@ function insertInitialPhrases() {
 }
 
 export function checkDatabaseAccessibility(callback) {
+
+    const firstRun = state.getConfig().firstRun;
+    if (firstRun) {
+        // create the database file if it doesn't exist
+        if (!fs.existsSync(dbPath)) {
+            fs.writeFileSync(dbPath, '');
+        }
+
+        state.setConfig({ firstRun: false });
+    }
+
     fs.access(dbPath, fs.constants.F_OK | fs.constants.R_OK | fs.constants.W_OK, (err) => {
         const accessible = !err;
         databaseEvents.emit('database-status', accessible);
@@ -79,13 +90,14 @@ ipcMain.on('search-phrases', (event, searchText) => {
         if (!accessible) {
             return;
         }
-        db.all(`SELECT * FROM phrases WHERE phrase LIKE ? OR expanded_text LIKE ?`, [`%${searchText}%`, `%${searchText}%`], (err, rows) => {
-            if (err) {
-                event.reply('database-error', 'Error executing search');
-                return;
-            }
-            event.reply('phrases-list', rows);
-        });
+        db.all(`SELECT * FROM phrases WHERE phrase LIKE ? OR expanded_text LIKE ? ORDER BY usageCount DESC`, 
+            [`%${searchText}%`, `%${searchText}%`], (err, rows) => {
+                if (err) {
+                    event.reply('database-error', 'Error executing search');
+                    return;
+                }
+                event.reply('phrases-list', rows);
+            });
     });
 });
 

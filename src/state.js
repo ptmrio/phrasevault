@@ -5,8 +5,11 @@ import { app } from 'electron';
 let config = {
     theme: 'system',
     purchased: false,
+    autostart: true,
     dbPath: path.join(app.getPath('userData'), 'phrasevault.sqlite'),
     showOnStartup: true,
+    firstRun: true,
+    initializeTables: true,
     recentFiles: []
 };
 

@@ -1,11 +1,16 @@
 # PhraseVault License
 
-| What You Can't Do                                            | What You Can Do                                               |
-|--------------------------------------------------------------|---------------------------------------------------------------|
-| ❌ Use without purchase (commercial or private)              | ✅ Download freely                                             |
-| ❌ Distribute modified or unmodified versions                | ✅ Inspect the source code freely                              |
-| ❌ Use the provider's name, logo, or trademarks without permission | ✅ Fork for inspection or personal use after purchase          |
-| ❌ Sub-license or resell                                      | ✅ Modify for personal use after purchase                      |
+**What You Can't Do**
+- Use without purchase (commercial or private)
+- Distribute modified or unmodified versions
+- Use the provider's name, logo, or trademarks without permission
+- Sub-license or resell
+
+**What You Can Do**
+- Download freely and try for free (maximum 14 days)
+- Inspect the source code freely
+- Fork for inspection or personal use after purchase
+- Modify for personal use after purchase
 
 ## Preamble
 
@@ -16,12 +21,12 @@ PhraseVault's mission is to empower users with efficient phrase management tools
 This license grants you the rights, and only the rights, set out below in respect of the source code provided. If you take advantage of these rights, you accept this license. If you do not accept the license, do not access the code.
 
 ### Section 1: Definitions
-- "Code" means the source code made available from time to time for access under this license. Reference to code in this license means the code and any part of it and any derivative of it.
-- “Compilation” means to compile the code from ‘source code’ to ‘machine code’.
-- "Defect" means a defect, bug, backdoor, security issue, or other deficiency in the code.
-- “Non-commercial distribution” means distribution of the code or any compilation of the code, or of any other application or program containing the code or any compilation of the code, where such distribution is not intended for or directed towards commercial advantage or monetary compensation.
-- "Review" means to access, analyze, test, and otherwise review the code as a reference, for the sole purpose of analyzing it for defects.
-- "You" means the licensee of rights set out in this license.
+- *Code* means the source code made available from time to time for access under this license. Reference to code in this license means the code and any part of it and any derivative of it.
+- *Compilation* means to compile the code from 'source code' to 'machine code'.
+- *Defect* means a defect, bug, backdoor, security issue, or other deficiency in the code.
+- *Non-commercial distribution* means distribution of the code or any compilation of the code, or of any other application or program containing the code or any compilation of the code, where such distribution is not intended for or directed towards commercial advantage or monetary compensation.
+- *Review* means to access, analyze, test, and otherwise review the code as a reference, for the sole purpose of analyzing it for defects.
+- *You* means the licensee of rights set out in this license.
 
 ### Section 2: Grant of Rights
 1. Subject to the terms of this license, we grant you a non-transferable, non-exclusive, worldwide, royalty-free license to access and use the code solely for the purposes of review, compilation, and non-commercial distribution.
@@ -49,7 +54,7 @@ This license grants you the rights, and only the rights, set out below in respec
 1. This license and its interpretation and operation are governed solely by the local law. You agree to submit to the exclusive jurisdiction of the local arbitral tribunals as further described in our Terms of Service, and you agree not to raise any jurisdictional issue if we need to enforce an arbitral award or judgment in our jurisdiction or another country.
 2. Questions and comments regarding this license are welcomed and should be addressed at ptmr.io or in the issues section of [GitHub](https://github.com/ptmrio/phrasevault/issues).
 
-Last updated 2024-06-15.
+Last updated 2024-06-19.
 
 ---
 

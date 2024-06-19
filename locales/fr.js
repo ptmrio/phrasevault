@@ -18,6 +18,8 @@ const fr = {
         'Create': 'Créer',
         'Open Database': 'Ouvrir la Base de Données',
         'Recent Databases': 'Bases de Données Récentes',
+        'Enable Autostart': 'Activer le Démarrage Automatique',
+        'Disable Autostart': 'Désactiver le Démarrage Automatique',
         'Quit': 'Quitter',
         'Light Theme': 'Thème Clair',
         'Dark Theme': 'Thème Sombre',

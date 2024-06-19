@@ -18,6 +18,8 @@ const pt = {
         'Create': 'Criar',
         'Open Database': 'Abrir Banco de Dados',
         'Recent Databases': 'Bancos de Dados Recentes',
+        'Enable Autostart': 'Ativar Início Automático',
+        'Disable Autostart': 'Desativar Início Automático',
         'Quit': 'Sair',
         'Light Theme': 'Tema Claro',
         'Dark Theme': 'Tema Escuro',

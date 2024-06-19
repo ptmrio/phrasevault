@@ -18,6 +18,8 @@ const de = {
         'Create': 'Erstellen',
         'Open Database': 'Datenbank öffnen',
         'Recent Databases': 'Kürzlich verwendete Datenbanken',
+        'Enable Autostart': 'Autostart aktivieren',
+        'Disable Autostart': 'Autostart deaktivieren',
         'Quit': 'Beenden',
         'Light Theme': 'Helles Thema',
         'Dark Theme': 'Dunkles Thema',

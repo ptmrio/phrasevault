@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const statusIndicator = status.querySelector('#db-status-indicator');
         const statusText = status.querySelector('#db-status-text');
         if (available) {
-            statusText.innerText = window.i18n.t('Database loaded');
+            statusText.innerText = window.i18n.t('Phrases loaded');
             statusIndicator.style.color = 'green';
         } else {
             statusText.innerText = window.i18n.t('Waiting for database');
@@ -196,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             li.querySelector('.copy-button').addEventListener('click', () => {
                 window.electron.send('copy-to-clipboard', phrase.expanded_text);
+                window.electron.send('increment-usage', phrase.id);
                 showToast(window.i18n.t('Copied to clipboard'), 'success');
             });
 
@@ -288,6 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.electron.receive('phrase-to-insert', (phrase) => {
         console.log('Inserting text:', phrase.expanded_text);
         window.electron.send('insert-text', phrase.expanded_text);
+        window.electron.send('increment-usage', phrase.id);
     });
 
     window.electron.receive('focus-search', () => {
