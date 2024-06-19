@@ -1,4 +1,4 @@
-import { BrowserWindow, app, Tray, Menu, ipcMain } from 'electron';
+import { BrowserWindow, app, Tray, Menu, ipcMain, nativeTheme } from 'electron';
 import backend from "i18next-electron-fs-backend";
 import path from 'path';
 import fs from 'fs';
@@ -26,6 +26,8 @@ export function createWindow() {
             sandbox: false,
         },
     });
+
+    nativeTheme.themeSource = state.getConfig().theme;
 
     backend.mainBindings(ipcMain, mainWindow, fs);
 

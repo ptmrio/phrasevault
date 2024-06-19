@@ -3,7 +3,6 @@ import fs from 'fs';
 import state from './state.js';
 import path from 'path';
 import i18n from './i18n.js';
-import db, { initializeDatabase } from './database.js';
 import Winreg from 'winreg';
 
 function updateRecentFilesMenu(mainWindow) {
@@ -125,9 +124,30 @@ export function createTemplate(mainWindow, setTheme, setLanguage) {
         {
             label: i18n.t('View'),
             submenu: [
-                { label: i18n.t('Light Theme'), click: () => setTheme('light') },
-                { label: i18n.t('Dark Theme'), click: () => setTheme('dark') },
-                { label: i18n.t('System Preference'), click: () => setTheme('system') },
+                {
+                    label: i18n.t('Light Theme'), click: () => { 
+                        setTheme('light');
+                        state.setConfig({ showOnStartup: true });
+                        app.relaunch();
+                        app.exit();
+                    }
+                },
+                {
+                    label: i18n.t('Dark Theme'), click: () => {
+                        setTheme('dark');
+                        state.setConfig({ showOnStartup: true });
+                        app.relaunch();
+                        app.exit();
+                    }
+                },
+                {
+                    label: i18n.t('System Preference'), click: () => {
+                        setTheme('system');
+                        state.setConfig({ showOnStartup: true });
+                        app.relaunch();
+                        app.exit();
+                    }
+                },
             ]
         },
         {

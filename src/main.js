@@ -4,7 +4,7 @@ import { windowManager } from 'node-window-manager';
 import { createWindow, createTray } from './window.js';
 import path from 'path';
 import state from './state.js';
-import db, { checkDatabaseAccessibility } from './database.js';
+import db from './database.js';
 import { exec } from 'child_process';
 import { createTemplate } from './menu.js';
 import i18n, { availableLanguages } from './i18n.js';
