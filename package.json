@@ -8,7 +8,7 @@
     "start": "electron .",
     "build": "electron-builder",
     "watch": "electronmon .",
-    "version-bump": "node version.js",
+    "version-bump": "node version-bump.js",
     "postinstall": "electron-builder install-app-deps"
   },
   "keywords": [
@@ -20,7 +20,7 @@
     "productivity"
   ],
   "author": "Petermeir Web Solutions",
-  "license": "PhraseVault License - See LICENSE.md",
+  "license": "SEE LICENSE IN LICENSE.md",
   "dependencies": {
     "electron-json-storage": "^4.6.0",
     "i18next": "^23.11.5",

@@ -1,24 +1,19 @@
-// Example usage: yarn version-bump "2.0.0" "CommitMsg"
-
 import fs from 'fs';
 import { exec } from 'child_process';
 
 // Read the package.json file
 const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 
-// Get the new version and commit message from command line arguments
+// Get the new version from command line arguments
 const newVersion = process.argv[2];
-const commitMessage = process.argv[3];
 
 if (!newVersion) {
     console.error('Please provide a version number.');
     process.exit(1);
 }
 
-if (!commitMessage) {
-    console.error('Please provide a commit message.');
-    process.exit(1);
-}
+// Generate the commit message
+const commitMessage = `Release version ${newVersion}`;
 
 // Update the package.json version
 packageJson.version = newVersion;

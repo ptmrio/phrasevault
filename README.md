@@ -41,18 +41,20 @@ Whether you are a business professional looking to automate repetitive email tas
 
 ## License
 
-This project is licensed under the PhraseVault License. For detailed licensing terms, see the [LICENSE](https://github.com/ptmrio/phrasevault/blob/main/LICENSE.md) file. Below is a summary of what you can and cannot do under this license:
+This project is licensed under the Source First License. For detailed licensing terms, see the [LICENSE](https://github.com/ptmrio/phrasevault/blob/main/LICENSE.md) file. Below is a summary of what you can and cannot do under this license:
 
-| What You Can't Do                                                  | What You Can Do                                       |
-| ------------------------------------------------------------------ | ----------------------------------------------------- |
-| ❌ Use without purchase (commercial or private)                    | ✅ Download freely and try for free (maximum 14 days) |
-| ❌ Distribute modified or unmodified versions                      | ✅ Inspect the source code freely                     |
-| ❌ Use the provider's name, logo, or trademarks without permission | ✅ Fork for inspection or personal use after purchase |
-| ❌ Sub-license or resell                                           | ✅ Modify for personal use after purchase             |
+| What You Can't Do                                                   | What You Can Do                                                                   |
+| ------------------------------------------------------------------  | -----------------------------------------------------------------                  |
+| ❌ Use the software for commercial purposes without purchasing a commercial license | ✅ Use the software for non-commercial purposes (research, personal study, private entertainment, etc.) |
+| ❌ Distribute modified or unmodified versions for commercial purposes | ✅ Modify the software for non-commercial purposes                                    |
+| ❌ Remove or obscure functionality related to payment to the Licensor | ✅ Distribute the software or provide it to others free of charge for non-commercial purposes |
+| ❌ Alter, remove, or obscure licensing, copyright, or other notices  | ✅ Ensure recipients get a copy of these terms                                       |
+| ❌ Use the Licensor’s trademarks without permission                   | ✅ Include a prominent notice in modified copies indicating changes                  |
+| ❌ Sub-license or transfer licenses                                   |                                                                                      |
 
 ## Preamble
 
-PhraseVault's mission is to empower users with efficient phrase management tools while fostering the entrepreneurial spirit of software creators. Our software is open and transparent, yet requires a one-time, lifetime license purchase for full use. This license is intended to protect our intellectual property while providing users with the freedom to inspect and modify the code for personal use after purchase.
+PhraseVault's mission is to empower users with efficient phrase management tools while fostering the entrepreneurial spirit of software creators. Our software is open and transparent, yet requires a one-time, lifetime license purchase for full use. This license is intended to protect our intellectual property while providing users with the freedom to inspect and modify the code as needed under the terms outlined in the license agreement.
 
 ## Table of Contents
 
@@ -111,10 +113,6 @@ PhraseVault's mission is to empower users with efficient phrase management tools
   - You can inspect the source code and use it for review, but full usage requires a one-time, lifetime license purchase.
 - **How do I change the database location?**
   - Go to the settings within the app and select your preferred database location, such as a cloud drive.
-
-## License
-
-This project is licensed under the PhraseVault License. For detailed licensing terms, see the [LICENSE](https://github.com/ptmrio/phrasevault/blob/main/LICENSE.md) file.
 
 ## Contact and Support
 

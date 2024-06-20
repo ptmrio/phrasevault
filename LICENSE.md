@@ -1,61 +1,60 @@
-# PhraseVault License
+# Source First License 1.0
+
+## Overview
 
 **What You Can't Do**
-- Use without purchase (commercial or private)
-- Distribute modified or unmodified versions
-- Use the provider's name, logo, or trademarks without permission
-- Sub-license or resell
+- Use the software for commercial purposes without purchasing a commercial license
+- Distribute modified or unmodified versions for commercial purposes
+- Remove or obscure functionality related to payment to the Licensor
+- Alter, remove, or obscure licensing, copyright, or other notices
+- Use the Licensor’s trademarks without permission
+- Sub-license or transfer licenses
 
 **What You Can Do**
-- Download freely and try for free (maximum 14 days)
-- Inspect the source code freely
-- Fork for inspection or personal use after purchase
-- Modify for personal use after purchase
+- Use the software for non-commercial purposes (research, personal study, private entertainment, etc.)
+- Modify the software for non-commercial purposes
+- Distribute the software or provide it to others free of charge for non-commercial purposes
+- Ensure recipients get a copy of these terms
+- Include a prominent notice in modified copies indicating changes
 
-## Preamble
+## Acceptance
+By using the software, you agree to all of the terms and conditions below.
 
-PhraseVault's mission is to empower users with efficient phrase management tools while fostering the entrepreneurial spirit of software creators. Our software is open and transparent, yet requires a one-time, lifetime license purchase for full use. This license is intended to protect our intellectual property while providing users with the freedom to inspect and modify the code for personal use after purchase.
+## Copyright License
+Petermeir Web Solutions, Gerhard Petermeir (the “Licensor”) grants you a non-exclusive, royalty-free, worldwide, non-sublicensable, non-transferable license to use, copy, distribute, make available, and prepare derivative works of the software, in each case subject to the limitations below.
 
-## License
+## Limitations
+You may use or modify the software only for non-commercial purposes such as personal use for research, experiment, and testing for the benefit of public knowledge, personal study, private entertainment, hobby projects, amateur pursuits, or religious observance, all without any anticipated commercial application.
 
-This license grants you the rights, and only the rights, set out below in respect of the source code provided. If you take advantage of these rights, you accept this license. If you do not accept the license, do not access the code.
+You may distribute the software or provide it to others only if you do so free of charge for non-commercial purposes.
 
-### Section 1: Definitions
-- *Code* means the source code made available from time to time for access under this license. Reference to code in this license means the code and any part of it and any derivative of it.
-- *Compilation* means to compile the code from 'source code' to 'machine code'.
-- *Defect* means a defect, bug, backdoor, security issue, or other deficiency in the code.
-- *Non-commercial distribution* means distribution of the code or any compilation of the code, or of any other application or program containing the code or any compilation of the code, where such distribution is not intended for or directed towards commercial advantage or monetary compensation.
-- *Review* means to access, analyze, test, and otherwise review the code as a reference, for the sole purpose of analyzing it for defects.
-- *You* means the licensee of rights set out in this license.
+Notwithstanding the above, you may not remove or obscure any functionality in the software related to payment to the Licensor in any copy you distribute to others.
 
-### Section 2: Grant of Rights
-1. Subject to the terms of this license, we grant you a non-transferable, non-exclusive, worldwide, royalty-free license to access and use the code solely for the purposes of review, compilation, and non-commercial distribution.
-2. You may provide the code to anyone else and publish excerpts of it for the purposes of review, compilation, and non-commercial distribution, provided that when you do so you make any recipient of the code aware of the terms of this license, they must agree to be bound by the terms of this license, and you must attribute the code to the provider.
-3. Other than in respect of those parts of the code that were developed by other parties and as specified strictly in accordance with the open-source and other licenses under which those parts of the code have been made available, you are not entitled to use or do anything with the code for any commercial or private purpose, other than review, compilation, and non-commercial distribution in accordance with the terms of this license.
-4. Subject to the terms of this license, you must at all times comply with and shall be bound by our Terms of Use, Privacy, and Data Policy.
-5. Use of the software, whether commercial or private, requires a one-time, lifetime license purchase.
+You may not alter, remove, or obscure any licensing, copyright, or other notices of the Licensor in the software. Any use of the Licensor’s trademarks is subject to applicable law.
 
-### Section 3: Duties
-1. You must purchase a license from the official website, [phrasevault.app](https://phrasevault.app), or other official sources linked on the website.
-2. You must ensure that any recipients of the code are made aware of the terms of this license and agree to be bound by them.
-3. You must attribute the code to the original provider when sharing or publishing excerpts.
-4. You must not use the provider's name, logo, or trademarks without explicit permission.
-5. You must not sub-license or resell the code or any part of it.
+## Patents
+If you make any written claim that the software infringes or contributes to infringement of any patent, your patent license for the software granted under these terms ends immediately. If your company makes such a claim, your patent license ends immediately for work on behalf of your company.
 
-### Section 4: Limitations
-1. This license does not grant you any rights to use the provider's name, logo, or trademarks, and you must not in any way indicate you are authorized to speak on behalf of the provider.
-2. If you issue proceedings in any jurisdiction against the provider because you consider the provider has infringed copyright or any patent right in respect of the code (including any joinder or counterclaim), your license to the code is automatically terminated.
-3. THE CODE IS MADE AVAILABLE "AS-IS" AND WITHOUT ANY EXPRESS OR IMPLIED GUARANTEES AS TO FITNESS, MERCHANTABILITY, NON-INFRINGEMENT, OR OTHERWISE. IT IS NOT BEING PROVIDED IN TRADE BUT ON A VOLUNTARY BASIS ON OUR PART AND IS NOT MADE AVAILABLE FOR ANY USE OUTSIDE THE TERMS OF THIS LICENSE. ANYONE ACCESSING THE CODE MUST ENSURE THEY HAVE THE REQUISITE EXPERTISE TO SECURE THEIR OWN SYSTEM AND DEVICES AND TO ACCESS AND USE THE CODE IN ACCORDANCE WITH THE TERMS OF THIS LICENSE. YOU BEAR THE RISK OF ACCESSING AND USING THE CODE. IN PARTICULAR, THE PROVIDER BEARS NO LIABILITY FOR ANY INTERFERENCE WITH OR ADVERSE EFFECT ON YOUR SYSTEM OR DEVICES AS A RESULT OF YOUR ACCESSING AND USING THE CODE IN ACCORDANCE WITH THE TERMS OF THIS LICENSE OR OTHERWISE.
+## Notices
+You must ensure that anyone who gets a copy of any part of the software from you also gets a copy of these terms. If you modify the software, you must include in any modified copies of the software a prominent notice stating that you have modified the software, such as but not limited to, a statement in a readme file or an in-application about section.
 
-### Section 5: Termination, Suspension, and Variation
-1. We may suspend, terminate, or vary the terms of this license and any access to the code at any time, without notice, for any reason or no reason, in respect of any licensee, group of licensees, or all licensees including as may be applicable any sub-licensees.
+## Fair Use
+You may have "fair use" rights for the software under the law. These terms do not limit them.
 
-### Section 6: General
-1. This license and its interpretation and operation are governed solely by the local law. You agree to submit to the exclusive jurisdiction of the local arbitral tribunals as further described in our Terms of Service, and you agree not to raise any jurisdictional issue if we need to enforce an arbitral award or judgment in our jurisdiction or another country.
-2. Questions and comments regarding this license are welcomed and should be addressed at ptmr.io or in the issues section of [GitHub](https://github.com/ptmrio/phrasevault/issues).
+## No Other Rights
+These terms do not allow you to sublicense or transfer any of your licenses to anyone else, or prevent the Licensor from granting licenses to anyone else. These terms do not imply any other licenses.
 
-Last updated 2024-06-19.
+## Termination
+If you use the software in violation of these terms, such use is not licensed, and your license will automatically terminate. If the licensor provides you with a notice of your violation, and you cease all violation of this license no later than 30 days after you receive that notice, your license will be reinstated retroactively. However, if you violate these terms after such reinstatement, any additional violation of these terms will cause your license to terminate automatically and permanently.
 
----
+## No Liability
+As far as the law allows, the software comes as is, without any warranty or condition, and the Licensor will not be liable to you for any damages arising out of these terms or the use or nature of the software, under any kind of legal claim.
 
-Thank you to the FUTO organization for providing the inspiration for this licensing model.
+## Definitions
+- The “Licensor” is the entity offering these terms, Petermeir Web Solutions, Gerhard Petermeir.
+- The “software” is the software the licensor makes available under these terms, including any portion of it.
+- “You” refers to the individual or entity agreeing to these terms.
+- “Your company” is any legal entity, sole proprietorship, or other kind of organization that you work for, plus all organizations that have control over, are under the control of, or are under common control with that organization. Control means ownership of substantially all the assets of an entity, or the power to direct its management and policies by vote, contract, or otherwise. Control can be direct or indirect.
+- “Your license” is the license granted to you for the software under these terms.
+- “Use” means anything you do with the software requiring your license.
+- “Trademark” means trademarks, service marks, and similar rights.
