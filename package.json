@@ -1,6 +1,6 @@
 {
   "name": "phrasevault",
-  "version": "2.0.3",
+  "version": "2.1.0-dev",
   "description": "A phrase management tool",
   "main": "src/main.js",
   "type": "module",
@@ -26,6 +26,7 @@
     "i18next": "^23.11.5",
     "i18next-electron-fs-backend": "^3.0.2",
     "i18next-electron-language-detector": "^0.0.10",
+    "marked": "^13.0.1",
     "node-key-sender": "^1.0.11",
     "node-window-manager": "^2.2.4",
     "os-locale": "^6.0.2",

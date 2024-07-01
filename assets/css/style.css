@@ -440,7 +440,8 @@ button:hover {
   justify-content: space-between;
 }
 .modal .modal-content input,
-.modal .modal-content textarea {
+.modal .modal-content textarea,
+.modal .modal-content select {
   width: 100%;
   padding: var(--spacer);
   border: 1px solid var(--color-border);
@@ -452,6 +453,44 @@ button:hover {
   flex-grow: 1;
   resize: none;
   overflow: auto;
+}
+.modal .modal-content .radio-group {
+  display: flex;
+  justify-content: start;
+  gap: var(--spacer);
+}
+.modal .modal-content .radio-group label {
+  display: flex;
+  align-items: center;
+  line-height: 1;
+  cursor: pointer;
+}
+.modal .modal-content .radio-group input[type=radio] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  position: relative;
+}
+.modal .modal-content .radio-group input[type=radio]:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0.75rem;
+  height: 0.75rem;
+  background-color: var(--color-primary-500);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+.modal .modal-content .radio-group input[type=radio]:checked:before {
+  opacity: 1;
 }
 .modal .modal-content button {
   align-self: center;
@@ -470,9 +509,12 @@ button:hover {
 }
 
 .toast {
+  --toast-count: 1;
+  --toast-bottom: calc(var(--spacer) + ((var(--toast-count) - 1) * var(--spacer) * 5));
+  align-self: center;
   visibility: hidden;
   min-width: 250px;
-  margin-left: -125px;
+  margin-inline: auto;
   background-color: #333;
   color: var(--color-white);
   text-align: center;
@@ -480,13 +522,11 @@ button:hover {
   padding: var(--spacer);
   position: fixed;
   z-index: 1;
-  left: 50%;
-  bottom: calc(3 * var(--spacer));
-  font-size: 1.0625rem;
+  bottom: var(--toast-bottom);
 }
 .toast.show {
   visibility: visible;
-  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: toastFadein 0.5s, toastFadeout 0.5s 2.5s;
 }
 .toast.danger {
   background-color: var(--color-danger);
@@ -495,19 +535,19 @@ button:hover {
   background-color: var(--color-success);
 }
 
-@keyframes fadein {
+@keyframes toastFadein {
   from {
     bottom: 0;
     opacity: 0;
   }
   to {
-    bottom: calc(3 * var(--spacer));
+    bottom: var(--toast-bottom);
     opacity: 1;
   }
 }
-@keyframes fadeout {
+@keyframes toastFadeout {
   from {
-    bottom: calc(3 * var(--spacer));
+    bottom: var(--toast-bottom);
     opacity: 1;
   }
   to {

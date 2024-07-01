@@ -144,28 +144,86 @@ document.addEventListener('DOMContentLoaded', () => {
         window.electron.send('search-phrases', searchText);
     }
 
+    function createSvgIcon(iconId) {
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.classList.add('icon');
+        const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+        use.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", "#" + iconId);
+        svg.appendChild(use);
+        return svg;
+    }
+
     window.electron.receive('phrases-list', (phrases) => {
         phraseList.innerHTML = '';
         phrases.forEach(phrase => {
             const li = document.createElement('li');
             li.tabIndex = 0;
             li.setAttribute('data-id', phrase.id);
-            li.innerHTML = `
-                <span class="phrase-list-text"><strong>${phrase.phrase}</strong> - ${phrase.expanded_text}</span>
-                <div class="buttons">
-                    <button class="copy-button" data-action="copy" data-id="${phrase.id}" title="${window.i18n.t('Copy to clipboard')}"><svg class="icon"><use href="#icon-copy"></use></svg></button>
-                    <button class="edit-button" data-action="edit" data-id="${phrase.id}" title="${window.i18n.t('Edit Phrase')}"><svg class="icon"><use href="#icon-edit"></use></svg></button>
-                    <button class="three-dots" title="${window.i18n.t('More')}"><svg class="icon"><use href="#icon-dots-vertical"></use></svg></button>
-                </div>
-                <div class="menu" data-state="closed">
-                    <div class="menu-item" data-action="delete" data-id="${phrase.id}" style="background-color: red; color: white; display: flex; gap: 5px;">
-                        <svg class="icon"><use href="#icon-trash"></use></svg> <span>${window.i18n.t('Delete Phrase')}</span>
-                    </div>
-                </div>
-            `;
 
-            const menu = li.querySelector('.menu');
-            const threeDots = li.querySelector('.three-dots');
+            // Create elements for phrase text and buttons
+            const span = document.createElement('span');
+            span.className = 'phrase-list-text';
+            const strong = document.createElement('strong');
+            strong.textContent = (phrase.phrase.length > 200 ? phrase.phrase.substring(0, 200) : phrase.phrase);
+            span.appendChild(strong);
+            span.appendChild(document.createTextNode(' - ' + phrase.expanded_text));
+            const divButtons = document.createElement('div');
+            divButtons.className = 'buttons';
+            
+            // Copy button
+            const copyButton = document.createElement('button');
+            copyButton.className = 'copy-button';
+            copyButton.setAttribute('data-action', 'copy');
+            copyButton.setAttribute('data-id', phrase.id);
+            copyButton.title = window.i18n.t('Copy to clipboard');
+            const svgCopy = createSvgIcon('icon-copy');
+            copyButton.appendChild(svgCopy);
+
+            // Edit button
+            const editButton = document.createElement('button');
+            editButton.className = 'edit-button';
+            editButton.setAttribute('data-action', 'edit');
+            editButton.setAttribute('data-id', phrase.id);
+            editButton.title = window.i18n.t('Edit Phrase');
+            const svgEdit = createSvgIcon('icon-edit');
+            editButton.appendChild(svgEdit);
+
+            // More options button
+            const threeDots = document.createElement('button');
+            threeDots.className = 'three-dots';
+            threeDots.title = window.i18n.t('More');
+            const svgDots = createSvgIcon('icon-dots-vertical');
+            threeDots.appendChild(svgDots);
+
+            // Append buttons to div
+            divButtons.appendChild(copyButton);
+            divButtons.appendChild(editButton);
+            divButtons.appendChild(threeDots);
+
+            // Menu div (hidden initially)
+            const menu = document.createElement('div');
+            menu.className = 'menu';
+            menu.setAttribute('data-state', 'closed');
+            const menuItem = document.createElement('div');
+            menuItem.className = 'menu-item';
+            menuItem.setAttribute('data-action', 'delete');
+            menuItem.setAttribute('data-id', phrase.id);
+            menuItem.style.cssText = 'background-color: red; color: white; display: flex; gap: 5px;';
+            const svgTrash = createSvgIcon('icon-trash');
+            const spanDelete = document.createElement('span');
+            spanDelete.textContent = window.i18n.t('Delete Phrase');
+            menuItem.appendChild(svgTrash);
+            menuItem.appendChild(spanDelete);
+            menu.appendChild(menuItem);
+
+            // Construct the list item
+            li.appendChild(span);
+            li.appendChild(divButtons);
+            li.appendChild(menu);
+
+            // Append the list item to the list
+            phraseList.appendChild(li);
+
 
             threeDots.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -191,13 +249,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             li.querySelector('.copy-button').addEventListener('click', () => {
-                window.electron.send('copy-to-clipboard', phrase.expanded_text);
-                window.electron.send('increment-usage', phrase.id);
+                window.electron.send('copy-to-clipboard', phrase);
                 showToast(window.i18n.t('Copied to clipboard'), 'success');
             });
 
             li.querySelector('.edit-button').addEventListener('click', () => {
-                openPhraseForm(phrase.phrase, phrase.expanded_text, phrase.id);
+                openPhraseForm(phrase.phrase, phrase.expanded_text, phrase.type, phrase.id);
             });
 
             phraseList.appendChild(li);
@@ -213,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function openPhraseForm(phrase = '', expandedText = '', id = null) {
+    function openPhraseForm(phrase = '', expandedText = '', type = 'plain', id = null) {
         const modal = document.querySelector('#phraseModal');
         const title = modal.querySelector('#modal-title')
         const phraseInput = modal.querySelector('#phraseInput');
@@ -223,8 +280,9 @@ document.addEventListener('DOMContentLoaded', () => {
         phraseInput.value = phrase;
         expandedTextInput.value = expandedText;
         idInput.value = id;
+        modal.querySelector('input[name="phraseType"][value="' + type + '"]').checked = true;
 
-        title.textContent = id ? 'Edit Phrase' : 'Add Phrase';
+        title.textContent = id ? window.i18n.t('Edit Phrase') : window.i18n.t('Add Phrase');
 
         openModal();
 
@@ -238,9 +296,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleSaveButtonClick() {
-        const phraseInput = document.querySelector('#phraseInput');
-        const expandedTextInput = document.querySelector('#expandedTextInput');
-        const idInput = document.querySelector('#idInput');
+        const modal = document.querySelector('#phraseModal');
+        const phraseInput = modal.querySelector('#phraseInput');
+        const expandedTextInput = modal.querySelector('#expandedTextInput');
+        const idInput = modal.querySelector('#idInput');
+        const type = modal.querySelector('input[name="phraseType"]:checked').value || 'plain';
+       
 
         const newPhrase = phraseInput.value;
         const newExpandedText = expandedTextInput.value;
@@ -252,9 +313,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (id) {
-            window.electron.send('edit-phrase', { id, newPhrase, newExpandedText });
+            window.electron.send('edit-phrase', { id, newPhrase, newExpandedText, type });
         } else {
-            window.electron.send('add-phrase', { newPhrase, newExpandedText });
+            window.electron.send('add-phrase', { newPhrase, newExpandedText, type });
         }
     }
 
@@ -264,6 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
         toast.textContent = message;
         document.body.appendChild(toast);
         toast.classList.add('show');
+        toast.style.setProperty('--toast-count', document.querySelectorAll('.toast').length);
         toast.classList.add(type);
         setTimeout(() => {
             toast.classList.remove('show');
@@ -280,14 +342,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function insertTextIntoActiveField(id) {
-        window.electron.send('get-phrase-by-id', id);
+        window.electron.send('insert-phrase-by-id', id);
     }
-
-    window.electron.receive('phrase-to-insert', (phrase) => {
-        console.log('Inserting text:', phrase.expanded_text);
-        window.electron.send('insert-text', phrase.expanded_text);
-        window.electron.send('increment-usage', phrase.id);
-    });
 
     window.electron.receive('focus-search', () => {
         searchInput.focus();

@@ -42,6 +42,12 @@ const pt = {
         'I have purchased a license': 'Eu comprei uma licença',
         'No': 'Não',
 
+        // Modal
+        'Phrase': 'Frase',
+        'Expanded Text': 'Texto Expandido',
+        'Plain Text': 'Texto Simples',
+        'Markdown': 'Markdown',
+
         // database status
         'Phrases loaded': 'Frases carregadas',
         'Waiting for database': 'Aguardando o banco de dados',
@@ -56,6 +62,8 @@ const pt = {
         'Phrase deleted successfully.': 'Frase excluída com sucesso.',
         'Copied to clipboard': 'Copiado para a área de transferência',
         'Phrase cannot be empty': 'A frase não pode estar vazia',
+        'Database schema upgraded successfully.': 'Esquema do banco de dados atualizado com sucesso.',
+        'Error upgrading database schema, but a backup was created.': 'Erro ao atualizar o esquema do banco de dados, mas um backup foi criado.',
 
         // examples
         'Customer Thank You': 'Agradecimento ao Cliente',

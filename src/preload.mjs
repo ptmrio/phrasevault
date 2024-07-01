@@ -4,8 +4,8 @@ import i18n from "./i18n.js";
 
 const validChannels = [
     'search-phrases', 'add-phrase', 'edit-phrase', 'delete-phrase', 'copy-to-clipboard', 'increment-usage',
-    'insert-text', 'phrases-list', 'phrase-added', 'phrase-edited', 'phrase-deleted', 'clipboard-updated',
-    'usage-incremented', 'get-phrase-by-id', 'phrase-to-insert', 'focus-search', 'get-theme', 'set-theme',
+    'insert-text', 'phrases-list', 'phrase-added', 'phrase-edited', 'phrase-deleted',
+    'usage-incremented', 'insert-phrase-by-id', 'focus-search', 'get-theme', 'set-theme',
     'toast-message', 'save-success', 'open-db-location-dialog', 'change-language',
     'database-status', 'database-error',
     'handle-escape', 'minimize-window'

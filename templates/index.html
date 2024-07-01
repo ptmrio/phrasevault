@@ -10,8 +10,7 @@
 </head>
 
 <body>
-
-    <div style="display: hidden;">
+    <div style="display: none;">
         <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
             <symbol id="icon-x" viewBox="0 0 24 24">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -84,15 +83,25 @@
     <div id="phraseModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="modal-title">Add/Edit Phrase</h2>
+                <h2 id="modal-title"></h2>
                 <button class="close">
                     <svg class="icon">
                         <use href="#icon-x"></use>
                     </svg>
                 </button>
             </div>
-            <input type="text" id="phraseInput" placeholder="Phrase">
-            <textarea id="expandedTextInput" placeholder="Expanded Text"></textarea>
+            <input type="text" id="phraseInput" data-i18n="Phrase" data-i18n-attribute="placeholder">
+            <textarea id="expandedTextInput" data-i18n="Expanded Text" data-i18n-attribute="placeholder"></textarea>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="phraseType" value="plain" checked>
+                    <span data-i18n="Plain Text"></span>
+                </label>
+                <label>
+                    <input type="radio" name="phraseType" value="markdown">
+                    <span data-i18n="Markdown"></span>
+                </label>
+            </div>
             <input type="hidden" id="idInput">
             <button id="saveButton">
                 <svg class="icon">

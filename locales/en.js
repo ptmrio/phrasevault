@@ -42,6 +42,12 @@ const en = {
         'I have purchased a license': 'I have purchased a license',
         'No': 'No',
 
+        // Modal
+        'Phrase': 'Phrase',
+        'Expanded Text': 'Expanded Text',
+        'Plain Text': 'Plain Text',
+        'Markdown': 'Markdown',
+
         // database status
         'Phrases loaded': 'Phrases loaded',
         'Waiting for database': 'Waiting for database',
@@ -56,6 +62,8 @@ const en = {
         'Phrase deleted successfully.': 'Phrase deleted successfully.',
         'Copied to clipboard': 'Copied to clipboard',
         'Phrase cannot be empty': 'Phrase cannot be empty',
+        'Database schema upgraded successfully.': 'Database schema upgraded successfully.',
+        'Error upgrading database schema, but a backup was created.': 'Error upgrading database schema, but a backup was created.',
 
         // examples
         'Customer Thank You': 'Customer Thank You',

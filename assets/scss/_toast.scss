@@ -1,8 +1,11 @@
 // Toast notification
 .toast {
+    --toast-count: 1;
+    --toast-bottom: calc(var(--spacer) + ((var(--toast-count) - 1) * var(--spacer) * 5));
+    align-self: center;
     visibility: hidden;
     min-width: 250px;
-    margin-left: -125px;
+    margin-inline: auto;
     background-color: #333;
     color: var(--color-white);
     text-align: center;
@@ -10,15 +13,13 @@
     padding: var(--spacer);
     position: fixed;
     z-index: 1;
-    left: 50%;
-    bottom: calc(3 * var(--spacer));
-    font-size: 1.0625rem;
+    bottom: var(--toast-bottom);
 
     &.show {
         visibility: visible;
         animation:
-            fadein 0.5s,
-            fadeout 0.5s 2.5s;
+            toastFadein 0.5s,
+            toastFadeout 0.5s 2.5s;
     }
 
     &.danger {
@@ -26,5 +27,29 @@
     }
     &.success {
         background-color: var(--color-success);
+    }
+}
+
+@keyframes toastFadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+
+    to {
+        bottom: var(--toast-bottom);
+        opacity: 1;
+    }
+}
+
+@keyframes toastFadeout {
+    from {
+        bottom: var(--toast-bottom);
+        opacity: 1;
+    }
+
+    to {
+        bottom: 0;
+        opacity: 0;
     }
 }

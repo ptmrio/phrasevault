@@ -1,9 +1,12 @@
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 import sqlite3 from 'sqlite3';
 import { app, ipcMain, clipboard } from 'electron';
 import state from './state.js';
 import i18n from './i18n.js';
+import { upgrades } from './database-upgrades.js';
+import { marked } from 'marked';
+import { get } from 'http';
 import { set } from 'electron-json-storage';
 
 const dbPath = state.getConfig().dbPath;
@@ -11,43 +14,151 @@ const dbPath = state.getConfig().dbPath;
 let db;
 
 export function initializeDatabase() {
-    db = new sqlite3.Database(dbPath, (err) => {
+    db = new sqlite3.Database(dbPath, async (err) => {
         if (err) {
+            console.error('Error opening database:', err);
             return;
         }
 
         const initializeTables = state.getConfig().initializeTables;
         if (initializeTables) {
             db.run(`
-                CREATE TABLE IF NOT EXISTS phrases (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    phrase TEXT,
-                    expanded_text TEXT,
-                    usageCount INTEGER DEFAULT 0,
-                    dateAdd DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    dateLastUsed DATETIME DEFAULT CURRENT_TIMESTAMP
+                CREATE TABLE IF NOT EXISTS schema_version (
+                    version INTEGER PRIMARY KEY
                 )
-            `, insertInitialPhrases);
-            state.setConfig({ initializeTables: false });
+            `, (err) => {
+                if (err) {
+                    console.error('Error creating schema_version table:', err);
+                    return;
+                }
+
+                const lastVersion = upgrades[upgrades.length - 1].version;
+                db.run('INSERT OR REPLACE INTO schema_version (version) VALUES (?)', [lastVersion], (err) => {
+                    if (err) {
+                        console.error('Error inserting schema version:', err);
+                        return;
+                    }
+
+                    db.run(`
+                        CREATE TABLE IF NOT EXISTS phrases (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            phrase TEXT,
+                            expanded_text TEXT,
+                            type TEXT DEFAULT 'plain',
+                            usageCount INTEGER DEFAULT 0,
+                            dateAdd DATETIME DEFAULT CURRENT_TIMESTAMP,
+                            dateLastUsed DATETIME DEFAULT CURRENT_TIMESTAMP
+                        )
+                    `, (err) => {
+                        if (err) {
+                            console.error('Error creating phrases table:', err);
+                            return;
+                        }
+                        
+                        db.get('SELECT COUNT(*) AS count FROM phrases', (err, row) => {
+                            if (err) {
+                                console.error('Error counting phrases:', err);
+                                return;
+                            }
+
+                            if (row && row.count === 0) {
+                                const phrases = [
+                                    { phrase: i18n.t('Customer Thank You'), expanded_text: i18n.t('examplePhrase1') },
+                                    { phrase: i18n.t('Out of Office'), expanded_text: i18n.t('examplePhrase2') },
+                                    { phrase: i18n.t('ChatGPT Prompt'), expanded_text: i18n.t('examplePhrase3') },
+                                    { phrase: i18n.t('MidJourney Art Prompt'), expanded_text: i18n.t('examplePhrase4') }
+                                ];
+                                const stmt = db.prepare('INSERT INTO phrases (phrase, expanded_text) VALUES (?, ?)');
+                                phrases.forEach(p => stmt.run(p.phrase, p.expanded_text));
+                                stmt.finalize();
+                            }
+
+                            state.setConfig({ initializeTables: false });
+                        });
+                    });
+                });
+            });
+        } else {
+            checkAndUpdateSchema();
         }
     });
 }
 
 
-function insertInitialPhrases() {
-    db.get('SELECT COUNT(*) AS count FROM phrases', (err, row) => {
-        if (row && row.count === 0) {
-            const phrases = [
-                { phrase: i18n.t('Customer Thank You'), expanded_text: i18n.t('examplePhrase1') },
-                { phrase: i18n.t('Out of Office'), expanded_text: i18n.t('examplePhrase2') },
-                { phrase: i18n.t('ChatGPT Prompt'), expanded_text: i18n.t('examplePhrase3') },
-                { phrase: i18n.t('MidJourney Art Prompt'), expanded_text: i18n.t('examplePhrase4') }
-            ];
-            const stmt = db.prepare('INSERT INTO phrases (phrase, expanded_text) VALUES (?, ?)');
-            phrases.forEach(p => stmt.run(p.phrase, p.expanded_text));
-            stmt.finalize();
+async function checkAndUpdateSchema() {
+    try {
+        const currentVersion = await getCurrentSchemaVersion();
+        let updated = false;
+        let backupPath = null;
+
+        for (const upgrade of upgrades) {
+            if (currentVersion < upgrade.version) {
+                if (!updated) {
+                    backupPath = await backupDatabase();
+                    updated = true;
+                }
+                await upgrade.upgrade(db);
+                await updateSchemaVersion(upgrade.version);
+            }
         }
+        if (updated) {
+            state.setConfig({ showOnStartup: true });
+            setTimeout(() => {
+                    databaseEvents.emit('toast-message', {
+                    type: 'success',
+                    message: i18n.t('Database schema upgraded successfully')
+                });
+            }, 1000);
+        }
+    } catch (error) {
+        console.error('Error upgrading database schema:', error);
+        databaseEvents.emit('toast-message', {
+            type: 'danger',
+            message: i18n.t('Error upgrading database schema, but a backup was created.')
+        });
+    }
+}
+
+function getCurrentSchemaVersion() {
+    return new Promise((resolve, reject) => {
+        db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='schema_version'", (err, table) => {
+            if (err) {
+                reject(err);
+            } else if (table) {
+                db.get('SELECT version FROM schema_version ORDER BY version DESC LIMIT 1', (err, row) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(row ? row.version : 0);
+                    }
+                });
+            } else {
+                resolve(0); // Assume version 0 if the table doesn't exist
+            }
+        });
     });
+}
+
+
+function updateSchemaVersion(version) {
+    return new Promise((resolve, reject) => {
+        db.run('INSERT OR REPLACE INTO schema_version (version) VALUES (?)', [version], (err) => {
+            if (err) reject(err);
+            resolve();
+        });
+    });
+}
+
+async function backupDatabase() {
+    const dbPath = state.getConfig().dbPath;
+    const backupPath = path.join(path.dirname(dbPath), `phrasevault_backup_${Date.now()}.sqlite`);
+    try {
+        await fs.promises.copyFile(dbPath, backupPath);
+        return backupPath;
+    } catch (error) {
+        console.error('Failed to create database backup:', error);
+        throw error;
+    }
 }
 
 export function checkDatabaseAccessibility(callback) {
@@ -66,7 +177,7 @@ export function checkDatabaseAccessibility(callback) {
         const accessible = !err;
         databaseEvents.emit('database-status', accessible);
         if (accessible) {
-            if (!db) initializeDatabase();
+            initializeDatabase();
         } else {
             setTimeout(() => checkDatabaseAccessibility(callback), 5000);
         }
@@ -78,7 +189,6 @@ function checkDuplicatePhrase(phrase, id, callback) {
     const query = id ? `SELECT * FROM phrases WHERE phrase = ? AND id != ?` : `SELECT * FROM phrases WHERE phrase = ?`;
     db.get(query, [phrase, id].filter(v => v), (err, row) => {
         if (err) {
-
             return callback(false);
         }
         callback(!!row);
@@ -101,7 +211,7 @@ ipcMain.on('search-phrases', (event, searchText) => {
     });
 });
 
-ipcMain.on('get-phrase-by-id', (event, id) => {
+ipcMain.on('insert-phrase-by-id', (event, id) => {
     checkDatabaseAccessibility(accessible => {
         if (!accessible) {
             return;
@@ -111,12 +221,12 @@ ipcMain.on('get-phrase-by-id', (event, id) => {
                 console.error(err.message);
                 return;
             }
-            event.reply('phrase-to-insert', row);
+            databaseEvents.emit('insert-text', event, row);
         });
     });
 });
 
-ipcMain.on('add-phrase', (event, { newPhrase, newExpandedText }) => {
+ipcMain.on('add-phrase', (event, { newPhrase, newExpandedText, type }) => {
     checkDatabaseAccessibility(accessible => {
         if (!accessible) {
             return;
@@ -126,7 +236,7 @@ ipcMain.on('add-phrase', (event, { newPhrase, newExpandedText }) => {
                 event.reply('toast-message', { type: 'danger', message: i18n.t('Phrase already exists.') });
                 return;
             }
-            db.run(`INSERT INTO phrases (phrase, expanded_text) VALUES (?, ?)`, [newPhrase, newExpandedText], function(err) {
+            db.run(`INSERT INTO phrases (phrase, expanded_text, type) VALUES (?, ?, ?)`, [newPhrase, newExpandedText, type], function(err) {
                 if (err) {
                     event.reply('database-error', 'Failed to add phrase');
                     return;
@@ -138,7 +248,7 @@ ipcMain.on('add-phrase', (event, { newPhrase, newExpandedText }) => {
     });
 });
 
-ipcMain.on('edit-phrase', (event, { id, newPhrase, newExpandedText }) => {
+ipcMain.on('edit-phrase', (event, { id, newPhrase, newExpandedText, type }) => {
     checkDatabaseAccessibility(accessible => {
         if (!accessible) {
             return;
@@ -148,7 +258,7 @@ ipcMain.on('edit-phrase', (event, { id, newPhrase, newExpandedText }) => {
                 event.reply('toast-message', { type: 'danger', message: i18n.t('Phrase already exists.') });
                 return;
             }
-            db.run(`UPDATE phrases SET phrase = ?, expanded_text = ? WHERE id = ?`, [newPhrase, newExpandedText, id], function(err) {
+            db.run(`UPDATE phrases SET phrase = ?, expanded_text = ?, type = ? WHERE id = ?`, [newPhrase, newExpandedText, type, id], function(err) {
                 if (err) {
                     event.reply('database-error', 'Failed to edit phrase');
                     return;
@@ -176,9 +286,20 @@ ipcMain.on('delete-phrase', (event, id) => {
     });
 });
 
-ipcMain.on('copy-to-clipboard', (event, text) => {
-    clipboard.writeText(text);
-    event.reply('clipboard-updated');
+ipcMain.on('copy-to-clipboard', (event, phrase) => {
+    
+    if (phrase.type === 'markdown') {
+        let htmlText = marked(phrase.expanded_text).replace(/\n/g, '<br>');        
+        clipboard.write({
+            text: phrase.expanded_text,
+            html: htmlText
+        });
+    }
+    else {
+        clipboard.writeText(phrase.expanded_text);
+    }
+
+    ipcMain.emit('increment-usage', event, phrase.id);
 });
 
 ipcMain.on('increment-usage', (event, id) => {

@@ -42,6 +42,12 @@ const es = {
         'I have purchased a license': 'Ya he comprado una licencia',
         'No': 'No',
 
+        // Modal
+        'Phrase': 'Frase',
+        'Expanded Text': 'Texto Expandido',
+        'Plain Text': 'Texto sin formato',
+        'Markdown': 'Markdown',
+
         // database status
         'Phrases loaded': 'Frases cargadas',
         'Waiting for database': 'Esperando la base de datos',
@@ -56,6 +62,8 @@ const es = {
         'Phrase deleted successfully.': 'Frase eliminada exitosamente.',
         'Copied to clipboard': 'Copiado al portapapeles',
         'Phrase cannot be empty': 'La frase no puede estar vacía',
+        'Database schema upgraded successfully.': 'Esquema de base de datos actualizado con éxito.',
+        'Error upgrading database schema, but a backup was created.': 'Error al actualizar el esquema de la base de datos, pero se creó una copia de seguridad.',
 
         // examples
         'Customer Thank You': 'Agradecimiento a Cliente',

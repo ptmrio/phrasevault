@@ -34,8 +34,8 @@
         position: relative;
         opacity: 0;
         transform: translateY(-10%);
-        transition: 
-            opacity var(--modal-animation-duration), 
+        transition:
+            opacity var(--modal-animation-duration),
             transform var(--modal-animation-duration);
 
         &.show {
@@ -50,7 +50,8 @@
         }
 
         input,
-        textarea {
+        textarea,
+        select {
             width: 100%;
             padding: var(--spacer);
             border: 1px solid var(--color-border);
@@ -63,6 +64,49 @@
             flex-grow: 1;
             resize: none; // Prevent resizing
             overflow: auto;
+        }
+
+        .radio-group {
+            display: flex;
+            justify-content: start;
+            gap: var(--spacer);
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .radio-group input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid var(--color-border);
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            position: relative;
+        }
+
+        .radio-group input[type="radio"]:before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0.75rem;
+            height: 0.75rem;
+            background-color: var(--color-primary-500);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        .radio-group input[type="radio"]:checked:before {
+            opacity: 1;
         }
 
         button {

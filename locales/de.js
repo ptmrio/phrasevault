@@ -38,10 +38,16 @@ const de = {
         'View License Agreement': 'Lizenzvertrag anzeigen',
         'Show Phrase Database File': 'Phrase-Datenbankdatei anzeigen',
         'Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank!'
-        : 'Die Entwicklung und Pflege von PhraseVault erfordert Zeit und Mühe. Bitte unterstützen Sie das Projekt durch den Kauf einer Lizenz. Wir setzen auf Ihre Ehrlichkeit. Vielen Dank!',
+            : 'Die Entwicklung und Pflege von PhraseVault erfordert Zeit und Mühe. Bitte unterstützen Sie das Projekt durch den Kauf einer Lizenz. Wir setzen auf Ihre Ehrlichkeit. Vielen Dank!',
         'Confirm Purchase': 'Kauf bestätigen',
         'I have purchased a license': 'Ich habe eine Lizenz erworben',
         'No': 'Nein',
+
+        // Modal
+        'Phrase': 'Phrase',
+        'Expanded Text': 'Erweiterter Text',
+        'Plain Text': 'Klartext',
+        'Markdown': 'Markdown',
 
         // database status
         'Phrases loaded': 'Phrasen geladen',
@@ -57,6 +63,8 @@ const de = {
         'Phrase deleted successfully.': 'Phrase erfolgreich gelöscht.',
         'Copied to clipboard': 'In Zwischenablage kopiert',
         'Phrase cannot be empty': 'Phrase darf nicht leer sein',
+        'Database schema upgraded successfully.': 'Datenbankschema erfolgreich aktualisiert.',
+        'Error upgrading database schema, but a backup was created.': 'Fehler beim Aktualisieren des Datenbankschemas, aber ein Backup wurde erstellt.',
 
         // examples
         'Customer Thank You': 'Dank an Kunden',

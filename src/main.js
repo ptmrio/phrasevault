@@ -10,6 +10,7 @@ import { createTemplate } from './menu.js';
 import i18n, { availableLanguages } from './i18n.js';
 import EventEmitter from 'events';
 import { fileURLToPath } from 'url';
+import { marked } from 'marked';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -131,7 +132,7 @@ if (!gotTheLock) {
             if (BrowserWindow.getAllWindows().length === 0) mainWindow = createWindow();
         });
 
-        ipcMain.on('insert-text', (event, text) => {
+        databaseEvents.on('insert-text', (event, phrase) => {
             mainWindow.hide();
             setTimeout(() => {
                 if (previousWindow) {
@@ -139,18 +140,31 @@ if (!gotTheLock) {
                 }
 
                 let originalClipboardContent;
+                let originalHtmlContent;
                 try {
                     originalClipboardContent = clipboard.readText();
+                    originalHtmlContent = clipboard.readHTML();
                 } catch (error) {
                     console.error('Failed to read clipboard content:', error);
-                    originalClipboardContent = ''; // Set to an empty string if reading fails
+                    originalClipboardContent = '';
+                    originalHtmlContent = ''; 
                 }
 
                 try {
-                    clipboard.writeText(text);
+                    if (phrase.type === 'markdown') {
+                        let htmlText = marked(phrase.expanded_text).replace(/\n/g, '<br>');
+                        
+                        clipboard.write({
+                            text: phrase.expanded_text,
+                            html: htmlText
+                        });
+                    }
+                    else {
+                        clipboard.writeText(phrase.expanded_text);
+                    }
                 } catch (error) {
                     console.error('Failed to write to clipboard:', error);
-                    return; // Exit the function if writing to clipboard fails
+                    return; 
                 }
 
                 setTimeout(() => {
@@ -159,10 +173,15 @@ if (!gotTheLock) {
                             console.error('Failed to execute paste command:', error);
                         }
 
+                        ipcMain.emit('increment-usage', event, phrase.id);
+
                         // Restore the original clipboard content
                         setTimeout(() => {
                             try {
-                                clipboard.writeText(originalClipboardContent);
+                                clipboard.write({
+                                    text: originalClipboardContent,
+                                    html: originalHtmlContent
+                                });
                             } catch (error) {
                                 console.error('Failed to restore original clipboard content:', error);
                             }
@@ -177,6 +196,12 @@ if (!gotTheLock) {
     databaseEvents.on('database-status', (statusData) => {
         if (mainWindow && mainWindow.webContents) {
             mainWindow.webContents.send('database-status', statusData);
+        }
+    });
+
+    databaseEvents.on('toast-message', (message) => {
+        if (mainWindow && mainWindow.webContents) {
+            mainWindow.webContents.send('toast-message', message);
         }
     });
 

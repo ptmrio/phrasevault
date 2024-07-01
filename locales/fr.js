@@ -42,6 +42,13 @@ const fr = {
         'I have purchased a license': 'J\'ai acheté une licence',
         'No': 'Non',
 
+        // Modal
+        'Phrase': 'Phrase',
+        'Expanded Text': 'Texte Étendu',
+        'Plain Text': 'Texte Brut',
+        'Markdown': 'Markdown',
+    
+
         // database status
         'Phrases loaded': 'Phrases chargées',
         'Waiting for database': 'En attente de la base de données',
@@ -56,6 +63,8 @@ const fr = {
         'Phrase deleted successfully.': 'Phrase supprimée avec succès.',
         'Copied to clipboard': 'Copié dans le presse-papiers',
         'Phrase cannot be empty': 'La phrase ne peut pas être vide',
+        'Database schema upgraded successfully.': 'Schéma de base de données mis à jour avec succès.',
+        'Error upgrading database schema, but a backup was created.': 'Erreur lors de la mise à jour du schéma de la base de données, mais une sauvegarde a été créée.',
 
         // examples
         'Customer Thank You': 'Remerciement Client',
