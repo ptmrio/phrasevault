@@ -201,6 +201,9 @@ app.on('ready', () => {
 });
 
 app.on('will-quit', () => {
+    if (!db) {
+        return;
+    }
     db.close((err) => {
         if (err) {
             console.error('Error closing database connection', err);

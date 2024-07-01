@@ -7,7 +7,8 @@ const validChannels = [
     'insert-text', 'phrases-list', 'phrase-added', 'phrase-edited', 'phrase-deleted', 'clipboard-updated',
     'usage-incremented', 'get-phrase-by-id', 'phrase-to-insert', 'focus-search', 'get-theme', 'set-theme',
     'toast-message', 'save-success', 'open-db-location-dialog', 'change-language',
-    'database-status', 'database-error'
+    'database-status', 'database-error',
+    'handle-escape', 'minimize-window'
 ];
 
 contextBridge.exposeInMainWorld('electron', {

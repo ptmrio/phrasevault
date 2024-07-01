@@ -103,22 +103,24 @@ if (!gotTheLock) {
         });
 
         mainWindow.webContents.on('before-input-event', (event, input) => {
-            if (input.key === 'Escape') {
-            
-                // todo: prevent if modal is open (or menubar?)
+            if (input.key === 'Escape' && input.type === 'keyUp') {
+                event.preventDefault(); // todo: might not be necessary or be counterproductive
+                mainWindow.webContents.send('handle-escape');
+            }
+        });
 
-                mainWindow.hide();
-                if (tray && !state.getBalloonShown()) {
-                    tray.displayBalloon({
-                        icon: path.join(__dirname, '../assets/img/tray_icon.png'),
-                        title: 'PhraseVault',
-                        content: 'PhraseVault is running in the background.',
-                    });
-                    state.setBalloonShown(true);
-                }
-                if (previousWindow) {
-                    previousWindow.bringToTop();
-                }
+        ipcMain.on('minimize-window', () => {
+            mainWindow.hide();
+            if (tray && !state.getBalloonShown()) {
+                tray.displayBalloon({
+                    icon: path.join(__dirname, '../assets/img/tray_icon.png'),
+                    title: 'PhraseVault',
+                    content: 'PhraseVault is running in the background.',
+                });
+                state.setBalloonShown(true);
+            }
+            if (previousWindow) {
+                previousWindow.bringToTop();
             }
         });
 

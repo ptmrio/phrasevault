@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function closeModal() {
-        document.querySelector('.modal-content').classList.remove('show');
+        modal.querySelector('.modal-content').classList.remove('show');
         modal.classList.remove('show');
         modal.addEventListener('transitionend', () => {
             if (!modal.classList.contains('show')) {
@@ -118,12 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Event listener to close the modal when the close button is clicked
     closeButton.addEventListener('click', () => {
         closeModal();
-    });
-
-    window.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.style.display = 'none';
-        }
     });
 
     searchInput.addEventListener('keydown', (e) => {
@@ -163,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button class="edit-button" data-action="edit" data-id="${phrase.id}" title="${window.i18n.t('Edit Phrase')}"><svg class="icon"><use href="#icon-edit"></use></svg></button>
                     <button class="three-dots" title="${window.i18n.t('More')}"><svg class="icon"><use href="#icon-dots-vertical"></use></svg></button>
                 </div>
-                <div class="menu">
+                <div class="menu" data-state="closed">
                     <div class="menu-item" data-action="delete" data-id="${phrase.id}" style="background-color: red; color: white; display: flex; gap: 5px;">
                         <svg class="icon"><use href="#icon-trash"></use></svg> <span>${window.i18n.t('Delete Phrase')}</span>
                     </div>
@@ -176,10 +170,12 @@ document.addEventListener('DOMContentLoaded', () => {
             threeDots.addEventListener('click', (e) => {
                 e.stopPropagation();
                 if (menu.style.display === 'block') {
+                    menu.setAttribute('data-state', 'closed');
                     menu.style.display = 'none';
                 } else {
                     closeAllMenus();
                     menu.style.display = 'block';
+                    menu.setAttribute('data-state', 'open');
                 }
             });
 
@@ -212,6 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function closeAllMenus() {
         document.querySelectorAll('.menu').forEach(menu => {
+            menu.setAttribute('data-state', 'closed');
             menu.style.display = 'none';
         });
     }
@@ -311,6 +308,22 @@ document.addEventListener('DOMContentLoaded', () => {
     window.electron.receive('phrase-deleted', (id) => {
         updateList();
     });
+
+    window.electron.receive('handle-escape', () => {
+        if (modal.style.display === 'grid') {
+            closeModal();
+            return;
+        }
+        
+        const openMenu = document.querySelector('.menu[data-state="open"]');
+        if (openMenu) {
+            closeAllMenus();
+            return;
+        }
+        
+        window.electron.send('minimize-window');
+    });
+
 
     window.electron.receive('toast-message', (message) => {
         showToast(message.message, message.type);
