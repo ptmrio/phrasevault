@@ -1,3 +1,8 @@
+/* 
+Usage: yarn version-bump <new-version>
+Example: yarn version-bump 1.0.0
+*/
+
 import fs from 'fs';
 import { exec } from 'child_process';
 
