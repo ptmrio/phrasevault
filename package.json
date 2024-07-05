@@ -81,7 +81,12 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "license": "LICENSE.md",
-      "include": "installer.nsh"
+      "include": "installer.nsh",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "runAfterFinish": true,
+      "artifactName": "${productName}-Setup-${version}.${ext}",
+      "guid": "20f726f4-eb4b-53a7-a447-f2062c4bad89"
     },
     "forceCodeSigning": false
   }

@@ -1,5 +1,5 @@
 
-import { app, Menu, globalShortcut, BrowserWindow, ipcMain, clipboard } from 'electron';
+import { app, Menu, globalShortcut, BrowserWindow, ipcMain, clipboard, screen } from 'electron';
 import { windowManager } from 'node-window-manager';
 import { createWindow, createTray } from './window.js';
 import path from 'path';
@@ -98,6 +98,37 @@ if (!gotTheLock) {
 
         globalShortcut.register('CommandOrControl+.', () => {
             previousWindow = windowManager.getActiveWindow();
+            if (previousWindow) {
+                const bounds = previousWindow.getBounds();
+                const display = screen.getDisplayMatching(bounds);
+
+                let { width, height } = mainWindow.getBounds();
+                const maxWidth = display.bounds.width * 0.9; // Use 90% of the display width
+                const maxHeight = display.bounds.height * 0.9; // Use 90% of the display height
+
+                // Adjust the size if necessary
+                if (width > maxWidth) {
+                    width = maxWidth;
+                }
+                if (height > maxHeight) {
+                    height = maxHeight;
+                }
+
+                const x = display.bounds.x + ((display.bounds.width - width) / 2);
+                const y = display.bounds.y + ((display.bounds.height - height) / 2);
+
+                // Ensure window is not maximized before setting bounds
+                if (mainWindow.isMaximized()) {
+                    mainWindow.unmaximize();
+                }
+
+                mainWindow.setBounds({ x, y, width, height });
+            } else {
+                if (mainWindow.isMaximized()) {
+                    mainWindow.unmaximize();
+                }
+                mainWindow.center(); // Center on the primary display if no previous window is found
+            }
             mainWindow.show();
             mainWindow.focus();
             mainWindow.webContents.send('focus-search');
