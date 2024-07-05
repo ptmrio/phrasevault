@@ -11,7 +11,7 @@ import i18n, { availableLanguages } from './i18n.js';
 import EventEmitter from 'events';
 import { fileURLToPath } from 'url';
 import { marked } from 'marked';
-
+import markedOptions from './_partial/_marked-options.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -152,7 +152,8 @@ if (!gotTheLock) {
 
                 try {
                     if (phrase.type === 'markdown') {
-                        let htmlText = marked(phrase.expanded_text).replace(/\n/g, '<br>');
+                        marked.setOptions(markedOptions);
+                        let htmlText = marked(phrase.expanded_text);
                         
                         clipboard.write({
                             text: phrase.expanded_text,

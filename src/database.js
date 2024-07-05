@@ -6,7 +6,7 @@ import state from './state.js';
 import i18n from './i18n.js';
 import { upgrades } from './database-upgrades.js';
 import { marked } from 'marked';
-import { get } from 'http';
+import markedOptions from './_partial/_marked-options.js';
 import { set } from 'electron-json-storage';
 
 const dbPath = state.getConfig().dbPath;
@@ -70,10 +70,17 @@ export function initializeDatabase() {
                                 ];
                                 const stmt = db.prepare('INSERT INTO phrases (phrase, expanded_text) VALUES (?, ?)');
                                 phrases.forEach(p => stmt.run(p.phrase, p.expanded_text));
-                                stmt.finalize();
+                                stmt.finalize(() => {
+                                    searchPhrases('Customer Thank You', (err, rows) => {
+                                        if (err) {
+                                            console.error('Error executing initial search:', err);
+                                        }
+                                    });
+                                });
                             }
 
                             state.setConfig({ initializeTables: false });
+                            
                         });
                     });
                 });
@@ -195,19 +202,51 @@ function checkDuplicatePhrase(phrase, id, callback) {
     });
 }
 
-ipcMain.on('search-phrases', (event, searchText) => {
+function searchPhrases(searchText, callback) {
     checkDatabaseAccessibility(accessible => {
         if (!accessible) {
+            callback(new Error('Database not accessible'), null);
             return;
         }
-        db.all(`SELECT * FROM phrases WHERE phrase LIKE ? OR expanded_text LIKE ? ORDER BY usageCount DESC`, 
-            [`%${searchText}%`, `%${searchText}%`], (err, rows) => {
+
+        let exactMatchQuery = `SELECT * FROM phrases WHERE phrase = ? ORDER BY usageCount DESC`;
+        let query;
+
+        const words = searchText.split(' ').map(word => word.trim()).filter(word => word.length > 0);
+
+        if (words.length > 0) {
+            const likeClauses = words.map(word => `(phrase LIKE '%${word}%' OR expanded_text LIKE '%${word}%')`);
+            query = `SELECT * FROM phrases WHERE ${likeClauses.join(' AND ')} ORDER BY usageCount DESC`;
+        } else {
+            query = 'SELECT * FROM phrases ORDER BY usageCount DESC';
+        }
+
+        db.all(exactMatchQuery, [searchText], (err, exactRows) => {
+            if (err) {
+                callback(err, null);
+                return;
+            }
+
+            db.all(query, (err, rows) => {
                 if (err) {
-                    event.reply('database-error', 'Error executing search');
+                    callback(err, null);
                     return;
                 }
-                event.reply('phrases-list', rows);
+                const combinedRows = [...exactRows, ...rows.filter(row => !exactRows.some(er => er.id === row.id))];
+                const uniqueRows = combinedRows.filter((row, index, self) => self.findIndex(r => r.id === row.id) === index);
+                callback(null, uniqueRows);
             });
+        });
+    });
+}
+
+ipcMain.on('search-phrases', (event, searchText) => {
+    searchPhrases(searchText, (err, rows) => {
+        if (err) {
+            event.reply('database-error', 'Error executing search');
+            return;
+        }
+        event.reply('phrases-list', rows);
     });
 });
 
@@ -289,7 +328,9 @@ ipcMain.on('delete-phrase', (event, id) => {
 ipcMain.on('copy-to-clipboard', (event, phrase) => {
     
     if (phrase.type === 'markdown') {
-        let htmlText = marked(phrase.expanded_text).replace(/\n/g, '<br>');        
+        marked.setOptions(markedOptions);
+        let htmlText = marked(phrase.expanded_text);   
+
         clipboard.write({
             text: phrase.expanded_text,
             html: htmlText
