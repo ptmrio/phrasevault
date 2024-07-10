@@ -1,6 +1,6 @@
 {
   "name": "phrasevault",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "A phrase management tool",
   "main": "src/main.js",
   "type": "module",
@@ -30,6 +30,7 @@
     "node-key-sender": "^1.0.11",
     "node-window-manager": "^2.2.4",
     "os-locale": "^6.0.2",
+    "robotjs": "^0.6.0",
     "sqlite3": "^5.1.7",
     "winreg": "^1.2.5"
   },

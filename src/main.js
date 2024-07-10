@@ -1,6 +1,6 @@
-
 import { app, Menu, globalShortcut, BrowserWindow, ipcMain, clipboard, screen } from 'electron';
 import { windowManager } from 'node-window-manager';
+import { platform } from 'os';
 import { createWindow, createTray } from './window.js';
 import path from 'path';
 import state from './state.js';
@@ -12,6 +12,7 @@ import EventEmitter from 'events';
 import { fileURLToPath } from 'url';
 import { marked } from 'marked';
 import markedOptions from './_partial/_marked-options.js';
+import robot from 'robotjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -34,7 +35,6 @@ process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
-
 function setTheme(theme) {
     if (mainWindow && mainWindow.webContents) {
         mainWindow.webContents.send('set-theme', theme);
@@ -49,7 +49,6 @@ function setLanguage(lng) {
     app.exit();
 }
 
-
 const gotTheLock = app.requestSingleInstanceLock();
 
 if (!gotTheLock) {
@@ -61,8 +60,8 @@ if (!gotTheLock) {
             mainWindow.focus();
         }
     });
+
     app.whenReady().then(async () => {
-    
         const config = state.getConfig();
         let languageToUse = config.language;
     
@@ -163,64 +162,61 @@ if (!gotTheLock) {
             if (BrowserWindow.getAllWindows().length === 0) mainWindow = createWindow();
         });
 
-        databaseEvents.on('insert-text', (event, phrase) => {
+        databaseEvents.on('insert-text', async (event, phrase) => {
             mainWindow.hide();
-            setTimeout(() => {
-                if (previousWindow) {
-                    previousWindow.bringToTop();
-                }
+            if (previousWindow) {
+                previousWindow.bringToTop();
+            }
 
-                let originalClipboardContent;
-                let originalHtmlContent;
-                try {
-                    originalClipboardContent = clipboard.readText();
-                    originalHtmlContent = clipboard.readHTML();
-                } catch (error) {
-                    console.error('Failed to read clipboard content:', error);
-                    originalClipboardContent = '';
-                    originalHtmlContent = ''; 
-                }
+            let originalClipboardContent;
+            let originalHtmlContent;
+            try {
+                originalClipboardContent = clipboard.readText();
+                originalHtmlContent = clipboard.readHTML();
+            } catch (error) {
+                console.error('Failed to read clipboard content:', error);
+                originalClipboardContent = '';
+                originalHtmlContent = ''; 
+            }
 
-                try {
-                    if (phrase.type === 'markdown') {
-                        marked.setOptions(markedOptions);
-                        let htmlText = marked(phrase.expanded_text);
-                        
-                        clipboard.write({
-                            text: phrase.expanded_text,
-                            html: htmlText
-                        });
-                    }
-                    else {
-                        clipboard.writeText(phrase.expanded_text);
-                    }
-                } catch (error) {
-                    console.error('Failed to write to clipboard:', error);
-                    return; 
-                }
+            try {
+                if (phrase.type === 'markdown') {
+                    marked.setOptions(markedOptions);
+                    let htmlText = marked(phrase.expanded_text);
 
-                setTimeout(() => {
-                    exec('powershell.exe -Command "Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.SendKeys]::SendWait(\'^v\')"', (error) => {
-                        if (error) {
-                            console.error('Failed to execute paste command:', error);
-                        }
-
-                        ipcMain.emit('increment-usage', event, phrase.id);
-
-                        // Restore the original clipboard content
-                        setTimeout(() => {
-                            try {
-                                clipboard.write({
-                                    text: originalClipboardContent,
-                                    html: originalHtmlContent
-                                });
-                            } catch (error) {
-                                console.error('Failed to restore original clipboard content:', error);
-                            }
-                        }, 100);
+                    clipboard.write({
+                        text: phrase.expanded_text,
+                        html: htmlText
                     });
-                }, 10);
-            }, 100);
+                }
+                else {
+                    clipboard.writeText(phrase.expanded_text);
+                }
+            } catch (error) {
+                console.error('Failed to write to clipboard:', error);
+                return; 
+            }
+
+            try {
+                setTimeout(() => {
+                    const pasteModifier = platform() === 'darwin' ? ['command'] : ['control'];
+                    robot.keyTap('v', pasteModifier);
+                    ipcMain.emit('increment-usage', event, phrase.id);
+
+                    setTimeout(() => {
+                        try {
+                            clipboard.write({
+                                text: originalClipboardContent,
+                                html: originalHtmlContent
+                            });
+                        } catch (error) {
+                            console.error('Failed to restore original clipboard content:', error);
+                        }
+                    }, 50);
+                }, 50);
+            } catch (error) {
+                console.error('Failed to simulate paste command:', error);
+            }
         });
 
     });
