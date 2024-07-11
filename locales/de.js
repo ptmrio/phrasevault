@@ -37,8 +37,7 @@ const de = {
         'Report Issue': 'Fehler melden',
         'View License Agreement': 'Lizenzvertrag anzeigen',
         'Show Phrase Database File': 'Phrase-Datenbankdatei anzeigen',
-        'Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank!'
-            : 'Die Entwicklung und Pflege von PhraseVault erfordert Zeit und Mühe. Bitte unterstützen Sie das Projekt durch den Kauf einer Lizenz. Wir setzen auf Ihre Ehrlichkeit. Vielen Dank!',
+        'Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!': 'Die Entwicklung und Pflege von PhraseVault erfordert Zeit und Mühe. Bitte unterstützen Sie das Projekt durch den Kauf einer Lizenz. Wir setzen auf Ihre Ehrlichkeit. Vielen Dank!',
         'Confirm Purchase': 'Kauf bestätigen',
         'I have purchased a license': 'Ich habe eine Lizenz erworben',
         'No': 'Nein',

@@ -62,20 +62,30 @@ PhraseVault's mission is to empower users with efficient phrase management tools
 - [Usage](#usage)
 - [Troubleshooting](#troubleshooting)
 - [FAQs](#faqs)
-- [License](#license)
 - [Contact and Support](#contact-and-support)
 
 ## Getting Started
 
 ### Prerequisites
 
-- Windows 10 or later
+- Windows 10, Windows 11
 
 ### Installation Instructions
+
+#### Method 1: Download and Install from the Website
 
 1. **Download the Installer**: Visit [phrasevault.app](https://phrasevault.app) and download the latest `.exe` installer.
 2. **Run the Installer**: Double-click the downloaded `.exe` file and follow the on-screen instructions to install PhraseVault.
 3. **Launch the Application**: After installation, launch PhraseVault from the Start Menu or desktop shortcut.
+
+#### Method 2: Install via Winget
+
+1. **Open Command Prompt**: Press `Win + R`, type `cmd`, and press `Enter`.
+2. **Install PhraseVault**: Run the following command in the Command Prompt window:
+
+```bash
+winget install ptmrio.phrasevault
+```
 
 ### Quick Start
 
