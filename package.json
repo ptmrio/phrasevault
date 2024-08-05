@@ -1,6 +1,6 @@
 {
   "name": "phrasevault",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "A phrase management tool",
   "main": "src/main.js",
   "type": "module",
@@ -68,9 +68,21 @@
     ],
     "win": {
       "icon": "assets/img/icon_256x256.png",
+      "certificateSubjectName": "Open Source Developer, Gerhard Petermeir",
+      "signingHashAlgorithms": [
+        "sha256"
+      ],
+      "certificateSha1": "9e86273489a0cf6b48c003f344b8cb9687060ed7",
       "target": [
         {
           "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "portable",
           "arch": [
             "x64",
             "ia32"
@@ -89,6 +101,9 @@
       "artifactName": "${productName}-Setup-${version}.${ext}",
       "guid": "20f726f4-eb4b-53a7-a447-f2062c4bad89"
     },
-    "forceCodeSigning": false
+    "portable": {
+      "artifactName": "${productName}-Portable-${version}.${ext}"
+    },
+    "forceCodeSigning": true
   }
 }
