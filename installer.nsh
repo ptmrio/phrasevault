@@ -22,6 +22,21 @@ Function customInit
 done:
 FunctionEnd
 
+Function un.closePhraseVault
+    ; Check if PhraseVault is running
+    nsExec::ExecToStack 'tasklist /FI "IMAGENAME eq PhraseVault.exe" /FO CSV /NH'
+    Pop $0
+    StrCmp $0 "INFO: No tasks are running which match the specified criteria." notRunning
+    
+    ; If running, ask the user if they want to close it
+    MessageBox MB_YESNO|MB_ICONQUESTION "PhraseVault is currently running. Would you like to close it before uninstalling?" IDNO notRunning
+    ClearErrors
+    nsExec::Exec '"taskkill /IM PhraseVault.exe /F"'
+    IfErrors notRunning
+
+notRunning:
+FunctionEnd
+
 Section "MainSection" SEC01
   Call customInit
   SetOutPath "$INSTDIR"
@@ -39,5 +54,8 @@ Section "Install"
 SectionEnd
 
 Section "Un.MainSection" SEC01-Un
-  DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "${PRODUCT_NAME}"
+    Call un.closePhraseVault
+    DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "${PRODUCT_NAME}"
+    Delete "$INSTDIR\*.*"
+    RMDir "$INSTDIR"
 SectionEnd
