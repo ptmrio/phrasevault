@@ -2,7 +2,7 @@
 
 A powerful and user-friendly tool designed to help you manage and utilize your frequently used phrases efficiently. PhraseVault is perfect for a variety of use cases, whether you’re handling day-to-day business communications, such as **email templates**, **coding**, or **storing prompts for AI tools** like **ChatGPT** and **MidJourney**. With PhraseVault, you can streamline your workflow by quickly searching for and inserting phrases, saving you time and effort. Unlike other closed-source software that comes with expensive licenses, PhraseVault offers a competitive advantage with its small, one-time, lifetime payment.
 
-![PhraseVault Demo Screenshot](https://github.com/ptmrio/video-subtitler/blob/main/screenshots/phrasevault-github-screenshot.png)
+![PhraseVault Demo Screenshot](https://github.com/ptmrio/phrasevault/blob/main/screenshots/phrasevault-github-screenshot.png)
 
 ## Use Cases
 
