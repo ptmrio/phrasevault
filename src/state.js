@@ -44,7 +44,7 @@ function addRecentFile(filePath) {
         config.recentFiles = config.recentFiles.filter(file => file !== filePath);
     }
     config.recentFiles.unshift(filePath);
-    if (config.recentFiles.length > 5) {
+    if (config.recentFiles.length > 10) {
         config.recentFiles.pop();
     }
     saveConfig();
