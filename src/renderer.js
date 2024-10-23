@@ -139,6 +139,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    phraseList.addEventListener('dblclick', (e) => {
+        const targetElement = e.target.closest('li');
+        if (targetElement && (e.target === targetElement || e.target.classList.contains('phrase-list-text'))) {
+            const phraseId = targetElement.getAttribute('data-id');
+            insertTextIntoActiveField(phraseId);
+        }
+    });
+
     function updateList() {
         const searchText = searchInput.value.toLowerCase();
         window.electron.send('search-phrases', searchText);

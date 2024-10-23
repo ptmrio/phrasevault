@@ -60,6 +60,7 @@ const de = {
         'Phrase added successfully.': 'Phrase erfolgreich hinzugefügt.',
         'Phrase edited successfully.': 'Phrase erfolgreich bearbeitet.',
         'Phrase deleted successfully.': 'Phrase erfolgreich gelöscht.',
+        'Invalid phrase type.': 'Ungültiger Phrasentyp.',
         'Copied to clipboard': 'In Zwischenablage kopiert',
         'Phrase cannot be empty': 'Phrase darf nicht leer sein',
         'Database schema upgraded successfully.': 'Datenbankschema erfolgreich aktualisiert.',

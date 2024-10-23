@@ -276,6 +276,7 @@ button:hover {
   padding-bottom: calc(4 * var(--spacer));
 }
 #phrase-list li {
+  cursor: pointer;
   position: relative;
   padding: var(--spacer);
   margin-bottom: var(--spacer);
@@ -421,8 +422,8 @@ button:hover {
   background-color: var(--color-background);
   padding: calc(2 * var(--spacer));
   border: 1px solid var(--color-border);
-  width: min(80dvw, 120ch);
-  height: max(80dvh, var(--rem) * 10);
+  width: min(90dvw, 120ch);
+  height: max(90dvh, var(--rem) * 10);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   position: relative;

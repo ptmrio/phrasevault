@@ -65,6 +65,8 @@ if (!gotTheLock) {
         const config = state.getConfig();
         let languageToUse = config.language;
 
+        windowManager.requestAccessibility();
+
         if (!languageToUse || typeof languageToUse !== "string") {
             const { osLocaleSync } = await import("os-locale");
             const systemLocale = osLocaleSync();
@@ -109,11 +111,7 @@ if (!gotTheLock) {
                 const isLocalElectronExecutable = normalizedPath.toLowerCase().includes(path.join("phrasevault-electron", "node_modules", "electron", "dist", "electron.exe"));
 
                 if (!isPhraseVaultExecutable && !isLocalElectronExecutable) {
-                    console.log("New previous window:");
                     previousWindow = previousWindowCandidate;
-                }
-                else {
-                    console.log("Ignoring previous window as phrasevault or electron executable");
                 }
             }
 

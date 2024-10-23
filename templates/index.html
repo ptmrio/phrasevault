@@ -61,7 +61,7 @@
     </div>
 
     <div id="app">
-        <input type="text" id="search" placeholder="" data-i18n="Search..." data-i18n-attribute="placeholder" />
+        <input type="search" id="search" placeholder="" data-i18n="Search..." data-i18n-attribute="placeholder" />
         <ul id="phrase-list"></ul>
         <button id="add-phrase" aria-label="" data-i18n="Add Phrase" data-i18n-attribute="aria-label">
             <svg class="icon">
@@ -100,6 +100,14 @@
                 <label>
                     <input type="radio" name="phraseType" value="markdown">
                     <span data-i18n="Markdown"></span>
+                </label>
+                <!-- <label>
+                    <input type="radio" name="phraseType" value="mdwysiwyg">
+                    <span data-i18n="Markdown Editor"></span>
+                </label> -->
+                <label>
+                    <input type="radio" name="phraseType" value="html">
+                    <span data-i18n="HTML"></span>
                 </label>
             </div>
             <input type="hidden" id="idInput">

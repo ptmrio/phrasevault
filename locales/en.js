@@ -60,6 +60,7 @@ const en = {
         'Phrase added successfully.': 'Phrase added successfully.',
         'Phrase edited successfully.': 'Phrase edited successfully.',
         'Phrase deleted successfully.': 'Phrase deleted successfully.',
+        'Invalid phrase type.': 'Invalid phrase type.',
         'Copied to clipboard': 'Copied to clipboard',
         'Phrase cannot be empty': 'Phrase cannot be empty',
         'Database schema upgraded successfully.': 'Database schema upgraded successfully.',

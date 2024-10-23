@@ -60,6 +60,7 @@ const it = {
         'Phrase added successfully.': 'Frase aggiunta con successo.',
         'Phrase edited successfully.': 'Frase modificata con successo.',
         'Phrase deleted successfully.': 'Frase eliminata con successo.',
+        'Invalid phrase type.': 'Tipo di frase non valido.',
         'Copied to clipboard': 'Copiato negli appunti',
         'Phrase cannot be empty': 'La frase non può essere vuota',
         'Database schema upgraded successfully.': 'Schema del database aggiornato con successo.',

@@ -153,6 +153,7 @@ button {
     padding-bottom: calc(4 * var(--spacer));
 
     li {
+        cursor: pointer;
         position: relative;
         padding: var(--spacer);
         margin-bottom: var(--spacer);

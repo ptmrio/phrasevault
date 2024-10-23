@@ -61,6 +61,7 @@ const fr = {
         'Phrase added successfully.': 'Phrase ajoutée avec succès.',
         'Phrase edited successfully.': 'Phrase modifiée avec succès.',
         'Phrase deleted successfully.': 'Phrase supprimée avec succès.',
+        'Invalid phrase type.': 'Type de phrase invalide.',
         'Copied to clipboard': 'Copié dans le presse-papiers',
         'Phrase cannot be empty': 'La phrase ne peut pas être vide',
         'Database schema upgraded successfully.': 'Schéma de base de données mis à jour avec succès.',
