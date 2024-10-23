@@ -12,6 +12,7 @@ function updateRecentFilesMenu(mainWindow) {
         click: () => {
             state.setConfig({ dbPath: file });
             state.setConfig({ showOnStartup: true });
+            state.addRecentFile(file);
             app.relaunch();
             app.exit();
         }
@@ -22,158 +23,165 @@ function updateRecentFilesMenu(mainWindow) {
 export function createTemplate(mainWindow, setTheme, setLanguage) {
     const template = [
         {
-            label: i18n.t('File'),
+            label: i18n.t("File"),
             submenu: [
                 {
-                    label: i18n.t('New Database'),
+                    label: i18n.t("New Database"),
                     click: () => {
                         const options = {
-                            title: i18n.t('Create New Database'),
-                            defaultPath: 'phrasevault.sqlite',
-                            buttonLabel: i18n.t('Create'),
-                            filters: [
-                                { name: 'SQLite Database', extensions: ['sqlite'] }
-                            ]
+                            title: i18n.t("Create New Database"),
+                            defaultPath: "phrasevault.sqlite",
+                            buttonLabel: i18n.t("Create"),
+                            filters: [{ name: "SQLite Database", extensions: ["sqlite"] }],
                         };
 
-                        dialog.showSaveDialog(mainWindow, options).then(result => {
-                            if (!result.canceled && result.filePath) {
-                                const newDbPath = result.filePath.endsWith('.sqlite') ? result.filePath : result.filePath + '.sqlite';
-                                fs.writeFileSync(newDbPath, '');
-                                state.setConfig({ dbPath: newDbPath });
-                                state.setConfig({ showOnStartup: true });
-                                state.setConfig({ initializeTables: true });
-                                state.addRecentFile(newDbPath);
-                                app.relaunch();
-                                app.exit();
-                            }
-                        }).catch(err => {
-                            console.error('Failed to create new database:', err);
-                        });
-                    }
+                        dialog
+                            .showSaveDialog(mainWindow, options)
+                            .then((result) => {
+                                if (!result.canceled && result.filePath) {
+                                    const newDbPath = result.filePath.endsWith(".sqlite") ? result.filePath : result.filePath + ".sqlite";
+                                    fs.writeFileSync(newDbPath, "");
+                                    state.setConfig({ dbPath: newDbPath });
+                                    state.setConfig({ showOnStartup: true });
+                                    state.setConfig({ initializeTables: true });
+                                    state.addRecentFile(newDbPath);
+                                    app.relaunch();
+                                    app.exit();
+                                }
+                            })
+                            .catch((err) => {
+                                console.error("Failed to create new database:", err);
+                            });
+                    },
                 },
                 {
-                    label: i18n.t('Open Database'),
+                    label: i18n.t("Open Database"),
                     click: () => {
                         const options = {
-                            title: i18n.t('Open Database'),
-                            buttonLabel: i18n.t('Open'),
-                            filters: [
-                                { name: 'SQLite Database', extensions: ['sqlite'] }
-                            ],
-                            properties: ['openFile']
+                            title: i18n.t("Open Database"),
+                            buttonLabel: i18n.t("Open"),
+                            filters: [{ name: "SQLite Database", extensions: ["sqlite"] }],
+                            properties: ["openFile"],
                         };
 
-                        dialog.showOpenDialog(mainWindow, options).then(result => {
-                            if (!result.canceled && result.filePaths.length > 0) {
-                                const selectedPath = result.filePaths[0];
-                                state.setConfig({ dbPath: selectedPath });
-                                state.setConfig({ showOnStartup: true });
-                                state.addRecentFile(selectedPath);
-                                app.relaunch();
-                                app.exit();
-                            }
-                        }).catch(err => {
-                            console.error('Failed to open database:', err);
-                        });
-                    }
+                        dialog
+                            .showOpenDialog(mainWindow, options)
+                            .then((result) => {
+                                if (!result.canceled && result.filePaths.length > 0) {
+                                    const selectedPath = result.filePaths[0];
+                                    state.setConfig({ dbPath: selectedPath });
+                                    state.setConfig({ showOnStartup: true });
+                                    state.addRecentFile(selectedPath);
+                                    app.relaunch();
+                                    app.exit();
+                                }
+                            })
+                            .catch((err) => {
+                                console.error("Failed to open database:", err);
+                            });
+                    },
                 },
                 {
-                    label: i18n.t('Recent Databases'),
-                    submenu: updateRecentFilesMenu(mainWindow)
+                    label: i18n.t("Recent Databases"),
+                    submenu: updateRecentFilesMenu(mainWindow),
                 },
                 {
-                    label: state.getConfig().autostart ? i18n.t('Disable Autostart') : i18n.t('Enable Autostart'),
+                    label: state.getConfig().autostart ? i18n.t("Disable Autostart") : i18n.t("Enable Autostart"),
                     click: () => {
-                        const newAutostartSetting = !(state.getConfig().autostart);
+                        const newAutostartSetting = !state.getConfig().autostart;
                         state.setConfig({ autostart: newAutostartSetting });
                         if (newAutostartSetting) {
                             const regKey = new Winreg({
                                 hive: Winreg.HKCU,
-                                key: '\\Software\\Microsoft\\Windows\\CurrentVersion\\Run'
+                                key: "\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
                             });
-                            regKey.set('PhraseVault', Winreg.REG_SZ, app.getPath('exe'), (err) => {
+                            regKey.set("PhraseVault", Winreg.REG_SZ, app.getPath("exe"), (err) => {
                                 if (err) {
-                                    console.error('Failed to set autostart:', err);
+                                    console.error("Failed to set autostart:", err);
                                 }
                             });
                         } else {
                             const regKey = new Winreg({
                                 hive: Winreg.HKCU,
-                                key: '\\Software\\Microsoft\\Windows\\CurrentVersion\\Run'
+                                key: "\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
                             });
-                            regKey.remove('PhraseVault', (err) => {
+                            regKey.remove("PhraseVault", (err) => {
                                 if (err) {
-                                    console.error('Failed to remove autostart:', err);
+                                    console.error("Failed to remove autostart:", err);
                                 }
                             });
                         }
                         state.setConfig({ showOnStartup: true });
                         app.relaunch();
                         app.exit();
-                    }
+                    },
                 },
                 {
-                    label: i18n.t('Quit'), click: () => {
+                    label: i18n.t("Quit"),
+                    click: () => {
                         global.isQuitting = true;
                         app.quit();
-                    }
+                    },
                 },
-            ]
+            ],
         },
         {
-            label: i18n.t('View'),
+            label: i18n.t("View"),
             submenu: [
                 {
-                    label: i18n.t('Light Theme'), click: () => { 
-                        setTheme('light');
+                    label: i18n.t("Light Theme"),
+                    click: () => {
+                        setTheme("light");
                         state.setConfig({ showOnStartup: true });
                         app.relaunch();
                         app.exit();
-                    }
+                    },
                 },
                 {
-                    label: i18n.t('Dark Theme'), click: () => {
-                        setTheme('dark');
+                    label: i18n.t("Dark Theme"),
+                    click: () => {
+                        setTheme("dark");
                         state.setConfig({ showOnStartup: true });
                         app.relaunch();
                         app.exit();
-                    }
+                    },
                 },
                 {
-                    label: i18n.t('System Preference'), click: () => {
-                        setTheme('system');
+                    label: i18n.t("System Preference"),
+                    click: () => {
+                        setTheme("system");
                         state.setConfig({ showOnStartup: true });
                         app.relaunch();
                         app.exit();
-                    }
+                    },
                 },
-            ]
+            ],
         },
         {
-            label: i18n.t('Language'),
+            label: i18n.t("Language"),
             submenu: [
-                { label: i18n.t('English'), click: () => setLanguage('en') },
-                { label: i18n.t('Spanish'), click: () => setLanguage('es') },
-                { label: i18n.t('Portuguese'), click: () => setLanguage('pt') },
-                { label: i18n.t('French'), click: () => setLanguage('fr') },
-                { label: i18n.t('German'), click: () => setLanguage('de') },
-                { label: i18n.t('Italian'), click: () => setLanguage('it') },
-            ]
+                { label: i18n.t("English"), click: () => setLanguage("en") },
+                { label: i18n.t("Spanish"), click: () => setLanguage("es") },
+                { label: i18n.t("Portuguese"), click: () => setLanguage("pt") },
+                { label: i18n.t("French"), click: () => setLanguage("fr") },
+                { label: i18n.t("German"), click: () => setLanguage("de") },
+                { label: i18n.t("Italian"), click: () => setLanguage("it") },
+            ],
         },
         {
-            label: i18n.t('Purchase'),
+            label: i18n.t("Purchase"),
             submenu: [
-                { label: i18n.t('Buy License'), click: () => shell.openExternal('https://phrasevault.app/') },
+                { label: i18n.t("Buy License"), click: () => shell.openExternal("https://phrasevault.app/pricing") },
                 {
-                    label: i18n.t('I Have Already Bought'), click: () => {
+                    label: i18n.t("I Have Already Bought"),
+                    click: () => {
                         const response = dialog.showMessageBoxSync(mainWindow, {
-                            type: 'question',
-                            buttons: [i18n.t('I have purchased a license'), i18n.t('No')],
+                            type: "question",
+                            buttons: [i18n.t("I have purchased a license"), i18n.t("No")],
                             cancelId: 1,
                             noLink: true,
-                            title: i18n.t('Confirm Purchase'),
-                            message: i18n.t('Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!')
+                            title: i18n.t("Confirm Purchase"),
+                            message: i18n.t("Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!"),
                         });
 
                         if (response === 0) {
@@ -181,22 +189,22 @@ export function createTemplate(mainWindow, setTheme, setLanguage) {
                             state.setConfig({ showOnStartup: true });
                             app.relaunch();
                             app.exit();
+                        } else {
+                            shell.openExternal("https://phrasevault.app/pricing");
                         }
-                        else {
-                            shell.openExternal('https://phrasevault.app/');
-                        }
-                    }
-                }
-            ]
+                    },
+                },
+            ],
         },
         {
-            label: i18n.t('Help'),
+            label: i18n.t("Help"),
             submenu: [
-                { label: i18n.t('Documentation'), click: () => shell.openExternal('https://phrasevault.app/#faq') },
-                { label: i18n.t('Report Issue'), click: () => shell.openExternal('https://github.com/ptmrio/phrasevault/issues') },
-                { label: i18n.t('View License Agreement'), click: () => shell.openExternal('https://github.com/ptmrio/phrasevault/blob/main/LICENSE') },
+                { label: i18n.t("Documentation"), click: () => shell.openExternal("https://phrasevault.app/help") },
+                { label: i18n.t("Report Issue"), click: () => shell.openExternal("https://github.com/ptmrio/phrasevault/issues") },
+                { label: i18n.t("View License Agreement"), click: () => shell.openExternal("https://github.com/ptmrio/phrasevault/blob/main/LICENSE.md") },
                 {
-                    label: i18n.t('Show Phrase Database File'), click: () => {
+                    label: i18n.t("Show Phrase Database File"),
+                    click: () => {
                         const dbPath = state.getConfig().dbPath;
                         // check if file exists
                         if (fs.existsSync(state.getConfig().dbPath)) {
@@ -209,16 +217,16 @@ export function createTemplate(mainWindow, setTheme, setLanguage) {
                         // if file doesn't exist
                         else {
                             dialog.showMessageBox(mainWindow, {
-                                type: 'error',
-                                title: i18n.t('Database error'),
-                                message: i18n.t('Neither the database file nor the folder exists.')
+                                type: "error",
+                                title: i18n.t("Database error"),
+                                message: i18n.t("Neither the database file nor the folder exists."),
                             });
                         }
-                    }
+                    },
                 },
-                { label: `Version ${app.getVersion()}`, enabled: false }
-            ]
-        }
+                { label: `Version ${app.getVersion()}`, enabled: false },
+            ],
+        },
     ];
 
     // remove purchase menu if already purchased and replace with thank you message
