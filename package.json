@@ -1,110 +1,103 @@
 {
-    "name": "phrasevault",
-    "version": "2.1.4-dev",
-    "description": "A phrase management tool",
-    "main": "src/main.js",
-    "type": "module",
-    "scripts": {
-        "start": "set NODE_ENV=development && electron .",
-        "build": "electron-builder",
-        "watch": "set NODE_ENV=development && electronmon .",
-        "version-bump": "node version-bump.js",
-        "postinstall": "electron-builder install-app-deps"
+  "name": "phrasevault",
+  "version": "v2.4.1",
+  "description": "A phrase management tool",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "start": "set NODE_ENV=development && electron .",
+    "build": "electron-builder",
+    "watch": "set NODE_ENV=development && electronmon .",
+    "version-bump": "node version-bump.js",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "keywords": [
+    "phrase",
+    "management",
+    "tool",
+    "text expander",
+    "phrase expander",
+    "productivity"
+  ],
+  "author": "Petermeir Web Solutions",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "dependencies": {
+    "electron-json-storage": "^4.6.0",
+    "i18next": "^23.11.5",
+    "i18next-electron-fs-backend": "^3.0.2",
+    "i18next-electron-language-detector": "^0.0.10",
+    "marked": "^13.0.1",
+    "node-key-sender": "^1.0.11",
+    "node-window-manager": "^2.2.4",
+    "os-locale": "^6.0.2",
+    "robotjs": "^0.6.0",
+    "sqlite3": "^5.1.7",
+    "winreg": "^1.2.5"
+  },
+  "devDependencies": {
+    "electron": "^30.1.0",
+    "electron-builder": "^24.13.3",
+    "electronmon": "^1.0.5",
+    "node-abi": "^3.67.0",
+    "sass": "^1.35.1"
+  },
+  "build": {
+    "appId": "com.ptmrio.phrasevault",
+    "productName": "PhraseVault",
+    "directories": {
+      "output": "dist"
     },
-    "keywords": [
-        "phrase",
-        "management",
-        "tool",
-        "text expander",
-        "phrase expander",
-        "productivity"
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json",
+      "templates/**/*",
+      "locales/**/*"
     ],
-    "author": "Petermeir Web Solutions",
-    "license": "SEE LICENSE IN LICENSE.md",
-    "dependencies": {
-        "electron-json-storage": "^4.6.0",
-        "i18next": "^23.11.5",
-        "i18next-electron-fs-backend": "^3.0.2",
-        "i18next-electron-language-detector": "^0.0.10",
-        "marked": "^13.0.1",
-        "node-key-sender": "^1.0.11",
-        "node-window-manager": "^2.2.4",
-        "os-locale": "^6.0.2",
-        "robotjs": "^0.6.0",
-        "sqlite3": "^5.1.7",
-        "winreg": "^1.2.5"
+    "extraResources": [
+      {
+        "from": "assets/img/",
+        "to": "resources/img/",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "LICENSE.md",
+        "to": "LICENSE.md"
+      }
+    ],
+    "win": {
+      "icon": "assets/img/icon_256x256.png",
+      "certificateSubjectName": "Open Source Developer, Gerhard Petermeir",
+      "signingHashAlgorithms": [
+        "sha256"
+      ],
+      "certificateSha1": "9e86273489a0cf6b48c003f344b8cb9687060ed7",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
     },
-    "devDependencies": {
-        "electron": "^30.1.0",
-        "electron-builder": "^24.13.3",
-        "electronmon": "^1.0.5",
-        "node-abi": "^3.67.0",
-        "sass": "^1.35.1"
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "license": "LICENSE.md",
+      "include": "installer.nsh",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "runAfterFinish": true,
+      "artifactName": "${productName}-Setup-${version}.${ext}",
+      "guid": "20f726f4-eb4b-53a7-a447-f2062c4bad89"
     },
-    "build": {
-        "appId": "com.ptmrio.phrasevault",
-        "productName": "PhraseVault",
-        "directories": {
-            "output": "dist"
-        },
-        "files": [
-            "src/**/*",
-            "assets/**/*",
-            "package.json",
-            "templates/**/*",
-            "locales/**/*"
-        ],
-        "extraResources": [
-            {
-                "from": "assets/img/",
-                "to": "resources/img/",
-                "filter": [
-                    "**/*"
-                ]
-            },
-            {
-                "from": "LICENSE.md",
-                "to": "LICENSE.md"
-            }
-        ],
-        "win": {
-            "icon": "assets/img/icon_256x256.png",
-            "certificateSubjectName": "Open Source Developer, Gerhard Petermeir",
-            "signingHashAlgorithms": [
-                "sha256"
-            ],
-            "certificateSha1": "9e86273489a0cf6b48c003f344b8cb9687060ed7",
-            "target": [
-                {
-                    "target": "nsis",
-                    "arch": [
-                        "x64",
-                        "ia32"
-                    ]
-                },
-                {
-                    "target": "portable",
-                    "arch": [
-                        "x64",
-                        "ia32"
-                    ]
-                }
-            ]
-        },
-        "nsis": {
-            "oneClick": false,
-            "allowToChangeInstallationDirectory": true,
-            "license": "LICENSE.md",
-            "include": "installer.nsh",
-            "createDesktopShortcut": true,
-            "createStartMenuShortcut": true,
-            "runAfterFinish": true,
-            "artifactName": "${productName}-Setup-${version}.${ext}",
-            "guid": "20f726f4-eb4b-53a7-a447-f2062c4bad89"
-        },
-        "portable": {
-            "artifactName": "${productName}-Portable-${version}.${ext}"
-        },
-        "forceCodeSigning": true
-    }
+    "portable": {
+      "artifactName": "${productName}-Portable-${version}.${ext}"
+    },
+    "forceCodeSigning": true
+  }
 }

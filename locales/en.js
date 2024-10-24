@@ -36,6 +36,7 @@ const en = {
         'Documentation': 'Documentation',
         'Report Issue': 'Report Issue',
         'View License Agreement': 'View License Agreement',
+        'About / Credits': 'About / Credits',
         'Show Phrase Database File': 'Show Phrase Database File',
         'Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!': 'Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!',
         'Confirm Purchase': 'Confirm Purchase',

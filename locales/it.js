@@ -36,6 +36,7 @@ const it = {
         'Documentation': 'Documentazione',
         'Report Issue': 'Segnala un Problema',
         'View License Agreement': 'Visualizza il Contratto di Licenza',
+        'About / Credits': 'Informazioni / Crediti',
         'Show Phrase Database File': 'Mostra il File del Database delle Frasi',
         'Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!': 'Sviluppare e mantenere PhraseVault richiede tempo e impegno. Si prega di considerare di sostenere il progetto acquistando una licenza. Confidiamo nella tua onestà. Grazie!',
         'Confirm Purchase': 'Conferma l\'Acquisto',

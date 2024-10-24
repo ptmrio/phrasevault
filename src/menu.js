@@ -202,6 +202,7 @@ export function createTemplate(mainWindow, setTheme, setLanguage) {
                 { label: i18n.t("Documentation"), click: () => shell.openExternal("https://phrasevault.app/help") },
                 { label: i18n.t("Report Issue"), click: () => shell.openExternal("https://github.com/ptmrio/phrasevault/issues") },
                 { label: i18n.t("View License Agreement"), click: () => shell.openExternal("https://github.com/ptmrio/phrasevault/blob/main/LICENSE.md") },
+                { label: i18n.t("About / Credits"), click: () => shell.openExternal("https://phrasevault.app/about") },
                 {
                     label: i18n.t("Show Phrase Database File"),
                     click: () => {

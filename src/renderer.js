@@ -395,3 +395,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateList();
 });
+
