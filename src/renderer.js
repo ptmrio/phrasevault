@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function updateList() {
-        const searchText = searchInput.value.toLowerCase();
+        const searchText = searchInput.value;
         window.electron.send('search-phrases', searchText);
     }
 

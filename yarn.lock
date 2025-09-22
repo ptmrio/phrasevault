@@ -1369,11 +1369,6 @@ i18next-electron-fs-backend@^3.0.2:
     lodash.clonedeep "^4.5.0"
     lodash.merge "^4.6.2"
 
-i18next-electron-language-detector@^0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/i18next-electron-language-detector/-/i18next-electron-language-detector-0.0.10.tgz#6fdb01df5a47c40ca3821458449da88220c4baf8"
-  integrity sha512-l/CdtK5i6BB7h5OGKadUK+Q0q4e4EYXZSDV+Hetxjdv4C8RoYPNbqfTIpcc4RpIO3Dty05Xt8TxV+HyFd6opeA==
-
 i18next@^23.11.5:
   version "23.11.5"
   resolved "https://registry.yarnpkg.com/i18next/-/i18next-23.11.5.tgz#d71eb717a7e65498d87d0594f2664237f9e361ef"
@@ -1924,11 +1919,6 @@ node-gyp@8.x:
     semver "^7.3.5"
     tar "^6.1.2"
     which "^2.0.2"
-
-node-key-sender@^1.0.11:
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/node-key-sender/-/node-key-sender-1.0.11.tgz#93210f07163607d8daf2874f1a29567d0acdb94c"
-  integrity sha512-vv2IXd8QdZBFYXaIy02uy2rK6EKj+tOTEuoTxJKS9l8zw8Cz6DeLffR8ompj7N2A3h6XK7aiy+YAcTaeOqwp2Q==
 
 node-window-manager@^2.2.4:
   version "2.2.4"

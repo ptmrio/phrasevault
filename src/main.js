@@ -93,7 +93,7 @@ if (!gotTheLock) {
             mainWindow.webContents.send("change-language", config.language);
         });
 
-        if (process.env.NODE_ENV.trim() === "development") {
+        if (process?.env?.NODE_ENV?.trim() === "development") {
             console.log("Development mode enabled. Registering global shortcuts...");
             globalShortcut.register("CommandOrControl+Shift+I", () => {
                 mainWindow.webContents.toggleDevTools();

@@ -217,39 +217,39 @@ function searchPhrases(searchText, callback) {
             return;
         }
 
-        let exactMatchQuery = `SELECT * FROM phrases WHERE phrase = ? ORDER BY usageCount DESC`;
-        let query;
+        const norm = (s) => (s ?? "").normalize("NFC").toLowerCase();
+        const tokens = norm(searchText).split(/\s+/).filter(Boolean);
 
-        const words = searchText
-            .split(" ")
-            .map((word) => word.trim())
-            .filter((word) => word.length > 0);
-
-        if (words.length > 0) {
-            const likeClauses = words.map((word) => `(phrase LIKE '%${word}%' OR expanded_text LIKE '%${word}%')`);
-            query = `SELECT * FROM phrases WHERE ${likeClauses.join(" AND ")} ORDER BY usageCount DESC`;
-        } else {
-            query = "SELECT * FROM phrases ORDER BY usageCount DESC";
-        }
-
-        db.all(exactMatchQuery, [searchText], (err, exactRows) => {
+        db.all("SELECT * FROM phrases ORDER BY usageCount DESC", (err, rows) => {
             if (err) {
                 callback(err, null);
                 return;
             }
 
-            db.all(query, (err, rows) => {
-                if (err) {
-                    callback(err, null);
-                    return;
-                }
-                const combinedRows = [...exactRows, ...rows.filter((row) => !exactRows.some((er) => er.id === row.id))];
-                const uniqueRows = combinedRows.filter((row, index, self) => self.findIndex((r) => r.id === row.id) === index);
-                callback(null, uniqueRows);
+            if (!tokens.length) {
+                callback(null, rows);
+                return;
+            }
+
+            const nSearch = norm(searchText);
+
+            const exactRows = rows.filter((r) => norm(r.phrase) === nSearch);
+
+            const filtered = rows.filter((r) => {
+                const p = norm(r.phrase);
+                const e = norm(r.expanded_text);
+                // every token must be found in either phrase or expanded_text
+                return tokens.every((t) => p.includes(t) || e.includes(t));
             });
+
+            // exact first, then others without dupes
+            const unique = [...exactRows, ...filtered.filter((r) => !exactRows.some((er) => er.id === r.id))];
+
+            callback(null, unique);
         });
     });
 }
+
 
 ipcMain.on("search-phrases", (event, searchText) => {
     searchPhrases(searchText, (err, rows) => {
