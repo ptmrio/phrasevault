@@ -139,6 +139,11 @@ template {
 :root {
   --spacer: 10px;
   --rem: 1rem;
+  --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-full: 50%;
   --color-primary-100: hsl(5, 68%, 90%);
   --color-primary-200: hsl(5, 68%, 80%);
   --color-primary-300: hsl(5, 68%, 70%);
@@ -192,13 +197,22 @@ template {
   --scrollbar-color-track: var(--color-tertiary-700);
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
 html {
   font-size: var(--rem);
 }
 
 body,
 html {
-  font-family: Arial, sans-serif;
+  font-family: var(--font-family-base);
   height: 100%;
   margin: 0;
   display: flex;
@@ -229,8 +243,9 @@ button {
   border: none;
   background-color: transparent;
   cursor: pointer;
-  border-radius: calc(var(--spacer) / 2);
+  border-radius: var(--radius-sm);
   font: inherit;
+  transition: background-color 0.2s ease;
 }
 button:has(svg) {
   gap: 0.33em;
@@ -240,13 +255,11 @@ button svg {
   width: 1.5rem;
   height: 1.5rem;
 }
-button:focus-within {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--color-primary-200);
+button:focus-visible {
+  outline: 2px solid var(--color-primary-200);
 }
 button:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 #app {
@@ -262,7 +275,7 @@ button:hover {
   font: inherit;
   width: 100%;
   padding: var(--spacer);
-  border-radius: var(--spacer);
+  border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
 }
 
@@ -283,12 +296,14 @@ button:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-radius: var(--spacer);
+  border-radius: var(--radius-md);
   background-color: var(--color-background);
+  transition: background-color 0.2s ease;
+}
+#phrase-list li:focus-visible {
+  outline: none;
 }
 #phrase-list li:focus-within {
-  outline: none;
-  border-radius: var(--spacer);
   background-color: var(--color-background-highlight);
 }
 #phrase-list li .phrase-list-text {
@@ -316,7 +331,7 @@ button:hover {
 #phrase-list li .buttons .edit-button:hover,
 #phrase-list li .buttons .three-dots:hover {
   background-color: var(--color-primary-600);
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
 }
 #phrase-list li .buttons .copy-button img,
 #phrase-list li .buttons .edit-button img,
@@ -331,13 +346,16 @@ button:hover {
   right: calc(2.4 * var(--spacer));
   background-color: var(--color-background-body);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   z-index: 1;
   overflow: hidden;
 }
 #phrase-list li .menu .menu-item {
   padding: var(--spacer);
   cursor: pointer;
+  display: flex;
+  gap: 5px;
+  transition: filter 0.2s ease;
 }
 #phrase-list li .menu .menu-item:hover {
   filter: brightness(1.1);
@@ -358,7 +376,7 @@ button:hover {
   background-color: var(--color-primary-500);
   color: var(--color-white);
   border: none;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   width: calc(3 * var(--rem));
   height: calc(3 * var(--rem));
   font-size: calc(2.4 * var(--spacer));
@@ -367,6 +385,7 @@ button:hover {
   align-items: center;
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s ease;
 }
 #add-phrase:hover {
   background-color: var(--color-primary-600);
@@ -381,7 +400,7 @@ button:hover {
   gap: calc(var(--spacer) / 2);
   align-items: center;
   background-color: var(--color-background-body);
-  border-radius: var(--spacer);
+  border-radius: var(--radius-md);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   padding: var(--spacer) var(--spacer) calc(var(--spacer) - 0.2em) var(--spacer);
   color: var(--color-secondary-500);
@@ -395,17 +414,81 @@ button:hover {
   transform: translateY(-0.2em);
 }
 
+.purchase-reminder-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--spacer) * 2);
+}
+
+.purchase-reminder-content {
+  background-color: var(--color-background-body);
+  border-radius: calc(var(--spacer) * 1.5);
+  padding: calc(var(--spacer) * 3);
+  max-width: 500px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+.purchase-reminder-content h2 {
+  margin: 0 0 calc(var(--spacer) * 2) 0;
+  color: var(--color-primary-500);
+  font-size: calc(1.5 * var(--rem));
+}
+.purchase-reminder-content p {
+  margin: 0 0 var(--spacer) 0;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+.purchase-reminder-content p:last-of-type {
+  margin-bottom: calc(var(--spacer) * 2);
+}
+
+.purchase-reminder-buttons {
+  display: flex;
+  gap: var(--spacer);
+  justify-content: flex-end;
+}
+.purchase-reminder-buttons button {
+  padding: calc(var(--spacer) * 1.2) calc(var(--spacer) * 2);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--rem);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.purchase-reminder-buttons button.btn-secondary {
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+.purchase-reminder-buttons button.btn-secondary:hover {
+  background-color: var(--color-background-highlight);
+}
+.purchase-reminder-buttons button.btn-primary {
+  background-color: var(--color-primary-500);
+  color: var(--color-white);
+}
+.purchase-reminder-buttons button.btn-primary:hover {
+  background-color: var(--color-primary-600);
+}
+
 .modal {
-  --modal-animation-duration: 0.5s;
+  --modal-animation-duration: 0.3s;
   display: none;
   position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
+  z-index: 1000;
+  inset: 0;
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   opacity: 0;
   transition: opacity var(--modal-animation-duration) ease;
   place-items: center;
@@ -425,20 +508,21 @@ button:hover {
   width: min(90dvw, 120ch);
   height: max(90dvh, var(--rem) * 10);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   position: relative;
   opacity: 0;
-  transform: translateY(-10%);
-  transition: opacity var(--modal-animation-duration), transform var(--modal-animation-duration);
+  transform: translateY(-10%) scale(0.95);
+  transition: opacity var(--modal-animation-duration) ease, transform var(--modal-animation-duration) ease;
 }
 .modal .modal-content.show {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 .modal .modal-content .modal-header {
   display: flex;
   gap: var(--spacer);
   justify-content: space-between;
+  align-items: center;
 }
 .modal .modal-content input,
 .modal .modal-content textarea,
@@ -446,9 +530,17 @@ button:hover {
   width: 100%;
   padding: var(--spacer);
   border: 1px solid var(--color-border);
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   font-size: 1rem;
-  font-family: "Arial", sans-serif;
+  font-family: var(--font-family-base);
+  transition: border-color 0.2s ease;
+}
+.modal .modal-content input:focus-visible,
+.modal .modal-content textarea:focus-visible,
+.modal .modal-content select:focus-visible {
+  outline: 2px solid var(--color-primary-200);
+  outline-offset: 2px;
+  border-color: var(--color-primary-500);
 }
 .modal .modal-content textarea {
   flex-grow: 1;
@@ -459,12 +551,17 @@ button:hover {
   display: flex;
   justify-content: start;
   gap: var(--spacer);
+  flex-wrap: wrap;
 }
 .modal .modal-content .radio-group label {
   display: flex;
   align-items: center;
   line-height: 1;
   cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.modal .modal-content .radio-group label:hover {
+  opacity: 0.8;
 }
 .modal .modal-content .radio-group input[type=radio] {
   appearance: none;
@@ -473,45 +570,67 @@ button:hover {
   width: 1.25rem;
   height: 1.25rem;
   border: 2px solid var(--color-border);
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   margin-right: 0.5rem;
   position: relative;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+.modal .modal-content .radio-group input[type=radio]:hover {
+  border-color: var(--color-primary-400);
+}
+.modal .modal-content .radio-group input[type=radio]:focus-visible {
+  outline: 2px solid var(--color-primary-200);
+  outline-offset: 2px;
 }
 .modal .modal-content .radio-group input[type=radio]:before {
   content: "";
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0);
   width: 0.75rem;
   height: 0.75rem;
   background-color: var(--color-primary-500);
-  border-radius: 50%;
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
+  border-radius: var(--radius-full);
+  transition: transform 0.2s ease;
+}
+.modal .modal-content .radio-group input[type=radio]:checked {
+  border-color: var(--color-primary-500);
 }
 .modal .modal-content .radio-group input[type=radio]:checked:before {
-  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
 }
 .modal .modal-content button {
   align-self: center;
   background-color: var(--color-primary-500);
   color: var(--color-white);
+  transition: background-color 0.2s ease;
 }
 .modal .modal-content button:hover {
   background-color: var(--color-primary-600);
 }
+.modal .modal-content button:focus-visible {
+  outline: 2px solid var(--color-primary-200);
+  outline-offset: 2px;
+}
 .modal .modal-content button#saveButton {
   font-size: calc(2 * var(--spacer));
+  padding: calc(var(--spacer) * 1.2) calc(var(--spacer) * 2);
 }
 .modal .modal-content button.close {
   font-size: var(--rem);
   font-weight: bold;
+  background-color: transparent;
+  color: var(--color-text);
+}
+.modal .modal-content button.close:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .toast {
   --toast-count: 1;
-  --toast-bottom: calc(var(--spacer) + ((var(--toast-count) - 1) * var(--spacer) * 5));
+  --toast-spacing: calc(var(--spacer) * 5);
   align-self: center;
   visibility: hidden;
   min-width: 250px;
@@ -519,15 +638,18 @@ button:hover {
   background-color: #333;
   color: var(--color-white);
   text-align: center;
-  border-radius: var(--spacer);
+  border-radius: var(--radius-md);
   padding: var(--spacer);
   position: fixed;
   z-index: 1;
-  bottom: var(--toast-bottom);
+  bottom: var(--spacer);
+  /* Use transform for better performance */
+  transform: translateY(calc((var(--toast-count) - 1) * var(--toast-spacing)));
+  will-change: transform, opacity;
 }
 .toast.show {
   visibility: visible;
-  animation: toastFadein 0.5s, toastFadeout 0.5s 2.5s;
+  animation: toastFadein 0.5s ease-out, toastFadeout 0.5s ease-in 2.5s;
 }
 .toast.danger {
   background-color: var(--color-danger);
@@ -536,23 +658,24 @@ button:hover {
   background-color: var(--color-success);
 }
 
+/* GPU-accelerated animations using transform */
 @keyframes toastFadein {
   from {
-    bottom: 0;
+    transform: translateY(100%);
     opacity: 0;
   }
   to {
-    bottom: var(--toast-bottom);
+    transform: translateY(calc((var(--toast-count) - 1) * var(--toast-spacing)));
     opacity: 1;
   }
 }
 @keyframes toastFadeout {
   from {
-    bottom: var(--toast-bottom);
+    transform: translateY(calc((var(--toast-count) - 1) * var(--toast-spacing)));
     opacity: 1;
   }
   to {
-    bottom: 0;
+    transform: translateY(100%);
     opacity: 0;
   }
 }/*# sourceMappingURL=style.css.map */

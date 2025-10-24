@@ -43,11 +43,17 @@ const fr = {
         "I have purchased a license": "J'ai acheté une licence",
         "No": "Non",
 
+        // Tray and System Notifications
+        "Show/Hide": "Afficher/Masquer",
+        "PhraseVault is running in the background.": "PhraseVault s’exécute en arrière-plan.",
+        "PhraseVault is running in the background. Press Ctrl+. to show/hide.": "PhraseVault s’exécute en arrière-plan. Appuyez sur Ctrl+. pour afficher/masquer.",
+
         // Modal
         "Phrase": "Phrase",
         "Expanded Text": "Texte Étendu",
         "Plain Text": "Texte Brut",
         "Markdown": "Markdown",
+        "HTML": "HTML",
 
         // database status
         "Phrases loaded": "Phrases chargées",
@@ -76,6 +82,15 @@ const fr = {
         "examplePhrase3": "Pouvez-vous fournir un résumé des derniers développements en recherche d'intelligence artificielle, en mettant l'accent sur les percées majeures et les tendances émergentes?",
         "MidJourney Art Prompt": "Prompt Artistique MidJourney",
         "examplePhrase4": "Créer une peinture numérique abstraite représentant la fusion de la nature et de la technologie, utilisant des couleurs vives et des détails complexes pour illustrer l'interaction entre ces deux éléments.",
+
+        // Purchase Reminder Overlay
+        "trial_ended_title": "Votre essai de 14 jours est terminé.",
+        "trial_ended_p1": "PhraseVault fait gagner beaucoup de temps en insérant des phrases enregistrées dans n'importe quelle application.",
+        "trial_ended_p2": "C'est open source (Source First License), privé et sans télémétrie.",
+        "trial_ended_p3": "Pour continuer à utiliser PhraseVault, une licence payante est requise.",
+        "trial_ended_p4_prefix": "Déjà acheté ? Activez via",
+        "trial_ended_p4_suffix": "dans le menu principal.",
+        "Purchase activated successfully. App will restart.": "Achat activé avec succès. L'application va redémarrer.",
     },
 };
 

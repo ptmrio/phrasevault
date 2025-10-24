@@ -5,6 +5,15 @@
     --spacer: 10px;
     --rem: 1rem; // Base unit of 16px
 
+    // Typography
+    --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+
+    // Border Radius
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 10px;
+    --radius-full: 50%;
+
     // Color Palette
     --color-primary-100: hsl(5, 68%, 90%);
     --color-primary-200: hsl(5, 68%, 80%);
@@ -64,6 +73,17 @@
     --scrollbar-color-track: var(--color-tertiary-700);
 }
 
+// Accessibility: Respect reduced motion preference
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
 // Common styles
 html {
     font-size: var(--rem); // Base font size
@@ -71,7 +91,7 @@ html {
 
 body,
 html {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-family-base);
     height: 100%;
     margin: 0;
     display: flex;
@@ -102,8 +122,9 @@ button {
     border: none;
     background-color: transparent;
     cursor: pointer;
-    border-radius: calc(var(--spacer) / 2);
+    border-radius: var(--radius-sm);
     font: inherit;
+    transition: background-color 0.2s ease;
 
     &:has(svg) {
         gap: 0.33em;
@@ -115,14 +136,12 @@ button {
         height: 1.5rem;
     }
 
-    &:focus-within {
-        outline: none;
-        box-shadow: 0 0 0 2px var(--color-primary-200);
+    &:focus-visible {
+        outline: 2px solid var(--color-primary-200);
     }
 
     &:hover {
-        background-color: rgba(0, 0, 0, 0.1);
-        border-radius: 4px;
+        background-color: rgba(0, 0, 0, 0.2);
     }
 }
 
@@ -139,7 +158,7 @@ button {
     font: inherit;
     width: 100%;
     padding: var(--spacer);
-    border-radius: var(--spacer);
+    border-radius: var(--radius-md);
     border: 1px solid var(--color-border);
 }
 
@@ -158,16 +177,17 @@ button {
         padding: var(--spacer);
         margin-bottom: var(--spacer);
         display: flex;
-        
         justify-content: space-between;
         align-items: center;
-
-        border-radius: var(--spacer);
+        border-radius: var(--radius-md);
         background-color: var(--color-background);
+        transition: background-color 0.2s ease;
+
+        &:focus-visible {
+            outline: none;
+        }
 
         &:focus-within {
-            outline: none;
-            border-radius: var(--spacer);
             background-color: var(--color-background-highlight);
         }
 
@@ -195,7 +215,7 @@ button {
 
                 &:hover {
                     background-color: var(--color-primary-600);
-                    border-radius: 5px;
+                    border-radius: var(--radius-sm);
                 }
 
                 img {
@@ -212,13 +232,16 @@ button {
             right: calc(2.4 * var(--spacer));
             background-color: var(--color-background-body);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            border-radius: 5px;
+            border-radius: var(--radius-sm);
             z-index: 1;
             overflow: hidden;
 
             .menu-item {
                 padding: var(--spacer);
                 cursor: pointer;
+                display: flex;
+                gap: 5px;
+                transition: filter 0.2s ease;
 
                 &:hover {
                     filter: brightness(1.1);
@@ -245,7 +268,7 @@ button {
     background-color: var(--color-primary-500);
     color: var(--color-white);
     border: none;
-    border-radius: 50%;
+    border-radius: var(--radius-full);
     width: calc(3 * var(--rem));
     height: calc(3 * var(--rem));
     font-size: calc(2.4 * var(--spacer));
@@ -254,6 +277,7 @@ button {
     align-items: center;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s ease;
 
     &:hover {
         background-color: var(--color-primary-600);
@@ -263,20 +287,17 @@ button {
 #db-status {
     position: fixed;
     opacity: 0.69;
-
     bottom: var(--spacer);
     left: var(--spacer);
     display: flex;
     gap: calc(var(--spacer) / 2);
     align-items: center;
-
     background-color: var(--color-background-body);
-    border-radius: var(--spacer);
+    border-radius: var(--radius-md);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     padding: var(--spacer) var(--spacer) calc(var(--spacer) - 0.2em) var(--spacer);
     color: var(--color-secondary-500);
     font-size: calc(0.8 * var(--rem));
-
     transition: opacity 0.2s ease-in-out;
 
     &:hover {
@@ -286,7 +307,80 @@ button {
     #db-status-indicator {
         transform: translateY(-0.2em);
     }
+}
 
+// Purchase Reminder Overlay
+.purchase-reminder-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: calc(var(--spacer) * 2);
+}
+
+.purchase-reminder-content {
+    background-color: var(--color-background-body);
+    border-radius: calc(var(--spacer) * 1.5);
+    padding: calc(var(--spacer) * 3);
+    max-width: 500px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    
+    h2 {
+        margin: 0 0 calc(var(--spacer) * 2) 0;
+        color: var(--color-primary-500);
+        font-size: calc(1.5 * var(--rem));
+    }
+    
+    p {
+        margin: 0 0 var(--spacer) 0;
+        line-height: 1.6;
+        color: var(--color-text);
+        
+        &:last-of-type {
+            margin-bottom: calc(var(--spacer) * 2);
+        }
+    }
+}
+
+.purchase-reminder-buttons {
+    display: flex;
+    gap: var(--spacer);
+    justify-content: flex-end;
+    
+    button {
+        padding: calc(var(--spacer) * 1.2) calc(var(--spacer) * 2);
+        border: none;
+        border-radius: var(--radius-sm);
+        font-size: var(--rem);
+        cursor: pointer;
+        transition: all 0.2s;
+        
+        &.btn-secondary {
+            background-color: var(--color-background);
+            color: var(--color-text);
+            
+            &:hover {
+                background-color: var(--color-background-highlight);
+            }
+        }
+        
+        &.btn-primary {
+            background-color: var(--color-primary-500);
+            color: var(--color-white);
+            
+            &:hover {
+                background-color: var(--color-primary-600);
+            }
+        }
+    }
 }
 
 @import "_modal";

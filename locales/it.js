@@ -38,16 +38,22 @@ const it = {
         "View License Agreement": "Visualizza il Contratto di Licenza",
         "about_credits": "Chi siamo e crediti",
         "Show Phrase Database File": "Mostra il File del Database delle Frasi",
-        "Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!": "Sviluppare e mantenere PhraseVault richiede tempo e impegno. Si prega di considerare di sostenere il progetto acquistando una licenza. Confidiamo nella tua onestà. Grazie!",
+        "Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!": "Sviluppare e mantenere PhraseVault richiede tempo e impegno. Valuta di sostenere il progetto acquistando una licenza. Confidiamo nella Sua onestà. Grazie!",
         "Confirm Purchase": "Conferma l'Acquisto",
         "I have purchased a license": "Ho acquistato una licenza",
         "No": "No",
+
+        // Tray and System Notifications
+        "Show/Hide": "Mostra/Nascondi",
+        "PhraseVault is running in the background.": "PhraseVault è in esecuzione in background.",
+        "PhraseVault is running in the background. Press Ctrl+. to show/hide.": "PhraseVault è in esecuzione in background. Premere Ctrl+. per mostrare/nascondere.",
 
         // Modal
         "Phrase": "Frase",
         "Expanded Text": "Testo Espanso",
         "Plain Text": "Testo Semplice",
         "Markdown": "Markdown",
+        "HTML": "HTML",
 
         // database status
         "Phrases loaded": "Frasi caricate",
@@ -65,17 +71,26 @@ const it = {
         "Copied to clipboard": "Copiato negli appunti",
         "Phrase cannot be empty": "La frase non può essere vuota",
         "Database schema upgraded successfully.": "Schema del database aggiornato con successo.",
-        "Error upgrading database schema, but a backup was created.": "Errore nell'aggiornamento dello schema del database, ma è stata creata un backup.",
+        "Error upgrading database schema, but a backup was created.": "Errore nell'aggiornamento dello schema del database, ma è stato creato un backup.",
 
         // examples
         "Customer Thank You": "Ringraziamento Cliente",
-        "examplePhrase1": "Caro [Nome del Cliente],\n\nGrazie per il tuo recente acquisto nel nostro negozio. Speriamo tu sia soddisfatto dell'acquisto. Se hai domande o hai bisogno di ulteriore assistenza, non esitare a contattarci.\n\nCordiali saluti,\n[La tua Azienda]",
-        "Out of Office": "Fuori dall'Ufficio",
-        "examplePhrase2": "Ciao,\n\nAttualmente sono fuori dall'ufficio e non sarò disponibile fino al [Data]. Per assistenza immediata, contatta [Contatto Alternativo] al [Informazioni di Contatto].\n\nGrazie,\n[Il Tuo Nome]",
-        "ChatGPT Prompt": "Prompt di ChatGPT",
-        "examplePhrase3": "Puoi fornire un riassunto degli ultimi sviluppi nella ricerca sull'intelligenza artificiale, concentrandoti sui principali progressi e tendenze emergenti?",
-        "MidJourney Art Prompt": "Prompt Artistico di MidJourney",
-        "examplePhrase4": "Crea un dipinto digitale astratto che rappresenti la fusione tra natura e tecnologia, utilizzando colori vivaci e dettagli intricati per illustrare il legame tra questi due elementi.",
+        "examplePhrase1": "Gentile [Nome del cliente],\n\nLa ringraziamo per il Suo recente acquisto presso il nostro negozio. Speriamo che sia soddisfatto dell'acquisto. In caso di domande o per ulteriore assistenza, non esiti a contattarci.\n\nCordiali saluti,\n[La Sua Azienda]",
+        "Out of Office": "Messaggio di assenza",
+        "examplePhrase2": "Buongiorno,\n\nAttualmente sono assente dall'ufficio e sarò nuovamente disponibile il [Data]. Per assistenza immediata, contatti [Contatto alternativo] a [Informazioni di contatto].\n\nGrazie,\n[Il Suo Nome]",
+        "ChatGPT Prompt": "Prompt per ChatGPT",
+        "examplePhrase3": "Può fornire un riepilogo degli ultimi sviluppi nella ricerca sull'intelligenza artificiale, concentrandosi sui principali avanzamenti e sulle tendenze emergenti?",
+        "MidJourney Art Prompt": "Prompt artistico per MidJourney",
+        "examplePhrase4": "Crei un dipinto digitale astratto che rappresenti la fusione tra natura e tecnologia, utilizzando colori vivaci e dettagli intricati per illustrare il legame tra questi due elementi.",
+
+        // Purchase Reminder Overlay
+        "trial_ended_title": "La prova di 14 giorni è terminata.",
+        "trial_ended_p1": "PhraseVault fa risparmiare molto tempo inserendo frasi salvate in qualsiasi app.",
+        "trial_ended_p2": "È open source (Source First License), privato e senza telemetria.",
+        "trial_ended_p3": "Per continuare a utilizzare PhraseVault è richiesta una licenza a pagamento.",
+        "trial_ended_p4_prefix": "Già acquistato? Attiva tramite",
+        "trial_ended_p4_suffix": "nel menu principale.",
+        "Purchase activated successfully. App will restart.": "Acquisto attivato con successo. L'app verrà riavviata.",
     },
 };
 

@@ -75,8 +75,27 @@
                     <use href="#icon-circle-filled"></use>
                 </svg>
             </span>
-            <span id="db-status-text"></span> 
-        
+            <span id="db-status-text"></span>
+
+        </div>
+    </div>
+
+    <!-- Purchase Reminder Overlay -->
+    <div id="purchase-reminder-overlay" class="purchase-reminder-overlay" style="display: none;">
+        <div class="purchase-reminder-content">
+            <h2 data-i18n="trial_ended_title">Your 14-day trial has ended.</h2>
+            <p data-i18n="trial_ended_p1">PhraseVault saves tons of time by inserting saved phrases into any app.</p>
+            <p data-i18n="trial_ended_p2">It's open source (Source First License), private, and no telemetry.</p>
+            <p data-i18n="trial_ended_p3">To continue using PhraseVault, a paid license is required.</p>
+            <p>
+                <span data-i18n="trial_ended_p4_prefix">Already purchased? Activate via</span>
+                <strong><span data-i18n="Purchase">Purchase</span> → <span data-i18n="I Have Already Bought">I Have Already Bought</span></strong>
+                <span data-i18n="trial_ended_p4_suffix">in the main menu.</span>
+            </p>
+            <div class="purchase-reminder-buttons">
+                <button id="already-bought-reminder-btn" class="btn-secondary" data-i18n="I Have Already Bought">I Have Already Bought</button>
+                <button id="buy-license-reminder-btn" class="btn-primary" data-i18n="Buy License">Buy License</button>
+            </div>
         </div>
     </div>
 

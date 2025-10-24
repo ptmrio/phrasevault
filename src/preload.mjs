@@ -26,6 +26,9 @@ const validChannels = [
     "database-error",
     "handle-escape",
     "minimize-window",
+    "show-purchase-reminder",
+    "open-external-url",
+    "mark-as-purchased",
 ];
 
 contextBridge.exposeInMainWorld("electron", {

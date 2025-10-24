@@ -1,4 +1,4 @@
-import { app, Menu, globalShortcut, BrowserWindow, ipcMain, clipboard, screen } from "electron";
+import { app, Menu, globalShortcut, BrowserWindow, ipcMain, clipboard, screen, shell } from "electron";
 import { windowManager } from "node-window-manager";
 import { platform } from "os";
 import { createWindow, createTray } from "./window.js";
@@ -12,7 +12,7 @@ import EventEmitter from "events";
 import { fileURLToPath } from "url";
 import { marked } from "marked";
 import markedOptions from "./_partial/_marked-options.js";
-import robot from "robotjs";
+import robot from "@hurdlegroup/robotjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -91,6 +91,11 @@ if (!gotTheLock) {
         mainWindow.webContents.on("did-finish-load", () => {
             setTheme(config.theme);
             mainWindow.webContents.send("change-language", config.language);
+
+            // Check if purchase reminder should be shown
+            if (state.shouldShowPurchaseReminder()) {
+                mainWindow.webContents.send("show-purchase-reminder");
+            }
         });
 
         if (process?.env?.NODE_ENV?.trim() === "development") {
@@ -164,7 +169,7 @@ if (!gotTheLock) {
                 tray.displayBalloon({
                     icon: path.join(__dirname, "../assets/img/tray_icon.png"),
                     title: "PhraseVault",
-                    content: "PhraseVault is running in the background.",
+                    content: i18n.t("PhraseVault is running in the background."),
                 });
                 state.setBalloonShown(true);
             }
@@ -234,8 +239,8 @@ if (!gotTheLock) {
                         } catch (error) {
                             console.error("Failed to restore original clipboard content:", error);
                         }
-                    }, 50);
-                }, 50);
+                    }, 100);
+                }, 100);
             } catch (error) {
                 console.error("Failed to simulate paste command:", error);
             }
@@ -260,6 +265,26 @@ if (!gotTheLock) {
 
     ipcMain.on("set-theme", (event, theme) => {
         setTheme(theme);
+    });
+
+    ipcMain.on("open-external-url", (event, url) => {
+        shell.openExternal(url);
+    });
+
+    ipcMain.on("mark-as-purchased", () => {
+        state.markAsPurchased();
+        // Show success message and relaunch
+        if (mainWindow && mainWindow.webContents) {
+            mainWindow.webContents.send("toast-message", {
+                type: "success",
+                message: i18n.t("Purchase activated successfully. App will restart."),
+            });
+        }
+        setTimeout(() => {
+            state.setConfig({ showOnStartup: true });
+            app.relaunch();
+            app.exit();
+        }, 1500);
     });
 
     app.on("will-quit", () => {

@@ -1,7 +1,7 @@
-// Toast notification
+// Toast notification - Optimized with transform-based animations
 .toast {
     --toast-count: 1;
-    --toast-bottom: calc(var(--spacer) + ((var(--toast-count) - 1) * var(--spacer) * 5));
+    --toast-spacing: calc(var(--spacer) * 5);
     align-self: center;
     visibility: hidden;
     min-width: 250px;
@@ -9,47 +9,50 @@
     background-color: #333;
     color: var(--color-white);
     text-align: center;
-    border-radius: var(--spacer);
+    border-radius: var(--radius-md);
     padding: var(--spacer);
     position: fixed;
     z-index: 1;
-    bottom: var(--toast-bottom);
+    bottom: var(--spacer);
+    /* Use transform for better performance */
+    transform: translateY(calc((var(--toast-count) - 1) * var(--toast-spacing)));
+    will-change: transform, opacity;
 
     &.show {
         visibility: visible;
         animation:
-            toastFadein 0.5s,
-            toastFadeout 0.5s 2.5s;
+            toastFadein 0.5s ease-out,
+            toastFadeout 0.5s ease-in 2.5s;
     }
 
     &.danger {
         background-color: var(--color-danger);
     }
+
     &.success {
         background-color: var(--color-success);
     }
 }
 
+/* GPU-accelerated animations using transform */
 @keyframes toastFadein {
     from {
-        bottom: 0;
+        transform: translateY(100%);
         opacity: 0;
     }
-
     to {
-        bottom: var(--toast-bottom);
+        transform: translateY(calc((var(--toast-count) - 1) * var(--toast-spacing)));
         opacity: 1;
     }
 }
 
 @keyframes toastFadeout {
     from {
-        bottom: var(--toast-bottom);
+        transform: translateY(calc((var(--toast-count) - 1) * var(--toast-spacing)));
         opacity: 1;
     }
-
     to {
-        bottom: 0;
+        transform: translateY(100%);
         opacity: 0;
     }
 }

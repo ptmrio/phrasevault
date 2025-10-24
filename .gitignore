@@ -5,3 +5,4 @@ node_modules/
 dist/*
 
 upload.sh
+HOWTORUN.md

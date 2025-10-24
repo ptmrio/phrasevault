@@ -1,9 +1,10 @@
-import { BrowserWindow, app, Tray, Menu, ipcMain, nativeTheme } from 'electron';
+import { BrowserWindow, app, Tray, Menu, ipcMain, nativeTheme } from "electron";
 import backend from "i18next-electron-fs-backend";
-import path from 'path';
-import fs from 'fs';
-import state from './state.js';
-import { fileURLToPath } from 'url';
+import path from "path";
+import fs from "fs";
+import state from "./state.js";
+import i18n from "./i18n.js";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,9 +18,9 @@ export function createWindow() {
         width: 800,
         height: 600,
         show: false,
-        icon: path.join(__dirname, '../assets/img/tray_icon.png'),
+        icon: path.join(__dirname, "../assets/img/tray_icon.png"),
         webPreferences: {
-            preload: path.join(__dirname, 'preload.mjs'),
+            preload: path.join(__dirname, "preload.mjs"),
             contextIsolation: true,
             enableRemoteModule: false,
             nodeIntegration: false,
@@ -31,35 +32,34 @@ export function createWindow() {
 
     backend.mainBindings(ipcMain, mainWindow, fs);
 
-    mainWindow.loadFile(path.join(__dirname, '../templates/index.html'));
+    mainWindow.loadFile(path.join(__dirname, "../templates/index.html"));
 
-    mainWindow.once('ready-to-show', () => {
+    mainWindow.once("ready-to-show", () => {
         if (state.getConfig().showOnStartup === true) {
             mainWindow.show();
-            state.setConfig({ showOnStartup: false })
-        }
-        else {
+            state.setConfig({ showOnStartup: false });
+        } else {
             mainWindow.hide();
         }
         if (tray && !state.getBalloonShown()) {
             tray.displayBalloon({
-                icon: path.join(__dirname, '../assets/img/tray_icon.png'),
-                title: 'PhraseVault',
-                content: 'PhraseVault is running in the background.',
+                icon: path.join(__dirname, "../assets/img/tray_icon.png"),
+                title: "PhraseVault",
+                content: i18n.t("PhraseVault is running in the background."),
             });
             state.setBalloonShown(true); // Update balloonShown
         }
     });
 
-    mainWindow.on('close', (event) => {
+    mainWindow.on("close", (event) => {
         if (!global.isQuitting) {
             event.preventDefault();
             mainWindow.hide();
             if (tray && !state.getBalloonShown()) {
                 tray.displayBalloon({
-                    icon: path.join(__dirname, '../assets/img/tray_icon.png'),
-                    title: 'PhraseVault',
-                    content: 'PhraseVault is running in the background.',
+                    icon: path.join(__dirname, "../assets/img/tray_icon.png"),
+                    title: "PhraseVault",
+                    content: i18n.t("PhraseVault is running in the background."),
                 });
                 state.setBalloonShown(true); // Update balloonShown
             }
@@ -71,26 +71,32 @@ export function createWindow() {
 
 // Create the system tray icon and menu
 export function createTray() {
-    tray = new Tray(path.join(__dirname, '../assets/img/tray_icon.png'));
-    tray.setToolTip('PhraseVault is running in the background. Press Ctrl+. to show/hide.');
+    tray = new Tray(path.join(__dirname, "../assets/img/tray_icon.png"));
+    tray.setToolTip(i18n.t("PhraseVault is running in the background. Press Ctrl+. to show/hide."));
 
     const contextMenu = Menu.buildFromTemplate([
-        { label: 'Show/Hide', click: () => {
-            if (mainWindow.isVisible()) {
-                mainWindow.hide();
-            } else {
-                mainWindow.show();
-                mainWindow.focus();
-            }
-        }},
-        { label: 'Quit', click: () => {
-            global.isQuitting = true;
-            app.quit();
-        }},
+        {
+            label: i18n.t("Show/Hide"),
+            click: () => {
+                if (mainWindow.isVisible()) {
+                    mainWindow.hide();
+                } else {
+                    mainWindow.show();
+                    mainWindow.focus();
+                }
+            },
+        },
+        {
+            label: i18n.t("Quit"),
+            click: () => {
+                global.isQuitting = true;
+                app.quit();
+            },
+        },
     ]);
     tray.setContextMenu(contextMenu);
 
-    tray.on('click', () => {
+    tray.on("click", () => {
         if (mainWindow.isVisible()) {
             mainWindow.hide();
         } else {
