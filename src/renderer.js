@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Event listener to open the modal when add phrase button is clicked
     addPhraseButton.addEventListener("click", () => {
-        openModal();
+        openPhraseForm("", "", "plain", null); // Pass empty values for new phrase
     });
 
     // Event listener to close the modal when the close button is clicked
@@ -310,11 +310,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const expandedTextInput = modal.querySelector("#expandedTextInput");
         const idInput = modal.querySelector("#idInput");
 
+        // Clear and set values
         phraseInput.value = phrase;
         expandedTextInput.value = expandedText;
-        idInput.value = id;
+        idInput.value = id || ""; // Ensure empty string if null
+
+        // Set the correct radio button
         modal.querySelector('input[name="phraseType"][value="' + type + '"]').checked = true;
 
+        // Set title based on whether we're adding or editing
         title.textContent = id ? window.i18n.t("Edit Phrase") : window.i18n.t("Add Phrase");
 
         openModal();
@@ -331,8 +335,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // Create new AbortController for this modal instance
         saveButtonController = new AbortController();
 
-        // Add event listener with signal for proper cleanup
-        saveButton.addEventListener("click", handleSaveButtonClick, {
+        // Add event listener with the new controller
+        saveButton.addEventListener("click", () => handleSaveButtonClick(), {
             signal: saveButtonController.signal,
         });
     }
