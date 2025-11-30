@@ -1,6 +1,7 @@
 const fr = {
     translation: {
         // menu
+        "Settings": "Paramètres",
         "Search...": "Rechercher...",
         "Save": "Enregistrer",
         "Add Phrase": "Ajouter une Phrase",
@@ -21,6 +22,7 @@ const fr = {
         "Enable Autostart": "Activer le Démarrage Automatique",
         "Disable Autostart": "Désactiver le Démarrage Automatique",
         "Quit": "Quitter",
+        "Startup": "Démarrage",
         "Light Theme": "Thème Clair",
         "Dark Theme": "Thème Sombre",
         "System Preference": "Préférence du Système",
@@ -32,12 +34,14 @@ const fr = {
         "Italian": "Italien",
         "Purchased - Thank you": "Acheté - Merci",
         "Buy License": "Acheter une Licence",
+        "Remind Me Later": "Me rappeler plus tard",
         "I Have Already Bought": "J'ai Déjà Acheté",
         "Documentation": "Documentation",
-        "Report Issue": "Signaler un Problème",
-        "View License Agreement": "Voir l'Accord de Licence",
-        "about_credits": "À propos de nous et crédits",
-        "Show Phrase Database File": "Afficher le Fichier de la Base de Données de Phrases",
+        "Report Issue": "Signaler un problème",
+        "View License Agreement": "Voir l'accord de licence",
+        "About": "À propos",
+        "Third Party Licenses": "Licences tierces",
+        "Show Phrase Database File": "Afficher le fichier de base de données",
         "Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!": "Développer et maintenir PhraseVault nécessite du temps et des efforts. Veuillez envisager de soutenir le projet en achetant une licence. Nous comptons sur votre honnêteté. Merci !",
         "Confirm Purchase": "Confirmer l'Achat",
         "I have purchased a license": "J'ai acheté une licence",
@@ -56,7 +60,7 @@ const fr = {
         "HTML": "HTML",
 
         // database status
-        "Phrases loaded": "Phrases chargées",
+        "Phrases loaded": "Base de données de phrases chargée avec succès",
         "Waiting for database": "En attente de la base de données",
         "Loading...": "Chargement...",
         "Database error": "Erreur de la base de données",
@@ -72,6 +76,8 @@ const fr = {
         "Phrase cannot be empty": "La phrase ne peut pas être vide",
         "Database schema upgraded successfully.": "Schéma de base de données mis à jour avec succès.",
         "Error upgrading database schema, but a backup was created.": "Erreur lors de la mise à jour du schéma de la base de données, mais une sauvegarde a été créée.",
+        "Autostart enabled": "Démarrage automatique activé",
+        "Autostart disabled": "Démarrage automatique désactivé",
 
         // examples
         "Customer Thank You": "Remerciement Client",
@@ -85,13 +91,13 @@ const fr = {
 
         // Purchase Reminder Overlay
         "trial_ended_title": "Votre essai de 14 jours est terminé.",
-        "trial_ended_p1": "PhraseVault fait gagner beaucoup de temps en insérant des phrases enregistrées dans n'importe quelle application.",
-        "trial_ended_p2": "C'est open source (Source First License), privé et sans télémétrie.",
-        "trial_ended_p3": "Pour continuer à utiliser PhraseVault, une licence payante est requise.",
+        "trial_ended_p1": "PhraseVault vous fait gagner beaucoup de temps en insérant des phrases, extraits et prompts fréquemment utilisés chaque jour.",
+        "trial_ended_p2": "C'est open source, sans publicité, axé sur la confidentialité sans télémétrie, et ne nécessite qu'un paiement unique pour une licence à vie.",
+        "trial_ended_p3": "Soutenez-nous en étant honnête et achetez une licence à vie en ligne maintenant.",
         "trial_ended_p4_prefix": "Déjà acheté ? Activez via",
-        "trial_ended_p4_suffix": "dans le menu principal.",
+        "trial_ended_p4_suffix": "dans les Paramètres.",
         "Purchase activated successfully. App will restart.": "Achat activé avec succès. L'application va redémarrer.",
     },
 };
 
-export default fr;
+module.exports = fr;

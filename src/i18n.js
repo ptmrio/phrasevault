@@ -1,10 +1,10 @@
-import i18n from 'i18next';
-import en from '../locales/en.js';
-import es from '../locales/es.js';
-import pt from '../locales/pt.js';
-import fr from '../locales/fr.js';
-import de from '../locales/de.js';
-import it from '../locales/it.js';
+const i18n = require("i18next");
+const en = require("../locales/en.js");
+const es = require("../locales/es.js");
+const pt = require("../locales/pt.js");
+const fr = require("../locales/fr.js");
+const de = require("../locales/de.js");
+const it = require("../locales/it.js");
 
 const resources = {
     en,
@@ -12,17 +12,17 @@ const resources = {
     pt,
     fr,
     de,
-    it
+    it,
 };
 
-i18n
-    .init({
-        debug: false,
-        lng: 'en',  // default language
-        resources
-    });
+i18n.init({
+    debug: false,
+    lng: "en", // default language
+    resources,
+});
 
 // Extracting language keys from the resources object
-export const availableLanguages = Object.keys(resources);
+const availableLanguages = Object.keys(resources);
 
-export default i18n;
+module.exports = i18n;
+module.exports.availableLanguages = availableLanguages;

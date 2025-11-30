@@ -1,6 +1,6 @@
-import fs from "fs";
-import path from "path";
-import { app } from "electron";
+const fs = require("fs");
+const path = require("path");
+const { app } = require("electron");
 
 let config = {
     theme: "system",
@@ -98,9 +98,7 @@ function markAsPurchased() {
 
 loadConfig();
 
-export { getConfig, setConfig, addRecentFile, getBalloonShown, setBalloonShown, shouldShowPurchaseReminder, markAsPurchased };
-
-export default {
+module.exports = {
     getConfig,
     setConfig,
     addRecentFile,

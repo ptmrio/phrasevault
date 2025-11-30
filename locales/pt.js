@@ -1,7 +1,8 @@
 const pt = {
     translation: {
         // menu
-        "Search...": "Pesquisar...",
+        "Settings": "Configurações",
+        "Search...": "Buscar...",
         "Save": "Salvar",
         "Add Phrase": "Adicionar Frase",
         "Copy to clipboard": "Copiar para a área de transferência",
@@ -21,6 +22,7 @@ const pt = {
         "Enable Autostart": "Ativar Início Automático",
         "Disable Autostart": "Desativar Início Automático",
         "Quit": "Sair",
+        "Startup": "Inicialização",
         "Light Theme": "Tema Claro",
         "Dark Theme": "Tema Escuro",
         "System Preference": "Preferência do Sistema",
@@ -32,12 +34,14 @@ const pt = {
         "Italian": "Italiano",
         "Purchased - Thank you": "Comprado - Obrigado",
         "Buy License": "Comprar Licença",
+        "Remind Me Later": "Lembrar mais tarde",
         "I Have Already Bought": "Já Comprei",
         "Documentation": "Documentação",
-        "Report Issue": "Reportar Problema",
-        "View License Agreement": "Ver Acordo de Licença",
-        "about_credits": "Sobre nós e créditos",
-        "Show Phrase Database File": "Mostrar Arquivo do Banco de Dados de Frases",
+        "Report Issue": "Relatar problema",
+        "View License Agreement": "Ver acordo de licença",
+        "About": "Sobre",
+        "Third Party Licenses": "Licenças de terceiros",
+        "Show Phrase Database File": "Mostrar arquivo do banco de dados de frases",
         "Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!": "Desenvolver e manter o PhraseVault demanda tempo e esforço. Considere apoiar o projeto comprando uma licença. Confiamos na sua honestidade. Obrigado!",
         "Confirm Purchase": "Confirmar Compra",
         "I have purchased a license": "Eu comprei uma licença",
@@ -56,8 +60,8 @@ const pt = {
         "HTML": "HTML",
 
         // database status
-        "Phrases loaded": "Frases carregadas",
-        "Waiting for database": "Aguardando o banco de dados",
+        "Phrases loaded": "Banco de dados de frases carregado com sucesso",
+        "Waiting for database": "Aguardando banco de dados",
         "Loading...": "Carregando...",
         "Database error": "Erro no banco de dados",
         "Neither the database nor the folder exists.": "Nem o banco de dados nem a pasta existem.",
@@ -72,6 +76,8 @@ const pt = {
         "Phrase cannot be empty": "A frase não pode estar vazia",
         "Database schema upgraded successfully.": "Esquema do banco de dados atualizado com sucesso.",
         "Error upgrading database schema, but a backup was created.": "Erro ao atualizar o esquema do banco de dados, mas um backup foi criado.",
+        "Autostart enabled": "Início automático ativado",
+        "Autostart disabled": "Início automático desativado",
 
         // examples
         "Customer Thank You": "Agradecimento ao Cliente",
@@ -85,13 +91,13 @@ const pt = {
 
         // Purchase Reminder Overlay
         "trial_ended_title": "Seu teste de 14 dias terminou.",
-        "trial_ended_p1": "PhraseVault economiza muito tempo ao inserir frases salvas em qualquer aplicativo.",
-        "trial_ended_p2": "É de código aberto (Source First License), privado e sem telemetria.",
-        "trial_ended_p3": "Para continuar usando o PhraseVault, é necessária uma licença paga.",
+        "trial_ended_p1": "PhraseVault economiza muito tempo inserindo frases, trechos e prompts de uso frequente todos os dias.",
+        "trial_ended_p2": "É de código aberto, sem anúncios, com privacidade em primeiro lugar e sem telemetria, e requer apenas um pagamento único para uma licença vitalícia.",
+        "trial_ended_p3": "Apoie-nos sendo honesto e compre uma licença vitalícia online agora.",
         "trial_ended_p4_prefix": "Já comprou? Ative através de",
-        "trial_ended_p4_suffix": "no menu principal.",
+        "trial_ended_p4_suffix": "nas Configurações.",
         "Purchase activated successfully. App will restart.": "Compra ativada com sucesso. O aplicativo será reiniciado.",
     },
 };
 
-export default pt;
+module.exports = pt;

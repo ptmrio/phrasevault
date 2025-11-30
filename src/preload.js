@@ -1,7 +1,9 @@
-import { contextBridge, ipcRenderer } from "electron";
-import i18n from "./i18n.js";
+const { contextBridge, ipcRenderer } = require("electron");
+
+const i18n = require("./i18n.js");
 
 const validChannels = [
+    // Existing channels...
     "search-phrases",
     "add-phrase",
     "edit-phrase",
@@ -29,6 +31,20 @@ const validChannels = [
     "show-purchase-reminder",
     "open-external-url",
     "mark-as-purchased",
+    "get-settings",
+    "init-settings",
+    "set-language",
+    "set-autostart",
+    "new-database",
+    "open-database",
+    "open-recent-database",
+    "get-recent-databases",
+    "recent-databases",
+    "show-database",
+    "confirm-purchase",
+    "quit-app",
+    "read-markdown-file",
+    "markdown-content",
 ];
 
 contextBridge.exposeInMainWorld("electron", {

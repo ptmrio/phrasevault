@@ -1,21 +1,57 @@
-import { app, Menu, globalShortcut, BrowserWindow, ipcMain, clipboard, screen, shell } from "electron";
-import { windowManager } from "node-window-manager";
-import { platform } from "os";
-import { createWindow, createTray } from "./window.js";
-import path from "path";
-import state from "./state.js";
-import db from "./database.js";
-import { exec } from "child_process";
-import { createTemplate } from "./menu.js";
-import i18n, { availableLanguages } from "./i18n.js";
-import EventEmitter from "events";
-import { fileURLToPath } from "url";
-import { marked } from "marked";
-import markedOptions from "./_partial/_marked-options.js";
-import robot from "@hurdlegroup/robotjs";
+const { app, Menu, globalShortcut, BrowserWindow, ipcMain, clipboard, screen, shell, dialog, nativeTheme } = require("electron");
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+if (require("electron-squirrel-startup")) app.quit();
+
+// Debugging installer
+if (process.env.DEBUG_SQUIRREL) {
+    process.on("uncaughtException", (error) => {
+        const fs = require("fs");
+        const path = require("path");
+        const logPath = path.join(require("os").tmpdir(), "phrasevault-error.log");
+
+        const errorDetails = `
+=== UNCAUGHT EXCEPTION ===
+Time: ${new Date().toISOString()}
+Error: ${error.message}
+Stack: ${error.stack}
+Process CWD: ${process.cwd()}
+Exec Path: ${process.execPath}
+Main Module: ${require.main ? require.main.filename : "unknown"}
+========================
+`;
+
+        fs.writeFileSync(logPath, errorDetails);
+        console.error(errorDetails);
+
+        try {
+            const { dialog } = require("electron");
+            dialog.showErrorBox("Fatal Error", `${error.message}\n\nLog saved to: ${logPath}`);
+        } catch (e) {
+            // Electron not ready yet
+        }
+
+        process.exit(1);
+    });
+}
+
+const { windowManager } = require("node-window-manager");
+const { platform } = require("os");
+const { createWindow, createTray, updateTitleBarTheme } = require("./window.js");
+const path = require("path");
+const fs = require("fs");
+const state = require("./state.js");
+const db = require("./database.js");
+const { exec } = require("child_process");
+const i18n = require("./i18n.js");
+const { availableLanguages } = require("./i18n.js");
+const EventEmitter = require("events");
+const { marked } = require("marked");
+const markedOptions = require("./_partial/_marked-options.js");
+const robot = require("@hurdlegroup/robotjs");
+
+if (process.platform === "win32") {
+    app.setAppUserModelId("PhraseVault");
+}
 
 class DatabaseEvents extends EventEmitter {}
 const databaseEvents = new DatabaseEvents();
@@ -36,10 +72,12 @@ process.on("unhandledRejection", (reason, promise) => {
 });
 
 function setTheme(theme) {
+    nativeTheme.themeSource = theme;
     if (mainWindow && mainWindow.webContents) {
         mainWindow.webContents.send("set-theme", theme);
     }
     state.setConfig({ theme });
+    updateTitleBarTheme(theme);
 }
 
 function setLanguage(lng) {
@@ -47,6 +85,39 @@ function setLanguage(lng) {
     state.setConfig({ showOnStartup: true });
     app.relaunch();
     app.exit();
+}
+
+function setAutoLaunch(enabled) {
+    if (process.platform !== "win32" || !app.isPackaged) return;
+
+    const exe = process.execPath;
+    const appFolder = path.dirname(exe);
+    const ourExeName = path.basename(exe);
+    const squirrelStub = path.resolve(appFolder, "..", ourExeName);
+    const useStub = fs.existsSync(squirrelStub);
+    const launchPath = useStub ? squirrelStub : exe;
+
+    app.setLoginItemSettings({
+        openAtLogin: enabled,
+        enabled: enabled,
+        path: launchPath,
+        args: ["--launched-at-login", "--hidden"],
+    });
+}
+
+function isAutoLaunchEnabled() {
+    if (process.platform !== "win32" || !app.isPackaged) return false;
+
+    const exe = process.execPath;
+    const appFolder = path.dirname(exe);
+    const ourExeName = path.basename(exe);
+    const squirrelStub = path.resolve(appFolder, "..", ourExeName);
+    const launchPath = fs.existsSync(squirrelStub) ? squirrelStub : exe;
+
+    return app.getLoginItemSettings({
+        path: launchPath,
+        args: ["--launched-at-login", "--hidden"],
+    }).openAtLogin;
 }
 
 const gotTheLock = app.requestSingleInstanceLock();
@@ -68,7 +139,7 @@ if (!gotTheLock) {
         windowManager.requestAccessibility();
 
         if (!languageToUse || typeof languageToUse !== "string") {
-            const { osLocaleSync } = await import("os-locale");
+            const { osLocaleSync } = require("os-locale");
             const systemLocale = osLocaleSync();
             const systemLanguage = systemLocale.split("-")[0].toLowerCase();
 
@@ -81,18 +152,15 @@ if (!gotTheLock) {
             state.setConfig({ language: languageToUse });
         }
 
-        // Update the i18n language setting
         i18n.changeLanguage(languageToUse);
 
         mainWindow = createWindow();
         tray = createTray();
 
-        // send change language to renderer
         mainWindow.webContents.on("did-finish-load", () => {
             setTheme(config.theme);
             mainWindow.webContents.send("change-language", config.language);
 
-            // Check if purchase reminder should be shown
             if (state.shouldShowPurchaseReminder()) {
                 mainWindow.webContents.send("show-purchase-reminder");
             }
@@ -125,10 +193,9 @@ if (!gotTheLock) {
                 const display = screen.getDisplayMatching(bounds);
 
                 let { width, height } = mainWindow.getBounds();
-                const maxWidth = display.bounds.width * 0.9; // Use 90% of the display width
-                const maxHeight = display.bounds.height * 0.9; // Use 90% of the display height
+                const maxWidth = display.bounds.width * 0.9;
+                const maxHeight = display.bounds.height * 0.9;
 
-                // Adjust the size if necessary
                 if (width > maxWidth) {
                     width = maxWidth;
                 }
@@ -139,7 +206,6 @@ if (!gotTheLock) {
                 const x = display.bounds.x + (display.bounds.width - width) / 2;
                 const y = display.bounds.y + (display.bounds.height - height) / 2;
 
-                // Ensure window is not maximized before setting bounds
                 if (mainWindow.isMaximized()) {
                     mainWindow.unmaximize();
                 }
@@ -149,7 +215,7 @@ if (!gotTheLock) {
                 if (mainWindow.isMaximized()) {
                     mainWindow.unmaximize();
                 }
-                mainWindow.center(); // Center on the primary display if no previous window is found
+                mainWindow.center();
             }
             mainWindow.show();
             mainWindow.focus();
@@ -158,7 +224,7 @@ if (!gotTheLock) {
 
         mainWindow.webContents.on("before-input-event", (event, input) => {
             if (input.key === "Escape" && input.type === "keyUp") {
-                event.preventDefault(); // todo: might not be necessary or be counterproductive
+                event.preventDefault();
                 mainWindow.webContents.send("handle-escape");
             }
         });
@@ -167,7 +233,7 @@ if (!gotTheLock) {
             mainWindow.hide();
             if (tray && !state.getBalloonShown()) {
                 tray.displayBalloon({
-                    icon: path.join(__dirname, "../assets/img/tray_icon.png"),
+                    icon: path.join(__dirname, "../assets/img/icon.ico"),
                     title: "PhraseVault",
                     content: i18n.t("PhraseVault is running in the background."),
                 });
@@ -178,8 +244,14 @@ if (!gotTheLock) {
             }
         });
 
-        const menu = Menu.buildFromTemplate(createTemplate(mainWindow, setTheme, setLanguage));
-        Menu.setApplicationMenu(menu);
+        // Minimal menu for keyboard shortcuts only (no visible menu bar)
+        const minimalMenu = Menu.buildFromTemplate([
+            {
+                label: "Edit",
+                submenu: [{ role: "undo" }, { role: "redo" }, { type: "separator" }, { role: "cut" }, { role: "copy" }, { role: "paste" }, { role: "selectAll" }],
+            },
+        ]);
+        Menu.setApplicationMenu(minimalMenu);
 
         app.on("activate", () => {
             if (BrowserWindow.getAllWindows().length === 0) mainWindow = createWindow();
@@ -259,6 +331,10 @@ if (!gotTheLock) {
         }
     });
 
+    // =============================================================================
+    // Settings IPC Handlers
+    // =============================================================================
+
     ipcMain.on("get-theme", (event) => {
         event.returnValue = state.getConfig().theme;
     });
@@ -267,13 +343,179 @@ if (!gotTheLock) {
         setTheme(theme);
     });
 
+    ipcMain.on("copy-to-clipboard", (event, phrase) => {
+        try {
+            if (phrase.type === "markdown" || phrase.type === "mdwysiwyg") {
+                marked.setOptions(markedOptions);
+                const htmlText = marked(phrase.expanded_text);
+                clipboard.write({
+                    text: phrase.expanded_text,
+                    html: htmlText,
+                });
+            } else if (phrase.type === "html") {
+                clipboard.write({
+                    text: phrase.expanded_text,
+                    html: phrase.expanded_text,
+                });
+            } else {
+                clipboard.writeText(phrase.expanded_text);
+            }
+        } catch (error) {
+            console.error("Failed to copy to clipboard:", error);
+        }
+    });
+
+    ipcMain.on("get-settings", (event) => {
+        const config = state.getConfig();
+        event.sender.send("init-settings", {
+            theme: config.theme || "system",
+            language: config.language || "en",
+            autostart: config.autostart ?? true,
+            purchased: config.purchased || false,
+            version: app.getVersion(),
+            platform: process.platform,
+        });
+    });
+
+    ipcMain.on("set-language", (event, lng) => {
+        setLanguage(lng);
+    });
+
+    ipcMain.on("set-autostart", (event, enabled) => {
+        state.setConfig({ autostart: enabled });
+        setAutoLaunch(enabled);
+        if (mainWindow && mainWindow.webContents) {
+            mainWindow.webContents.send("toast-message", {
+                type: "success",
+                message: enabled ? i18n.t("Autostart enabled") : i18n.t("Autostart disabled"),
+            });
+        }
+    });
+
+    ipcMain.on("new-database", () => {
+        const options = {
+            title: i18n.t("Create New Database"),
+            defaultPath: "phrasevault.sqlite",
+            buttonLabel: i18n.t("Create"),
+            filters: [{ name: "SQLite Database", extensions: ["sqlite"] }],
+        };
+
+        dialog
+            .showSaveDialog(mainWindow, options)
+            .then((result) => {
+                if (!result.canceled && result.filePath) {
+                    const newDbPath = result.filePath.endsWith(".sqlite") ? result.filePath : result.filePath + ".sqlite";
+                    fs.writeFileSync(newDbPath, "");
+                    state.setConfig({ dbPath: newDbPath });
+                    state.setConfig({ showOnStartup: true });
+                    state.setConfig({ initializeTables: true });
+                    state.addRecentFile(newDbPath);
+                    app.relaunch();
+                    app.exit();
+                }
+            })
+            .catch((err) => {
+                console.error("Failed to create new database:", err);
+            });
+    });
+
+    ipcMain.on("open-database", () => {
+        const options = {
+            title: i18n.t("Open Database"),
+            buttonLabel: i18n.t("Open"),
+            filters: [{ name: "SQLite Database", extensions: ["sqlite"] }],
+            properties: ["openFile"],
+        };
+
+        dialog
+            .showOpenDialog(mainWindow, options)
+            .then((result) => {
+                if (!result.canceled && result.filePaths.length > 0) {
+                    const selectedPath = result.filePaths[0];
+                    state.setConfig({ dbPath: selectedPath });
+                    state.setConfig({ showOnStartup: true });
+                    state.addRecentFile(selectedPath);
+                    app.relaunch();
+                    app.exit();
+                }
+            })
+            .catch((err) => {
+                console.error("Failed to open database:", err);
+            });
+    });
+
+    ipcMain.on("open-recent-database", (event, filePath) => {
+        state.setConfig({ dbPath: filePath });
+        state.setConfig({ showOnStartup: true });
+        state.addRecentFile(filePath);
+        app.relaunch();
+        app.exit();
+    });
+
+    ipcMain.on("get-recent-databases", (event) => {
+        const config = state.getConfig();
+        event.sender.send("recent-databases", config.recentFiles || []);
+    });
+
+    ipcMain.on("show-database", () => {
+        const dbPath = state.getConfig().dbPath;
+        if (fs.existsSync(dbPath)) {
+            shell.showItemInFolder(dbPath);
+        } else if (fs.existsSync(path.dirname(dbPath))) {
+            shell.openPath(path.dirname(dbPath));
+        } else {
+            if (mainWindow && mainWindow.webContents) {
+                mainWindow.webContents.send("toast-message", {
+                    type: "danger",
+                    message: i18n.t("Neither the database file nor the folder exists."),
+                });
+            }
+        }
+    });
+
+    ipcMain.on("confirm-purchase", () => {
+        const response = dialog.showMessageBoxSync(mainWindow, {
+            type: "question",
+            buttons: [i18n.t("I have purchased a license"), i18n.t("No")],
+            cancelId: 1,
+            noLink: true,
+            title: i18n.t("Confirm Purchase"),
+            message: i18n.t("Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!"),
+        });
+
+        if (response === 0) {
+            state.setConfig({ purchased: true });
+            state.setConfig({ showOnStartup: true });
+            app.relaunch();
+            app.exit();
+        } else {
+            shell.openExternal("https://phrasevault.app/pricing");
+        }
+    });
+
     ipcMain.on("open-external-url", (event, url) => {
         shell.openExternal(url);
     });
 
+    ipcMain.on("read-markdown-file", (event, filename) => {
+        const markdownPath = path.join(__dirname, "..", "templates", "markdown", filename);
+        try {
+            if (fs.existsSync(markdownPath)) {
+                const content = fs.readFileSync(markdownPath, "utf-8");
+                marked.setOptions(markedOptions);
+                const htmlContent = marked(content);
+                event.sender.send("markdown-content", { success: true, html: htmlContent, filename });
+            } else {
+                event.sender.send("markdown-content", { success: false, error: "File not found" });
+            }
+        } catch (error) {
+            console.error("Failed to read markdown file:", error);
+            event.sender.send("markdown-content", { success: false, error: error.message });
+        }
+    });
+
     ipcMain.on("mark-as-purchased", () => {
         state.markAsPurchased();
-        // Show success message and relaunch
         if (mainWindow && mainWindow.webContents) {
             mainWindow.webContents.send("toast-message", {
                 type: "success",

@@ -1,13 +1,13 @@
-import fs from "fs";
-import path from "path";
-import sqlite3 from "sqlite3";
-import { app, ipcMain, clipboard } from "electron";
-import state from "./state.js";
-import i18n from "./i18n.js";
-import { upgrades } from "./database-upgrades.js";
-import { marked } from "marked";
-import markedOptions from "./_partial/_marked-options.js";
-import { set } from "electron-json-storage";
+const fs = require("fs");
+const path = require("path");
+const sqlite3 = require("sqlite3");
+const { app, ipcMain, clipboard } = require("electron");
+const state = require("./state.js");
+const i18n = require("./i18n.js");
+const { upgrades } = require("./database-upgrades.js");
+const { marked } = require("marked");
+const markedOptions = require("./_partial/_marked-options.js");
+const { set } = require("electron-json-storage");
 
 const dbPath = state.getConfig().dbPath;
 
@@ -15,7 +15,7 @@ const validTypes = ["plain", "markdown", "mdwysiwyg", "html"];
 
 let db;
 
-export function initializeDatabase() {
+function initializeDatabase() {
     db = new sqlite3.Database(dbPath, async (err) => {
         if (err) {
             console.error("Error opening database:", err);
@@ -173,7 +173,7 @@ async function backupDatabase() {
     }
 }
 
-export function checkDatabaseAccessibility(callback) {
+function checkDatabaseAccessibility(callback) {
     const firstRun = state.getConfig().firstRun;
     if (firstRun) {
         // create the database file if it doesn't exist
@@ -249,7 +249,6 @@ function searchPhrases(searchText, callback) {
         });
     });
 }
-
 
 ipcMain.on("search-phrases", (event, searchText) => {
     searchPhrases(searchText, (err, rows) => {
@@ -396,4 +395,4 @@ app.on("will-quit", () => {
     });
 });
 
-export default db;
+module.exports = db;

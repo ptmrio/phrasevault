@@ -1,6 +1,7 @@
 const en = {
     translation: {
         // menu
+        "Settings": "Settings",
         "Search...": "Search...",
         "Save": "Save",
         "Add Phrase": "Add Phrase",
@@ -21,6 +22,7 @@ const en = {
         "Enable Autostart": "Enable Autostart",
         "Disable Autostart": "Disable Autostart",
         "Quit": "Quit",
+        "Startup": "Startup",
         "Light Theme": "Light Theme",
         "Dark Theme": "Dark Theme",
         "System Preference": "System Preference",
@@ -32,11 +34,13 @@ const en = {
         "Italian": "Italian",
         "Purchased - Thank you": "Purchased - Thank you",
         "Buy License": "Buy License",
+        "Remind Me Later": "Remind Me Later",
         "I Have Already Bought": "I Have Already Bought",
         "Documentation": "Documentation",
         "Report Issue": "Report Issue",
         "View License Agreement": "View License Agreement",
-        "about_credits": "About us and Credits",
+        "About": "About",
+        "Third Party Licenses": "Third Party Licenses",
         "Show Phrase Database File": "Show Phrase Database File",
         "Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!": "Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!",
         "Confirm Purchase": "Confirm Purchase",
@@ -56,7 +60,7 @@ const en = {
         "HTML": "HTML",
 
         // database status
-        "Phrases loaded": "Phrases loaded",
+        "Phrases loaded": "Phrase database loaded successfully",
         "Waiting for database": "Waiting for database",
         "Loading...": "Loading...",
         "Database error": "Database error",
@@ -72,6 +76,8 @@ const en = {
         "Phrase cannot be empty": "Phrase cannot be empty",
         "Database schema upgraded successfully.": "Database schema upgraded successfully.",
         "Error upgrading database schema, but a backup was created.": "Error upgrading database schema, but a backup was created.",
+        "Autostart enabled": "Autostart enabled",
+        "Autostart disabled": "Autostart disabled",
 
         // examples
         "Customer Thank You": "Customer Thank You",
@@ -85,13 +91,13 @@ const en = {
 
         // Purchase Reminder Overlay
         "trial_ended_title": "Your 14-day trial has ended.",
-        "trial_ended_p1": "PhraseVault saves tons of time by inserting saved phrases into any app.",
-        "trial_ended_p2": "It's open source (Source First License), private, and no telemetry.",
-        "trial_ended_p3": "To continue using PhraseVault, a paid license is required.",
+        "trial_ended_p1": "PhraseVault saves you tons of time by inserting commonly used phrases, snippets, and prompts every day.",
+        "trial_ended_p2": "It's open source, ad-free, privacy-first with no telemetry, and requires only a one-time payment for a lifetime license.",
+        "trial_ended_p3": "Support us by being honest and purchase a lifetime license online now.",
         "trial_ended_p4_prefix": "Already purchased? Activate via",
-        "trial_ended_p4_suffix": "in the main menu.",
+        "trial_ended_p4_suffix": "in Settings.",
         "Purchase activated successfully. App will restart.": "Purchase activated successfully. App will restart.",
     },
 };
 
-export default en;
+module.exports = en;

@@ -6,4 +6,4 @@ const markedOptions = {
     smartypants: false,
 };
 
-export default markedOptions;
+module.exports = markedOptions;

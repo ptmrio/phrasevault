@@ -4,12 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; connect-src 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'">
     <title>PhraseVault</title>
     <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 
 <body>
+    <!-- Title bar drag region -->
+    <div id="title-bar-drag"></div>
+    <div id="title-bar-brand">PhraseVault</div>
+
     <div style="display: none;">
         <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
             <symbol id="icon-x" viewBox="0 0 24 24">
@@ -57,83 +61,248 @@
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
             </symbol>
+            <symbol id="icon-search" viewBox="0 0 24 24">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                <path d="M21 21l-6 -6" />
+            </symbol>
+            <symbol id="icon-settings" viewBox="0 0 24 24">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path
+                    d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+                <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+            </symbol>
+            <symbol id="icon-chevron-right" viewBox="0 0 24 24">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M9 6l6 6l-6 6" />
+            </symbol>
+            <symbol id="icon-check" viewBox="0 0 24 24">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M5 12l5 5l10 -10" />
+            </symbol>
         </svg>
     </div>
 
     <div id="app">
-        <input type="search" id="search" placeholder="" data-i18n="Search..." data-i18n-attribute="placeholder" />
+        <div class="search-wrapper">
+            <input type="search" id="search" class="input" placeholder="" data-i18n="Search..." data-i18n-attribute="placeholder" />
+            <button type="button" class="search-clear" aria-label="Clear">
+                <svg class="icon">
+                    <use href="#icon-x"></use>
+                </svg>
+            </button>
+            <button class="btn btn-icon search-btn" aria-label="Search" data-i18n="Search" data-i18n-attribute="aria-label">
+                <svg class="icon">
+                    <use href="#icon-search"></use>
+                </svg>
+            </button>
+        </div>
         <ul id="phrase-list"></ul>
-        <button id="add-phrase" aria-label="" data-i18n="Add Phrase" data-i18n-attribute="aria-label">
-            <svg class="icon">
-                <use href="#icon-plus"></use>
-            </svg>
-        </button>
 
-        <div id="db-status">
-            <span id="db-status-indicator">
+        <!-- Settings FAB with status indicator -->
+        <button id="settings-btn" class="btn btn-secondary btn-fab btn-fab-left" aria-label="Settings" data-i18n="Settings" data-i18n-attribute="aria-label">
+            <span id="status-indicator">
                 <svg class="icon">
                     <use href="#icon-circle-filled"></use>
                 </svg>
             </span>
-            <span id="db-status-text"></span>
+            <svg class="icon icon-main">
+                <use href="#icon-settings"></use>
+            </svg>
+        </button>
 
-        </div>
+        <!-- Add Phrase FAB -->
+        <button id="add-phrase" class="btn btn-primary btn-fab" aria-label="" data-i18n="Add Phrase" data-i18n-attribute="aria-label">
+            <svg class="icon">
+                <use href="#icon-plus"></use>
+            </svg>
+        </button>
     </div>
 
     <!-- Purchase Reminder Overlay -->
     <div id="purchase-reminder-overlay" class="purchase-reminder-overlay" style="display: none;">
         <div class="purchase-reminder-content">
             <h2 data-i18n="trial_ended_title">Your 14-day trial has ended.</h2>
-            <p data-i18n="trial_ended_p1">PhraseVault saves tons of time by inserting saved phrases into any app.</p>
-            <p data-i18n="trial_ended_p2">It's open source (Source First License), private, and no telemetry.</p>
-            <p data-i18n="trial_ended_p3">To continue using PhraseVault, a paid license is required.</p>
+            <p data-i18n="trial_ended_p1">PhraseVault saves you tons of time by inserting commonly used phrases, snippets, and prompts every day.</p>
+            <p data-i18n="trial_ended_p2">It's open source, privacy-first with no telemetry, and requires only a one-time payment for a lifetime license.</p>
+            <p data-i18n="trial_ended_p3">Support us by being honest and purchase a lifetime license online now.</p>
             <p>
-                <span data-i18n="trial_ended_p4_prefix">Already purchased? Activate via</span>
-                <strong><span data-i18n="Purchase">Purchase</span> → <span data-i18n="I Have Already Bought">I Have Already Bought</span></strong>
-                <span data-i18n="trial_ended_p4_suffix">in the main menu.</span>
+                <span data-i18n="trial_ended_p4_prefix">Already purchased? Click</span>
+                <strong data-i18n="I Have Already Bought">I Have Already Bought</strong>
+                <span data-i18n="trial_ended_p4_suffix">in Settings.</span>
             </p>
             <div class="purchase-reminder-buttons">
-                <button id="already-bought-reminder-btn" class="btn-secondary" data-i18n="I Have Already Bought">I Have Already Bought</button>
-                <button id="buy-license-reminder-btn" class="btn-primary" data-i18n="Buy License">Buy License</button>
+                <button id="remind-later-btn" class="btn btn-secondary" data-i18n="Remind Me Later">Remind Me Later</button>
+                <button id="buy-license-reminder-btn" class="btn btn-primary" data-i18n="Buy License">Buy License</button>
             </div>
         </div>
     </div>
 
+    <!-- Phrase Modal -->
     <div id="phraseModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modal-title"></h2>
-                <button class="close">
+                <button class="btn btn-ghost btn-icon close">
                     <svg class="icon">
                         <use href="#icon-x"></use>
                     </svg>
                 </button>
             </div>
-            <input type="text" id="phraseInput" data-i18n="Phrase" data-i18n-attribute="placeholder">
-            <textarea id="expandedTextInput" data-i18n="Expanded Text" data-i18n-attribute="placeholder"></textarea>
+            <input type="text" id="phraseInput" class="input" data-i18n="Phrase" data-i18n-attribute="placeholder">
+            <textarea id="expandedTextInput" class="input" data-i18n="Expanded Text" data-i18n-attribute="placeholder"></textarea>
             <div class="radio-group">
-                <label>
-                    <input type="radio" name="phraseType" value="plain" checked>
-                    <span data-i18n="Plain Text"></span>
+                <label class="radio-label">
+                    <input type="radio" class="radio-input" name="phraseType" value="plain" checked>
+                    <span data-i18n="Plain Text">Plain Text</span>
                 </label>
-                <label>
-                    <input type="radio" name="phraseType" value="markdown">
-                    <span data-i18n="Markdown"></span>
+                <label class="radio-label">
+                    <input type="radio" class="radio-input" name="phraseType" value="markdown">
+                    <span data-i18n="Markdown">Markdown</span>
                 </label>
-                <!-- <label>
-                    <input type="radio" name="phraseType" value="mdwysiwyg">
-                    <span data-i18n="Markdown Editor"></span>
-                </label> -->
-                <label>
-                    <input type="radio" name="phraseType" value="html">
-                    <span data-i18n="HTML"></span>
+                <label class="radio-label">
+                    <input type="radio" class="radio-input" name="phraseType" value="html">
+                    <span data-i18n="HTML">HTML</span>
                 </label>
             </div>
             <input type="hidden" id="idInput">
-            <button id="saveButton">
-                <svg class="icon">
-                    <use href="#icon-floppy"></use>
-                </svg> <span data-i18n="Save"></span></button>
+            <div class="modal-footer">
+                <button id="saveButton" class="btn btn-primary">
+                    <svg class="icon">
+                        <use href="#icon-floppy"></use>
+                    </svg>
+                    <span data-i18n="Save">Save</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content settings-modal-content">
+            <div class="modal-header">
+                <h2 data-i18n="Settings">Settings</h2>
+                <button class="btn btn-ghost btn-icon settings-close">
+                    <svg class="icon">
+                        <use href="#icon-x"></use>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Database Status -->
+                <div class="settings-section settings-status">
+                    <span id="settings-status-indicator">
+                        <svg class="icon">
+                            <use href="#icon-circle-filled"></use>
+                        </svg>
+                    </span>
+                    <span id="settings-status-text"></span>
+                </div>
+
+                <!-- Database -->
+                <div class="settings-section">
+                    <h3 data-i18n="Database">Database</h3>
+                    <div class="settings-grid">
+                        <button id="new-db-btn" class="btn btn-secondary" data-i18n="New Database">New Database</button>
+                        <button id="open-db-btn" class="btn btn-secondary" data-i18n="Open Database">Open Database</button>
+                    </div>
+                    <div id="recent-databases" class="settings-recent"></div>
+                    <button id="show-db-btn" class="btn btn-secondary btn-sm" data-i18n="Show Phrase Database File">Show Database in Folder</button>
+                </div>
+
+                <!-- Purchase -->
+                <div class="settings-section" id="purchase-section">
+                    <h3 data-i18n="Purchase">Purchase</h3>
+                    <div class="settings-grid">
+                        <button id="buy-license-btn" class="btn btn-primary" data-i18n="Buy License">Buy License</button>
+                        <button id="already-bought-btn" class="btn btn-secondary" data-i18n="I Have Already Bought">I Have Already Bought</button>
+                    </div>
+                </div>
+
+                <!-- Purchased thank you (hidden by default) -->
+                <div class="settings-section" id="purchased-section" style="display: none;">
+                    <h3 data-i18n="Purchase">Purchase</h3>
+                    <p class="purchased-thanks">
+                        <svg class="icon">
+                            <use href="#icon-check"></use>
+                        </svg>
+                        <span data-i18n="Purchased - Thank you">Purchased - Thank you!</span>
+                    </p>
+                </div>
+
+                <!-- Autostart (Windows only) -->
+                <div class="settings-section" id="autostart-section">
+                    <h3 data-i18n="Startup">Startup</h3>
+                    <label class="settings-toggle">
+                        <input type="checkbox" id="autostart-toggle">
+                        <span data-i18n="Start with Windows">Start with Windows</span>
+                    </label>
+                </div>
+
+                <!-- Theme -->
+                <div class="settings-section">
+                    <h3 data-i18n="Theme">Theme</h3>
+                    <div class="settings-grid settings-grid-3">
+                        <label class="settings-option">
+                            <input type="radio" name="theme" value="light">
+                            <span data-i18n="Light Theme">Light</span>
+                        </label>
+                        <label class="settings-option">
+                            <input type="radio" name="theme" value="dark">
+                            <span data-i18n="Dark Theme">Dark</span>
+                        </label>
+                        <label class="settings-option">
+                            <input type="radio" name="theme" value="system">
+                            <span data-i18n="System Preference">System</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Language -->
+                <div class="settings-section">
+                    <h3 data-i18n="Language">Language</h3>
+                    <select id="language-select" class="input">
+                        <option value="en">English</option>
+                        <option value="es">Español</option>
+                        <option value="pt">Português</option>
+                        <option value="fr">Français</option>
+                        <option value="de">Deutsch</option>
+                        <option value="it">Italiano</option>
+                    </select>
+                </div>
+
+                <!-- Help -->
+                <div class="settings-section">
+                    <h3 data-i18n="Help">Help</h3>
+                    <div class="settings-grid settings-grid-2">
+                        <a href="#" id="link-docs" class="settings-link" data-i18n="Documentation">Documentation</a>
+                        <a href="#" id="link-issues" class="settings-link" data-i18n="Report Issue">Report Issue</a>
+                        <a href="#" id="link-license" class="settings-link" data-i18n="View License Agreement">License Agreement</a>
+                        <a href="#" id="link-about" class="settings-link" data-i18n="About">About</a>
+                        <a href="#" id="link-thirdparty" class="settings-link" data-i18n="Third Party Licenses">Third Party Licenses</a>
+                    </div>
+                </div>
+
+                <!-- Version -->
+                <div class="settings-section settings-version">
+                    <span id="version-text" class="version-text"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Markdown Viewer Modal -->
+    <div id="markdownModal" class="modal">
+        <div class="modal-content markdown-modal-content">
+            <div class="modal-header">
+                <h2 id="markdown-modal-title"></h2>
+                <button class="btn btn-ghost btn-icon markdown-close">
+                    <svg class="icon">
+                        <use href="#icon-x"></use>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body markdown-body" id="markdown-content"></div>
         </div>
     </div>
 

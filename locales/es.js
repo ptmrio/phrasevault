@@ -1,6 +1,7 @@
 const es = {
     translation: {
         // menu
+        "Settings": "Configuración",
         "Search...": "Buscar...",
         "Save": "Guardar",
         "Add Phrase": "Agregar Frase",
@@ -21,6 +22,7 @@ const es = {
         "Enable Autostart": "Activar Inicio Automático",
         "Disable Autostart": "Desactivar Inicio Automático",
         "Quit": "Salir",
+        "Startup": "Inicio",
         "Light Theme": "Tema Claro",
         "Dark Theme": "Tema Oscuro",
         "System Preference": "Preferencia del Sistema",
@@ -32,11 +34,13 @@ const es = {
         "Italian": "Italiano",
         "Purchased - Thank you": "Comprado - Gracias",
         "Buy License": "Comprar Licencia",
+        "Remind Me Later": "Recordar más tarde",
         "I Have Already Bought": "Ya He Comprado",
         "Documentation": "Documentación",
         "Report Issue": "Informar de un Problema",
         "View License Agreement": "Ver Acuerdo de Licencia",
-        "about_credits": "Sobre nosotros y créditos",
+        "About": "Acerca de",
+        "Third Party Licenses": "Licencias de terceros",
         "Show Phrase Database File": "Mostrar Archivo de la Base de Datos de Frases",
         "Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!": "Desarrollar y mantener PhraseVault requiere tiempo y esfuerzo. Por favor, considere apoyar el proyecto comprando una licencia. Confiamos en su honestidad. ¡Gracias!",
         "Confirm Purchase": "Confirmar Compra",
@@ -56,7 +60,7 @@ const es = {
         "HTML": "HTML",
 
         // database status
-        "Phrases loaded": "Frases cargadas",
+        "Phrases loaded": "Base de datos de frases cargada correctamente",
         "Waiting for database": "Esperando la base de datos",
         "Loading...": "Cargando...",
         "Database error": "Error en la base de datos",
@@ -72,6 +76,8 @@ const es = {
         "Phrase cannot be empty": "La frase no puede estar vacía",
         "Database schema upgraded successfully.": "Esquema de base de datos actualizado con éxito.",
         "Error upgrading database schema, but a backup was created.": "Error al actualizar el esquema de la base de datos, pero se creó una copia de seguridad.",
+        "Autostart enabled": "Inicio automático activado",
+        "Autostart disabled": "Inicio automático desactivado",
 
         // examples
         "Customer Thank You": "Agradecimiento a Cliente",
@@ -85,13 +91,13 @@ const es = {
 
         // Purchase Reminder Overlay
         "trial_ended_title": "Tu prueba de 14 días ha terminado.",
-        "trial_ended_p1": "PhraseVault ahorra mucho tiempo al insertar frases guardadas en cualquier aplicación.",
-        "trial_ended_p2": "Es de código abierto (Source First License), privado y sin telemetría.",
-        "trial_ended_p3": "Para continuar usando PhraseVault, se requiere una licencia de pago.",
+        "trial_ended_p1": "PhraseVault te ahorra mucho tiempo al insertar frases, fragmentos y prompts de uso frecuente todos los días.",
+        "trial_ended_p2": "Es de código abierto, sin publicidad, con privacidad primero y sin telemetría, y solo requiere un pago único para una licencia de por vida.",
+        "trial_ended_p3": "Apóyanos siendo honesto y compra una licencia de por vida en línea ahora.",
         "trial_ended_p4_prefix": "¿Ya compraste? Activa a través de",
-        "trial_ended_p4_suffix": "en el menú principal.",
+        "trial_ended_p4_suffix": "en Configuración.",
         "Purchase activated successfully. App will restart.": "Compra activada con éxito. La aplicación se reiniciará.",
     },
 };
 
-export default es;
+module.exports = es;

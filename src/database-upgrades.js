@@ -1,4 +1,4 @@
-export const upgrades = [
+const upgrades = [
     { version: 1, upgrade: upgradeToV1 },
 ];
 
@@ -27,3 +27,5 @@ function upgradeToV1(db) {
         });
     });
 }
+
+module.exports = { upgrades };

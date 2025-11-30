@@ -1,6 +1,7 @@
 const de = {
     translation: {
         // menu
+        "Settings": "Einstellungen",
         "Search...": "Suchen...",
         "Save": "Speichern",
         "Add Phrase": "Phrase hinzufügen",
@@ -21,6 +22,7 @@ const de = {
         "Enable Autostart": "Autostart aktivieren",
         "Disable Autostart": "Autostart deaktivieren",
         "Quit": "Beenden",
+        "Startup": "Autostart",
         "Light Theme": "Helles Thema",
         "Dark Theme": "Dunkles Thema",
         "System Preference": "Systemeinstellung",
@@ -32,11 +34,13 @@ const de = {
         "Italian": "Italienisch",
         "Purchased - Thank you": "Gekauft - Danke",
         "Buy License": "Lizenz erwerben",
+        "Remind Me Later": "Später erinnern",
         "I Have Already Bought": "Bereits erworben",
         "Documentation": "Dokumentation",
         "Report Issue": "Fehler melden",
         "View License Agreement": "Lizenzvertrag anzeigen",
-        "about_credits": "Über uns und Credits",
+        "About": "Über",
+        "Third Party Licenses": "Drittanbieter-Lizenzen",
         "Show Phrase Database File": "Phrase-Datenbankdatei anzeigen",
         "Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!": "Die Entwicklung und Pflege von PhraseVault erfordert Zeit und Mühe. Bitte unterstützen Sie das Projekt durch den Kauf einer Lizenz. Wir setzen auf Ihre Ehrlichkeit. Vielen Dank!",
         "Confirm Purchase": "Kauf bestätigen",
@@ -56,7 +60,7 @@ const de = {
         "HTML": "HTML",
 
         // database status
-        "Phrases loaded": "Phrasen geladen",
+        "Phrases loaded": "Phrasendatenbank erfolgreich geladen",
         "Waiting for database": "Warten auf Datenbank",
         "Loading...": "Lädt...",
         "Database error": "Datenbankfehler",
@@ -72,6 +76,8 @@ const de = {
         "Phrase cannot be empty": "Phrase darf nicht leer sein",
         "Database schema upgraded successfully.": "Datenbankschema erfolgreich aktualisiert.",
         "Error upgrading database schema, but a backup was created.": "Fehler beim Aktualisieren des Datenbankschemas, aber ein Backup wurde erstellt.",
+        "Autostart enabled": "Autostart aktiviert",
+        "Autostart disabled": "Autostart deaktiviert",
 
         // examples
         "Customer Thank You": "Dank an Kunden",
@@ -85,13 +91,13 @@ const de = {
 
         // Purchase Reminder Overlay
         "trial_ended_title": "Ihre 14-tägige Testversion ist abgelaufen.",
-        "trial_ended_p1": "PhraseVault spart viel Zeit, indem es gespeicherte Phrasen in jede App einfügt.",
-        "trial_ended_p2": "Es ist Open Source (Source First License), privat und ohne Telemetrie.",
-        "trial_ended_p3": "Um PhraseVault weiterhin zu verwenden, ist eine kostenpflichtige Lizenz erforderlich.",
+        "trial_ended_p1": "PhraseVault spart Ihnen täglich viel Zeit, indem es häufig verwendete Phrasen, Textbausteine und Prompts einfügt.",
+        "trial_ended_p2": "Es ist Open Source, werbefrei, datenschutzorientiert ohne Telemetrie und erfordert nur eine einmalige Zahlung für eine lebenslange Lizenz.",
+        "trial_ended_p3": "Unterstützen Sie uns, indem Sie ehrlich sind und jetzt online eine lebenslange Lizenz erwerben.",
         "trial_ended_p4_prefix": "Bereits gekauft? Aktivieren Sie über",
-        "trial_ended_p4_suffix": "im Hauptmenü.",
+        "trial_ended_p4_suffix": "in den Einstellungen.",
         "Purchase activated successfully. App will restart.": "Kauf erfolgreich aktiviert. Die App wird neu gestartet.",
     },
 };
 
-export default de;
+module.exports = de;

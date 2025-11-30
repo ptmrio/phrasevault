@@ -1,106 +1,53 @@
 {
-  "name": "phrasevault",
-  "version": "2.2.1",
-  "description": "A phrase management tool",
-  "main": "src/main.js",
-  "type": "module",
-  "scripts": {
-    "start": "cross-env NODE_ENV=development electron .",
-    "build": "cross-env NODE_ENV=production electron-builder",
-    "watch": "cross-env NODE_ENV=development electronmon .",
-    "rebuild": "electron-rebuild --force",
-    "postinstall": "electron-rebuild --force",
-    "version-bump": "node version-bump.js"
-  },
-  "keywords": [
-    "phrase",
-    "management",
-    "tool",
-    "text expander",
-    "phrase expander",
-    "productivity"
-  ],
-  "author": "Petermeir Web Solutions",
-  "license": "SEE LICENSE IN LICENSE.md",
-  "dependencies": {
-    "@hurdlegroup/robotjs": "^0.12.3",
-    "electron-json-storage": "^4.6.0",
-    "i18next": "^23.11.5",
-    "i18next-electron-fs-backend": "^3.0.2",
-    "marked": "^13.0.1",
-    "node-window-manager": "^2.2.4",
-    "os-locale": "^6.0.2",
-    "sqlite3": "^5.1.7",
-    "winreg": "^1.2.5"
-  },
-  "devDependencies": {
-    "@electron/rebuild": "^4.0.1",
-    "cross-env": "^7.0.3",
-    "electron": "^38.0.0",
-    "electron-builder": "^26.0.12",
-    "electronmon": "^1.0.5",
-    "node-abi": "^4.14.0",
-    "sass": "^1.35.1"
-  },
-  "build": {
-    "appId": "com.ptmrio.phrasevault",
-    "productName": "PhraseVault",
-    "directories": {
-      "output": "dist"
+    "name": "phrasevault",
+    "version": "2.2.2",
+    "description": "A phrase management tool",
+    "main": "src/main.js",
+    "scripts": {
+        "start": "cross-env NODE_ENV=development electron-forge start",
+        "package": "cross-env NODE_ENV=production electron-forge package",
+        "make": "npm run thirdparty && npm run copylegal && cross-env NODE_ENV=production electron-forge make",
+        "watch": "cross-env NODE_ENV=development electronmon .",
+        "rebuild": "electron-rebuild --force",
+        "postinstall": "electron-rebuild --force",
+        "version-bump": "node version-bump.js",
+        "thirdparty": "license-checker-rseidelsohn --json --production > licenses.json && node generate-thirdparty.js && del licenses.json",
+        "copylegal": "copy LICENSE.md templates\\markdown\\license.md && copy THIRD_PARTY_NOTICES.md templates\\markdown\\thirdparty.md"
     },
-    "files": [
-      "src/**/*",
-      "assets/**/*",
-      "package.json",
-      "templates/**/*",
-      "locales/**/*"
+    "keywords": [
+        "phrase",
+        "management",
+        "tool",
+        "text expander",
+        "phrase expander",
+        "productivity"
     ],
-    "extraResources": [
-      {
-        "from": "assets/img/",
-        "to": "resources/img/",
-        "filter": [
-          "**/*"
-        ]
-      },
-      {
-        "from": "LICENSE.md",
-        "to": "LICENSE.md"
-      }
-    ],
-    "win": {
-      "icon": "assets/img/icon_256x256.png",
-      "signtoolOptions": {
-        "timeStampServer": "http://time.certum.pl",
-        "signingHashAlgorithms": [
-          "sha256"
-        ],
-        "certificateSubjectName": "Gerhard Petermeir"
-      },
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
-        }
-      ]
+    "author": "Petermeir Web Solutions",
+    "license": "SEE LICENSE IN LICENSE.md",
+    "dependencies": {
+        "@hurdlegroup/robotjs": "^0.12.3",
+        "electron-json-storage": "^4.6.0",
+        "electron-squirrel-startup": "^1.0.1",
+        "i18next": "^23.11.5",
+        "i18next-electron-fs-backend": "^3.0.2",
+        "marked": "^13.0.1",
+        "node-window-manager": "^2.2.4",
+        "os-locale": "^6.0.2",
+        "sqlite3": "^5.1.7"
     },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "license": "LICENSE.md",
-      "include": "installer.nsh",
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "runAfterFinish": true,
-      "artifactName": "${productName}-Setup-${version}.${ext}",
-      "guid": "20f726f4-eb4b-53a7-a447-f2062c4bad89"
+    "devDependencies": {
+        "@electron-forge/cli": "^7.5.0",
+        "@electron-forge/maker-squirrel": "^7.5.0",
+        "@electron-forge/plugin-auto-unpack-natives": "^7.10.2",
+        "@electron/rebuild": "^4.0.1",
+        "cross-env": "^7.0.3",
+        "electron": "^38.0.0",
+        "electronmon": "^1.0.5",
+        "fs-extra": "^11.3.2",
+        "node-abi": "^4.14.0",
+        "sass": "^1.35.1"
     },
-    "portable": {
-      "artifactName": "${productName}-Portable-${version}.${ext}"
-    },
-    "forceCodeSigning": true
-  }
+    "config": {
+        "forge": "forge.config.js"
+    }
 }
