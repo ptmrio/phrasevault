@@ -23,6 +23,7 @@ const de = {
         "Disable Autostart": "Autostart deaktivieren",
         "Quit": "Beenden",
         "Startup": "Autostart",
+        "Start with Windows": "Mit Windows starten",
         "Light Theme": "Helles Thema",
         "Dark Theme": "Dunkles Thema",
         "System Preference": "Systemeinstellung",
@@ -42,7 +43,7 @@ const de = {
         "Third Party Licenses": "Drittanbieter-Lizenzen",
         "Updates": "Aktualisierungen",
         "Check for Updates": "Nach Updates suchen",
-        "Show Phrase Database File": "Phrase-Datenbankdatei anzeigen",
+        "Open Current Database Location": "Aktuellen Datenbank-Speicherort öffnen",
         "Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!": "Die Entwicklung und Pflege von PhraseVault erfordert Zeit und Mühe. Bitte unterstützen Sie das Projekt durch den Kauf einer Lizenz. Wir setzen auf Ihre Ehrlichkeit. Vielen Dank!",
         "Confirm Purchase": "Kauf bestätigen",
         "I have purchased a license": "Ich habe eine Lizenz erworben",
@@ -81,14 +82,23 @@ const de = {
         "Autostart disabled": "Autostart deaktiviert",
 
         // examples
-        "Customer Thank You": "Dank an Kunden",
-        "examplePhrase1": "Sehr geehrter [Kundenname],\n\nvielen Dank für Ihren kürzlichen Kauf in unserem Geschäft. Wir hoffen, Sie sind mit Ihrem Kauf zufrieden. Bei Fragen oder weiterem Unterstützungsbedarf zögern Sie bitte nicht, uns zu kontaktieren.\n\nMit freundlichen Grüßen,\n[Ihr Unternehmen]",
+        "My Business Phone": "Meine geschäftliche Telefonnummer",
+        "examplePhrase1": "+49 (0) 123 456789",
+        "My Tax ID": "Meine USt-IdNr.",
+        "examplePhrase2": "DE123456789",
+        "Email Signature": "E-Mail-Signatur",
+        "examplePhrase3": "Mit freundlichen Grüßen,\n\nMax Mustermann\nSenior Entwickler\nMusterfirma GmbH\nTel: +49 (0) 123 456789",
         "Out of Office": "Abwesenheitsnotiz",
-        "examplePhrase2": "Hallo,\n\nich bin derzeit nicht im Büro und erst am [Datum] wieder erreichbar. Für dringende Angelegenheiten kontaktieren Sie bitte [Alternativer Kontakt] unter [Kontaktinformation].\n\nVielen Dank,\n[Ihr Name]",
-        "ChatGPT Prompt": "ChatGPT Anfrage",
-        "examplePhrase3": "Können Sie eine Zusammenfassung der neuesten Entwicklungen in der Künstlichen Intelligenz geben, fokussiert auf wichtige Durchbrüche und aufkommende Trends?",
-        "MidJourney Art Prompt": "MidJourney Kunst Aufforderung",
-        "examplePhrase4": "Erstellen Sie ein abstraktes digitales Gemälde, das die Verschmelzung von Natur und Technologie darstellt. Verwenden Sie leuchtende Farben und komplexe Details, um das Zusammenspiel dieser beiden Elemente zu veranschaulichen.",
+        "examplePhrase4": "Hallo,\n\nvielen Dank für Ihre Nachricht. Ich bin derzeit außer Haus und werde am [Datum] zurückkehren.\n\nMit freundlichen Grüßen,\nMax Mustermann",
+        "AI Prompt": "KI-Anfrage",
+        "examplePhrase5": "Bitte fasse den folgenden Text zusammen und liste die wichtigsten Punkte auf:",
+        "Polite Follow-up": "Höfliche Nachfrage",
+        "examplePhrase6": "Hallo,\n\nich wollte mich nach meiner letzten Nachricht erkundigen. Bitte lassen Sie mich wissen, falls Sie weitere Informationen benötigen.\n\nVielen Dank!",
+
+        // License Agreement
+        "License Agreement": "Lizenzvereinbarung",
+        "Accept": "Akzeptieren",
+        "Decline": "Ablehnen",
 
         // Purchase Reminder Overlay
         "trial_ended_title": "Ihre 14-tägige Testversion ist abgelaufen.",
@@ -98,16 +108,6 @@ const de = {
         "trial_ended_p4_prefix": "Bereits gekauft? Aktivieren Sie über",
         "trial_ended_p4_suffix": "in den Einstellungen.",
         "Purchase activated successfully. App will restart.": "Kauf erfolgreich aktiviert. Die App wird neu gestartet.",
-
-        // NSIS to Squirrel migration
-        "nsis_title": "Ältere Version erkannt",
-        "nsis_message": "Eine ältere Version von PhraseVault wurde auf Ihrem System gefunden.",
-        "nsis_reason": "Aufgrund einer Änderung im Installationsprogramm empfehlen wir, die alte Version ({{version}}) zu entfernen, um Konflikte zu vermeiden.",
-        "nsis_note": "Dies ist eine einmalige Anfrage. Ihre Daten werden nicht beeinträchtigt.",
-        "nsis_btn_uninstall": "Alte Version deinstallieren",
-        "nsis_btn_skip": "Überspringen",
-        "nsis_success": "Das Deinstallationsprogramm wurde gestartet. Bitte folgen Sie den Anweisungen.",
-        "nsis_error": "Das Deinstallationsprogramm konnte nicht gestartet werden. Bitte entfernen Sie die alte Version manuell über 'Programme hinzufügen oder entfernen'.",
     },
 };
 

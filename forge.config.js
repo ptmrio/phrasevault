@@ -3,6 +3,12 @@ const fs = require("fs-extra");
 
 module.exports = {
     packagerConfig: {
+        osxSign: {}, // macOS signing placeholder
+        windowsSign: {
+            certificateSubjectName: "Gerhard Petermeir",
+            timestampServer: "http://timestamp.digicert.com",
+            signWithParams: "/a",
+        },
         name: "PhraseVault",
         executableName: "PhraseVault",
         icon: "assets/img/icon",
@@ -50,6 +56,7 @@ module.exports = {
                 setupIcon: "./assets/img/icon.ico",
                 icon: "./assets/img/icon.ico",
                 iconUrl: "https://phrasevault.app/forge-app-icon.ico",
+                signWithParams: '/n "Gerhard Petermeir" /a /tr http://timestamp.digicert.com /td SHA256 /fd SHA256',
             },
         },
     ],

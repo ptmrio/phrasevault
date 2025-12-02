@@ -2,6 +2,12 @@ const { contextBridge, ipcRenderer } = require("electron");
 
 const i18n = require("./i18n.js");
 
+// Get initial language synchronously before exposing i18n
+const initialLanguage = ipcRenderer.sendSync("get-language");
+if (initialLanguage) {
+    i18n.changeLanguage(initialLanguage);
+}
+
 const validChannels = [
     // Existing channels...
     "search-phrases",
@@ -24,6 +30,7 @@ const validChannels = [
     "save-success",
     "open-db-location-dialog",
     "change-language",
+    "get-language",
     "database-status",
     "database-error",
     "handle-escape",
@@ -46,9 +53,9 @@ const validChannels = [
     "read-markdown-file",
     "render-markdown",
     "markdown-content",
-    "show-nsis-uninstall-prompt",
-    "run-nsis-uninstall",
-    "nsis-uninstall-result",
+    "show-license-agreement",
+    "accept-license",
+    "decline-license",
 ];
 
 contextBridge.exposeInMainWorld("electron", {

@@ -23,6 +23,7 @@ const es = {
         "Disable Autostart": "Desactivar Inicio Automático",
         "Quit": "Salir",
         "Startup": "Inicio",
+        "Start with Windows": "Iniciar con Windows",
         "Light Theme": "Tema Claro",
         "Dark Theme": "Tema Oscuro",
         "System Preference": "Preferencia del Sistema",
@@ -42,7 +43,7 @@ const es = {
         "Third Party Licenses": "Licencias de terceros",
         "Updates": "Actualizaciones",
         "Check for Updates": "Buscar actualizaciones",
-        "Show Phrase Database File": "Mostrar Archivo de la Base de Datos de Frases",
+        "Open Current Database Location": "Abrir ubicación de la base de datos actual",
         "Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!": "Desarrollar y mantener PhraseVault requiere tiempo y esfuerzo. Por favor, considere apoyar el proyecto comprando una licencia. Confiamos en su honestidad. ¡Gracias!",
         "Confirm Purchase": "Confirmar Compra",
         "I have purchased a license": "Ya he comprado una licencia",
@@ -81,14 +82,23 @@ const es = {
         "Autostart disabled": "Inicio automático desactivado",
 
         // examples
-        "Customer Thank You": "Agradecimiento a Cliente",
-        "examplePhrase1": "Estimado [Nombre del Cliente],\n\nGracias por su reciente compra en nuestra tienda. Esperamos que esté contento con su adquisición. Si tiene alguna pregunta o necesita más asistencia, no dude en contactarnos.\n\nSaludos cordiales,\n[Su Empresa]",
+        "My Business Phone": "Mi Teléfono de Empresa",
+        "examplePhrase1": "+34 612 345 678",
+        "My Tax ID": "Mi NIF",
+        "examplePhrase2": "12345678A",
+        "Email Signature": "Firma de Correo",
+        "examplePhrase3": "Saludos cordiales,\n\nJuan García\nDesarrollador Senior\nEmpresa S.L.\nTel: +34 612 345 678",
         "Out of Office": "Fuera de la Oficina",
-        "examplePhrase2": "Hola,\n\nActualmente estoy fuera de la oficina y no estaré disponible hasta [Fecha]. Para asistencia inmediata, por favor contacte a [Contacto Alternativo] en [Información de Contacto].\n\nGracias,\n[Su Nombre]",
-        "ChatGPT Prompt": "Solicitud de ChatGPT",
-        "examplePhrase3": "¿Podría proporcionar un resumen de los últimos desarrollos en la investigación de inteligencia artificial, enfocándose en los principales avances y tendencias emergentes?",
-        "MidJourney Art Prompt": "Sugerencia de Arte de MidJourney",
-        "examplePhrase4": "Crear una pintura digital abstracta que represente la fusión de la naturaleza y la tecnología, utilizando colores vibrantes y detalles intrincados para ilustrar el vínculo entre estos dos elementos.",
+        "examplePhrase4": "Hola,\n\nGracias por su mensaje. Actualmente estoy fuera de la oficina y regresaré el [Fecha].\n\nSaludos,\nJuan García",
+        "AI Prompt": "Prompt de IA",
+        "examplePhrase5": "Por favor, resume el siguiente texto y enumera los puntos clave:",
+        "Polite Follow-up": "Seguimiento Cordial",
+        "examplePhrase6": "Hola,\n\nQuería hacer seguimiento a mi mensaje anterior. Por favor, avíseme si necesita información adicional.\n\n¡Gracias!",
+
+        // License Agreement
+        "License Agreement": "Acuerdo de licencia",
+        "Accept": "Aceptar",
+        "Decline": "Rechazar",
 
         // Purchase Reminder Overlay
         "trial_ended_title": "Tu prueba de 14 días ha terminado.",
@@ -98,16 +108,6 @@ const es = {
         "trial_ended_p4_prefix": "¿Ya compraste? Activa a través de",
         "trial_ended_p4_suffix": "en Configuración.",
         "Purchase activated successfully. App will restart.": "Compra activada con éxito. La aplicación se reiniciará.",
-
-        // NSIS to Squirrel migration
-        "nsis_title": "Versión anterior detectada",
-        "nsis_message": "Se encontró una versión anterior de PhraseVault en su sistema.",
-        "nsis_reason": "Debido a un cambio en el instalador, recomendamos eliminar la versión anterior ({{version}}) para evitar conflictos.",
-        "nsis_note": "Esta es una solicitud única. Sus datos no se verán afectados.",
-        "nsis_btn_uninstall": "Desinstalar versión anterior",
-        "nsis_btn_skip": "Omitir",
-        "nsis_success": "El desinstalador se ha iniciado. Por favor, siga sus instrucciones.",
-        "nsis_error": "No se pudo iniciar el desinstalador. Por favor, elimine la versión anterior manualmente desde 'Agregar o quitar programas'.",
     },
 };
 

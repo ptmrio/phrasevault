@@ -140,48 +140,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     settingsBtn.addEventListener("click", window.modals.openSettingsModal);
 
-    // =============================================================================
-    // NSIS to Squirrel Migration Prompt
-    // =============================================================================
-
-    let pendingUninstallString = null;
-
-    window.electron.receive("show-nsis-uninstall-prompt", (data) => {
-        pendingUninstallString = data.uninstallString;
-
-        const content = `${window.i18n.t("nsis_message")}
-
-${window.i18n.t("nsis_reason", { version: data.version })}
-
-${window.i18n.t("nsis_note")}`;
-
-        window.modals.openMarkdownModal({
-            title: window.i18n.t("nsis_title"),
-            content: content,
-            buttons: [
-                {
-                    label: window.i18n.t("nsis_btn_skip"),
-                    className: "btn btn-secondary",
-                },
-                {
-                    label: window.i18n.t("nsis_btn_uninstall"),
-                    className: "btn btn-primary",
-                    onClick: () => {
-                        window.electron.send("run-nsis-uninstall", pendingUninstallString);
-                    },
-                },
-            ],
-        });
-    });
-
-    window.electron.receive("nsis-uninstall-result", (data) => {
-        if (data.success) {
-            window.modals.showToast(window.i18n.t("nsis_success"), "success");
-        } else {
-            window.modals.showToast(window.i18n.t("nsis_error"), "error");
-        }
-    });
-
     // Settings: Theme
     document.querySelectorAll('input[name="theme"]').forEach((radio) => {
         radio.addEventListener("change", (e) => {
@@ -400,10 +358,15 @@ ${window.i18n.t("nsis_note")}`;
 
     phraseList.addEventListener("dblclick", (e) => {
         const targetElement = e.target.closest("li");
-        if (targetElement && (e.target === targetElement || e.target.classList.contains("phrase-list-text"))) {
-            const phraseId = targetElement.getAttribute("data-id");
-            insertTextIntoActiveField(phraseId);
+        if (!targetElement) return;
+
+        // Exclude buttons area and menu
+        if (e.target.closest(".buttons") || e.target.closest(".menu")) {
+            return;
         }
+
+        const phraseId = targetElement.getAttribute("data-id");
+        insertTextIntoActiveField(phraseId);
     });
 
     function updateList() {
@@ -622,6 +585,34 @@ ${window.i18n.t("nsis_note")}`;
 
     window.electron.receive("toast-message", (message) => {
         window.modals.showToast(message.message, message.type);
+    });
+
+    // =============================================================================
+    // License Agreement
+    // =============================================================================
+
+    window.electron.receive("show-license-agreement", () => {
+        window.modals.openMarkdownModal({
+            title: window.i18n.t("License Agreement"),
+            file: "license.md",
+            buttons: [
+                {
+                    label: window.i18n.t("Decline"),
+                    className: "btn btn-secondary",
+                    onClick: () => {
+                        window.electron.send("decline-license");
+                    },
+                    closeModal: false,
+                },
+                {
+                    label: window.i18n.t("Accept"),
+                    className: "btn btn-primary",
+                    onClick: () => {
+                        window.electron.send("accept-license");
+                    },
+                },
+            ],
+        });
     });
 
     // =============================================================================

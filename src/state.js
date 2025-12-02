@@ -12,6 +12,7 @@ let config = {
     firstRun: true,
     initializeTables: true,
     recentFiles: [],
+    licenseAgreed: false,
 };
 
 let balloonShown = false;
@@ -96,6 +97,15 @@ function markAsPurchased() {
     saveConfig();
 }
 
+function shouldShowLicenseAgreement() {
+    return config.licenseAgreed !== "SPQRK SOFTWARE LICENSE v1.0";
+}
+
+function acceptLicenseAgreement() {
+    config.licenseAgreed = "SPQRK SOFTWARE LICENSE v1.0";
+    saveConfig();
+}
+
 loadConfig();
 
 module.exports = {
@@ -106,4 +116,6 @@ module.exports = {
     setBalloonShown,
     shouldShowPurchaseReminder,
     markAsPurchased,
+    shouldShowLicenseAgreement,
+    acceptLicenseAgreement,
 };

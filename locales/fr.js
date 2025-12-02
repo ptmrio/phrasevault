@@ -23,6 +23,7 @@ const fr = {
         "Disable Autostart": "Désactiver le Démarrage Automatique",
         "Quit": "Quitter",
         "Startup": "Démarrage",
+        "Start with Windows": "Démarrer avec Windows",
         "Light Theme": "Thème Clair",
         "Dark Theme": "Thème Sombre",
         "System Preference": "Préférence du Système",
@@ -42,7 +43,7 @@ const fr = {
         "Third Party Licenses": "Licences tierces",
         "Updates": "Mises à jour",
         "Check for Updates": "Rechercher des mises à jour",
-        "Show Phrase Database File": "Afficher le fichier de base de données",
+        "Open Current Database Location": "Ouvrir l'emplacement de la base de données actuelle",
         "Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!": "Développer et maintenir PhraseVault nécessite du temps et des efforts. Veuillez envisager de soutenir le projet en achetant une licence. Nous comptons sur votre honnêteté. Merci !",
         "Confirm Purchase": "Confirmer l'Achat",
         "I have purchased a license": "J'ai acheté une licence",
@@ -81,14 +82,23 @@ const fr = {
         "Autostart disabled": "Démarrage automatique désactivé",
 
         // examples
-        "Customer Thank You": "Remerciement Client",
-        "examplePhrase1": "Cher [Nom du Client],\n\nMerci pour votre récent achat dans notre magasin. Nous espérons que vous êtes satisfait de votre achat. Si vous avez des questions ou avez besoin d'assistance supplémentaire, n'hésitez pas à nous contacter.\n\nCordialement,\n[Votre Entreprise]",
+        "My Business Phone": "Mon Téléphone Pro",
+        "examplePhrase1": "+33 6 12 34 56 78",
+        "My Tax ID": "Mon N° TVA",
+        "examplePhrase2": "FR12345678901",
+        "Email Signature": "Signature Email",
+        "examplePhrase3": "Cordialement,\n\nJean Dupont\nDéveloppeur Senior\nEntreprise SARL\nTél: +33 6 12 34 56 78",
         "Out of Office": "Message d'Absence",
-        "examplePhrase2": "Bonjour,\n\nJe suis actuellement absent du bureau et ne serai pas disponible avant le [Date]. Pour une assistance immédiate, veuillez contacter [Contact Alternatif] au [Information de Contact].\n\nMerci,\n[Votre Nom]",
-        "ChatGPT Prompt": "Demande ChatGPT",
-        "examplePhrase3": "Pouvez-vous fournir un résumé des derniers développements en recherche d'intelligence artificielle, en mettant l'accent sur les percées majeures et les tendances émergentes?",
-        "MidJourney Art Prompt": "Prompt Artistique MidJourney",
-        "examplePhrase4": "Créer une peinture numérique abstraite représentant la fusion de la nature et de la technologie, utilisant des couleurs vives et des détails complexes pour illustrer l'interaction entre ces deux éléments.",
+        "examplePhrase4": "Bonjour,\n\nMerci pour votre message. Je suis actuellement absent et serai de retour le [Date].\n\nCordialement,\nJean Dupont",
+        "AI Prompt": "Prompt IA",
+        "examplePhrase5": "Veuillez résumer le texte suivant et lister les points clés :",
+        "Polite Follow-up": "Relance Polie",
+        "examplePhrase6": "Bonjour,\n\nJe souhaitais faire suite à mon précédent message. N'hésitez pas à me contacter si vous avez besoin d'informations supplémentaires.\n\nMerci !",
+
+        // License Agreement
+        "License Agreement": "Contrat de licence",
+        "Accept": "Accepter",
+        "Decline": "Refuser",
 
         // Purchase Reminder Overlay
         "trial_ended_title": "Votre essai de 14 jours est terminé.",
@@ -98,16 +108,6 @@ const fr = {
         "trial_ended_p4_prefix": "Déjà acheté ? Activez via",
         "trial_ended_p4_suffix": "dans les Paramètres.",
         "Purchase activated successfully. App will restart.": "Achat activé avec succès. L'application va redémarrer.",
-
-        // NSIS to Squirrel migration
-        "nsis_title": "Ancienne version détectée",
-        "nsis_message": "Une ancienne version de PhraseVault a été trouvée sur votre système.",
-        "nsis_reason": "En raison d'un changement dans le programme d'installation, nous recommandons de supprimer l'ancienne version ({{version}}) pour éviter les conflits.",
-        "nsis_note": "Ceci est une demande unique. Vos données ne seront pas affectées.",
-        "nsis_btn_uninstall": "Désinstaller l'ancienne version",
-        "nsis_btn_skip": "Ignorer",
-        "nsis_success": "Le programme de désinstallation a été lancé. Veuillez suivre ses instructions.",
-        "nsis_error": "Impossible de démarrer le programme de désinstallation. Veuillez supprimer l'ancienne version manuellement depuis 'Ajout/Suppression de programmes'.",
     },
 };
 

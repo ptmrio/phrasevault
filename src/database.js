@@ -69,15 +69,17 @@ function initializeDatabase() {
 
                                     if (row && row.count === 0) {
                                         const phrases = [
-                                            { phrase: i18n.t("Customer Thank You"), expanded_text: i18n.t("examplePhrase1") },
-                                            { phrase: i18n.t("Out of Office"), expanded_text: i18n.t("examplePhrase2") },
-                                            { phrase: i18n.t("ChatGPT Prompt"), expanded_text: i18n.t("examplePhrase3") },
-                                            { phrase: i18n.t("MidJourney Art Prompt"), expanded_text: i18n.t("examplePhrase4") },
+                                            { phrase: i18n.t("My Business Phone"), expanded_text: i18n.t("examplePhrase1") },
+                                            { phrase: i18n.t("My Tax ID"), expanded_text: i18n.t("examplePhrase2") },
+                                            { phrase: i18n.t("Email Signature"), expanded_text: i18n.t("examplePhrase3") },
+                                            { phrase: i18n.t("Out of Office"), expanded_text: i18n.t("examplePhrase4") },
+                                            { phrase: i18n.t("AI Prompt"), expanded_text: i18n.t("examplePhrase5") },
+                                            { phrase: i18n.t("Polite Follow-up"), expanded_text: i18n.t("examplePhrase6") },
                                         ];
                                         const stmt = db.prepare("INSERT INTO phrases (phrase, expanded_text) VALUES (?, ?)");
                                         phrases.forEach((p) => stmt.run(p.phrase, p.expanded_text));
                                         stmt.finalize(() => {
-                                            searchPhrases("Customer Thank You", (err, rows) => {
+                                            searchPhrases("", (err, rows) => {
                                                 if (err) {
                                                     console.error("Error executing initial search:", err);
                                                 }
@@ -378,10 +380,6 @@ ipcMain.on("increment-usage", (event, id) => {
     });
 });
 
-app.on("ready", () => {
-    checkDatabaseAccessibility(() => {});
-});
-
 app.on("will-quit", () => {
     if (!db) {
         return;
@@ -395,4 +393,8 @@ app.on("will-quit", () => {
     });
 });
 
-module.exports = db;
+function initDatabase() {
+    checkDatabaseAccessibility(() => {});
+}
+
+module.exports = { db, initDatabase };

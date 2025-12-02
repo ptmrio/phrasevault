@@ -23,6 +23,7 @@ const en = {
         "Disable Autostart": "Disable Autostart",
         "Quit": "Quit",
         "Startup": "Startup",
+        "Start with Windows": "Start with Windows",
         "Light Theme": "Light Theme",
         "Dark Theme": "Dark Theme",
         "System Preference": "System Preference",
@@ -42,7 +43,7 @@ const en = {
         "Third Party Licenses": "Third Party Licenses",
         "Updates": "Updates",
         "Check for Updates": "Check for Updates",
-        "Show Phrase Database File": "Show Phrase Database File",
+        "Open Current Database Location": "Open Current Database Location",
         "Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!": "Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!",
         "Confirm Purchase": "Confirm Purchase",
         "I have purchased a license": "I have purchased a license",
@@ -81,14 +82,23 @@ const en = {
         "Autostart disabled": "Autostart disabled",
 
         // examples
-        "Customer Thank You": "Customer Thank You",
-        "examplePhrase1": "Dear [Customer Name],\n\nThank you for your recent purchase from our store. We hope you are happy with your purchase. If you have any questions or need further assistance, please don't hesitate to contact us.\n\nBest regards,\n[Your Company]",
+        "My Business Phone": "My Business Phone",
+        "examplePhrase1": "+1 (555) 123-4567",
+        "My Tax ID": "My Tax ID",
+        "examplePhrase2": "12-3456789",
+        "Email Signature": "Email Signature",
+        "examplePhrase3": "Best regards,\n\nJohn Doe\nSenior Developer\nAcme Inc.\nPhone: +1 (555) 123-4567",
         "Out of Office": "Out of Office",
-        "examplePhrase2": "Hello,\n\nI am currently out of the office and will not be available until [Date]. For immediate assistance, please contact [Alternative Contact] at [Contact Information].\n\nThank you,\n[Your Name]",
-        "ChatGPT Prompt": "ChatGPT Prompt",
-        "examplePhrase3": "Can you provide a summary of the latest developments in artificial intelligence research, focusing on key breakthroughs and emerging trends?",
-        "MidJourney Art Prompt": "MidJourney Art Prompt",
-        "examplePhrase4": "Create an abstract digital painting that represents the fusion of nature and technology, using vibrant colors and intricate details to illustrate the heart between these two elements.",
+        "examplePhrase4": "Hello,\n\nThank you for your email. I am currently out of the office and will return on [Date].\n\nBest regards,\nJohn Doe",
+        "AI Prompt": "AI Prompt",
+        "examplePhrase5": "Please summarize the following text and list the key points:",
+        "Polite Follow-up": "Polite Follow-up",
+        "examplePhrase6": "Hi,\n\nI wanted to follow up on my previous message. Please let me know if you need any additional information.\n\nThank you!",
+
+        // License Agreement
+        "License Agreement": "License Agreement",
+        "Accept": "Accept",
+        "Decline": "Decline",
 
         // Purchase Reminder Overlay
         "trial_ended_title": "Your 14-day trial has ended.",
@@ -98,16 +108,6 @@ const en = {
         "trial_ended_p4_prefix": "Already purchased? Activate via",
         "trial_ended_p4_suffix": "in Settings.",
         "Purchase activated successfully. App will restart.": "Purchase activated successfully. App will restart.",
-
-        // NSIS to Squirrel migration
-        "nsis_title": "Ältere Version erkannt",
-        "nsis_message": "Eine ältere Version von PhraseVault wurde auf Ihrem System gefunden.",
-        "nsis_reason": "Aufgrund einer Änderung im Installationsprogramm empfehlen wir, die alte Version ({{version}}) zu entfernen, um Konflikte zu vermeiden.",
-        "nsis_note": "Dies ist eine einmalige Anfrage. Ihre Daten werden nicht beeinträchtigt.",
-        "nsis_btn_uninstall": "Alte Version deinstallieren",
-        "nsis_btn_skip": "Überspringen",
-        "nsis_success": "Das Deinstallationsprogramm wurde gestartet. Bitte folgen Sie den Anweisungen.",
-        "nsis_error": "Das Deinstallationsprogramm konnte nicht gestartet werden. Bitte entfernen Sie die alte Version manuell über 'Programme hinzufügen oder entfernen'.",
     },
 };
 

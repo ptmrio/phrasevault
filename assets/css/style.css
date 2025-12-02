@@ -688,10 +688,36 @@ select.input {
   font-size: var(--text-sm);
 }
 .settings-toggle input[type=checkbox] {
+  appearance: none;
   width: 18px;
   height: 18px;
-  accent-color: var(--primary-600);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-sm);
   cursor: pointer;
+  transition: border-color var(--duration-fast), background-color var(--duration-fast);
+}
+.settings-toggle input[type=checkbox]::before {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 10px;
+  margin: 2px;
+  background: var(--primary-600);
+  transform: scale(0);
+  transition: transform var(--duration-fast) var(--ease-out);
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+.settings-toggle input[type=checkbox]:checked {
+  border-color: var(--primary-600);
+  background: var(--primary-600);
+}
+.settings-toggle input[type=checkbox]:checked::before {
+  transform: scale(1);
+  background: var(--color-white);
+}
+.settings-toggle input[type=checkbox]:focus-visible {
+  outline: 2px solid var(--primary-400);
+  outline-offset: 2px;
 }
 
 .settings-recent {

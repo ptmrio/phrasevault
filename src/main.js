@@ -44,7 +44,7 @@ const { createWindow, createTray, updateTitleBarTheme } = require("./window.js")
 const path = require("path");
 const fs = require("fs");
 const state = require("./state.js");
-const db = require("./database.js");
+const { initDatabase } = require("./database.js");
 const { exec } = require("child_process");
 const i18n = require("./i18n.js");
 const { availableLanguages } = require("./i18n.js");
@@ -52,7 +52,6 @@ const EventEmitter = require("events");
 const { marked } = require("marked");
 const markedOptions = require("./_partial/_marked-options.js");
 const robot = require("@hurdlegroup/robotjs");
-const { checkAndPromptForOldVersionUninstall } = require("./nsis-to-squirrel.js");
 const { log } = require("console");
 
 if (process.platform === "win32") {
@@ -111,6 +110,24 @@ function setAutoLaunch(enabled) {
     });
 }
 
+/**
+ * Sync autostart setting: ensure the actual system login item matches config.
+ * This handles migration from NSIS to Squirrel where the mechanism changed.
+ */
+function syncAutostart() {
+    const config = state.getConfig();
+    const actuallyEnabled = isAutoLaunchEnabled();
+
+    // If config and system state don't match, sync system to match config
+    if (config.autostart && !actuallyEnabled) {
+        console.log("Syncing autostart: enabling login item to match config");
+        setAutoLaunch(true);
+    } else if (!config.autostart && actuallyEnabled) {
+        console.log("Syncing autostart: disabling login item to match config");
+        setAutoLaunch(false);
+    }
+}
+
 function isAutoLaunchEnabled() {
     if (process.platform !== "win32" || !app.isPackaged) return false;
 
@@ -142,6 +159,9 @@ if (!gotTheLock) {
         const config = state.getConfig();
         let languageToUse = config.language;
 
+        // Sync autostart on first run after NSIS->Squirrel migration
+        syncAutostart();
+
         windowManager.requestAccessibility();
 
         if (!languageToUse || typeof languageToUse !== "string") {
@@ -160,19 +180,20 @@ if (!gotTheLock) {
 
         i18n.changeLanguage(languageToUse);
 
+        // Initialize database AFTER language is set so example phrases use correct translations
+        initDatabase();
+
         mainWindow = createWindow();
         tray = createTray();
 
         mainWindow.webContents.on("did-finish-load", () => {
             setTheme(config.theme);
-            mainWindow.webContents.send("change-language", config.language);
+            mainWindow.webContents.send("change-language", languageToUse);
 
-            // Check for old NSIS installation (Windows only)
-            if (process.platform === "win32") {
-                checkAndPromptForOldVersionUninstall(mainWindow);
-            }
-
-            if (state.shouldShowPurchaseReminder()) {
+            // Show license agreement first if not accepted
+            if (state.shouldShowLicenseAgreement()) {
+                mainWindow.webContents.send("show-license-agreement");
+            } else if (state.shouldShowPurchaseReminder()) {
                 mainWindow.webContents.send("show-purchase-reminder");
             }
         });
@@ -348,6 +369,10 @@ if (!gotTheLock) {
 
     ipcMain.on("get-theme", (event) => {
         event.returnValue = state.getConfig().theme;
+    });
+
+    ipcMain.on("get-language", (event) => {
+        event.returnValue = state.getConfig().language || "en";
     });
 
     ipcMain.on("set-theme", (event, theme) => {
@@ -536,15 +561,16 @@ if (!gotTheLock) {
         }
     });
 
-    ipcMain.on("run-nsis-uninstall", (event, uninstallString) => {
-        try {
-            const cleanUninstallString = uninstallString.replace(/^"|"$/g, "");
-            exec(`"${cleanUninstallString}"`, { shell: true });
-            event.sender.send("nsis-uninstall-result", { success: true });
-        } catch (err) {
-            console.error("Failed to run old uninstaller:", err);
-            event.sender.send("nsis-uninstall-result", { success: false, error: err.message });
+    ipcMain.on("accept-license", () => {
+        state.acceptLicenseAgreement();
+        // Check if we should show purchase reminder after accepting license
+        if (state.shouldShowPurchaseReminder() && mainWindow && mainWindow.webContents) {
+            mainWindow.webContents.send("show-purchase-reminder");
         }
+    });
+
+    ipcMain.on("decline-license", () => {
+        app.quit();
     });
 
     ipcMain.on("mark-as-purchased", () => {
