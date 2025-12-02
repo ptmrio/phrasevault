@@ -271,6 +271,12 @@
                     </select>
                 </div>
 
+                <!-- Updates -->
+                <div class="settings-section">
+                    <h3 data-i18n="Updates">Updates</h3>
+                    <button id="check-updates-btn" class="btn btn-secondary" data-i18n="Check for Updates">Check for Updates</button>
+                </div>
+
                 <!-- Help -->
                 <div class="settings-section">
                     <h3 data-i18n="Help">Help</h3>
@@ -278,7 +284,6 @@
                         <a href="#" id="link-docs" class="settings-link" data-i18n="Documentation">Documentation</a>
                         <a href="#" id="link-issues" class="settings-link" data-i18n="Report Issue">Report Issue</a>
                         <a href="#" id="link-license" class="settings-link" data-i18n="View License Agreement">License Agreement</a>
-                        <a href="#" id="link-about" class="settings-link" data-i18n="About">About</a>
                         <a href="#" id="link-thirdparty" class="settings-link" data-i18n="Third Party Licenses">Third Party Licenses</a>
                     </div>
                 </div>
@@ -303,9 +308,11 @@
                 </button>
             </div>
             <div class="modal-body markdown-body" id="markdown-content"></div>
+            <div class="modal-footer markdown-modal-footer" id="markdown-modal-footer" style="display: none;"></div>
         </div>
     </div>
 
+    <script src="../src/_partial/_renderer-modal.js"></script>
     <script src="../src/renderer.js"></script>
 </body>
 

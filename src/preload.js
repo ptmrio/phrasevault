@@ -44,7 +44,11 @@ const validChannels = [
     "confirm-purchase",
     "quit-app",
     "read-markdown-file",
+    "render-markdown",
     "markdown-content",
+    "show-nsis-uninstall-prompt",
+    "run-nsis-uninstall",
+    "nsis-uninstall-result",
 ];
 
 contextBridge.exposeInMainWorld("electron", {

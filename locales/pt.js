@@ -39,8 +39,9 @@ const pt = {
         "Documentation": "Documentação",
         "Report Issue": "Relatar problema",
         "View License Agreement": "Ver acordo de licença",
-        "About": "Sobre",
         "Third Party Licenses": "Licenças de terceiros",
+        "Updates": "Atualizações",
+        "Check for Updates": "Verificar atualizações",
         "Show Phrase Database File": "Mostrar arquivo do banco de dados de frases",
         "Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!": "Desenvolver e manter o PhraseVault demanda tempo e esforço. Considere apoiar o projeto comprando uma licença. Confiamos na sua honestidade. Obrigado!",
         "Confirm Purchase": "Confirmar Compra",
@@ -97,6 +98,16 @@ const pt = {
         "trial_ended_p4_prefix": "Já comprou? Ative através de",
         "trial_ended_p4_suffix": "nas Configurações.",
         "Purchase activated successfully. App will restart.": "Compra ativada com sucesso. O aplicativo será reiniciado.",
+
+        // NSIS to Squirrel migration
+        "nsis_title": "Versão anterior detectada",
+        "nsis_message": "Uma versão anterior do PhraseVault foi encontrada no seu sistema.",
+        "nsis_reason": "Devido a uma alteração no instalador, recomendamos remover a versão antiga ({{version}}) para evitar conflitos.",
+        "nsis_note": "Esta é uma solicitação única. Seus dados não serão afetados.",
+        "nsis_btn_uninstall": "Desinstalar versão antiga",
+        "nsis_btn_skip": "Pular",
+        "nsis_success": "O desinstalador foi iniciado. Por favor, siga suas instruções.",
+        "nsis_error": "Não foi possível iniciar o desinstalador. Por favor, remova a versão antiga manualmente em 'Adicionar ou remover programas'.",
     },
 };
 

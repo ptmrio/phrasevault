@@ -39,8 +39,9 @@ const it = {
         "Documentation": "Documentazione",
         "Report Issue": "Segnala un Problema",
         "View License Agreement": "Visualizza il Contratto di Licenza",
-        "About": "Informazioni",
         "Third Party Licenses": "Licenze di terze parti",
+        "Updates": "Aggiornamenti",
+        "Check for Updates": "Controlla aggiornamenti",
         "Show Phrase Database File": "Mostra il File del Database delle Frasi",
         "Developing and maintaining PhraseVault takes time and effort. Please consider supporting the project by purchasing a license. We trust you to be honest. Thank you!": "Sviluppare e mantenere PhraseVault richiede tempo e impegno. Valuta di sostenere il progetto acquistando una licenza. Confidiamo nella Sua onestà. Grazie!",
         "Confirm Purchase": "Conferma l'Acquisto",
@@ -97,6 +98,16 @@ const it = {
         "trial_ended_p4_prefix": "Già acquistato? Attiva tramite",
         "trial_ended_p4_suffix": "nelle Impostazioni.",
         "Purchase activated successfully. App will restart.": "Acquisto attivato con successo. L'app verrà riavviata.",
+
+        // NSIS to Squirrel migration
+        "nsis_title": "Versione precedente rilevata",
+        "nsis_message": "È stata trovata una versione precedente di PhraseVault sul tuo sistema.",
+        "nsis_reason": "A causa di una modifica nel programma di installazione, consigliamo di rimuovere la vecchia versione ({{version}}) per evitare conflitti.",
+        "nsis_note": "Questa è una richiesta una tantum. I tuoi dati non saranno interessati.",
+        "nsis_btn_uninstall": "Disinstalla versione precedente",
+        "nsis_btn_skip": "Salta",
+        "nsis_success": "Il programma di disinstallazione è stato avviato. Segui le sue istruzioni.",
+        "nsis_error": "Impossibile avviare il programma di disinstallazione. Rimuovi manualmente la vecchia versione da 'Installazione applicazioni'.",
     },
 };
 

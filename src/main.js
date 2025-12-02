@@ -1,38 +1,42 @@
 const { app, Menu, globalShortcut, BrowserWindow, ipcMain, clipboard, screen, shell, dialog, nativeTheme } = require("electron");
 
-if (require("electron-squirrel-startup")) app.quit();
+// Handle Squirrel events FIRST - before any other code runs
+const { handleSquirrelEvents } = require("./squirrel-events.js");
+if (handleSquirrelEvents()) {
+    return;
+}
 
 // Debugging installer
-if (process.env.DEBUG_SQUIRREL) {
-    process.on("uncaughtException", (error) => {
-        const fs = require("fs");
-        const path = require("path");
-        const logPath = path.join(require("os").tmpdir(), "phrasevault-error.log");
+// if (process.env.DEBUG_SQUIRREL) {
+//     process.on("uncaughtException", (error) => {
+//         const fs = require("fs");
+//         const path = require("path");
+//         const logPath = path.join(require("os").tmpdir(), "phrasevault-error.log");
 
-        const errorDetails = `
-=== UNCAUGHT EXCEPTION ===
-Time: ${new Date().toISOString()}
-Error: ${error.message}
-Stack: ${error.stack}
-Process CWD: ${process.cwd()}
-Exec Path: ${process.execPath}
-Main Module: ${require.main ? require.main.filename : "unknown"}
-========================
-`;
+//         const errorDetails = `
+// === UNCAUGHT EXCEPTION ===
+// Time: ${new Date().toISOString()}
+// Error: ${error.message}
+// Stack: ${error.stack}
+// Process CWD: ${process.cwd()}
+// Exec Path: ${process.execPath}
+// Main Module: ${require.main ? require.main.filename : "unknown"}
+// ========================
+// `;
 
-        fs.writeFileSync(logPath, errorDetails);
-        console.error(errorDetails);
+//         fs.writeFileSync(logPath, errorDetails);
+//         console.error(errorDetails);
 
-        try {
-            const { dialog } = require("electron");
-            dialog.showErrorBox("Fatal Error", `${error.message}\n\nLog saved to: ${logPath}`);
-        } catch (e) {
-            // Electron not ready yet
-        }
+//         try {
+//             const { dialog } = require("electron");
+//             dialog.showErrorBox("Fatal Error", `${error.message}\n\nLog saved to: ${logPath}`);
+//         } catch (e) {
+//             // Electron not ready yet
+//         }
 
-        process.exit(1);
-    });
-}
+//         process.exit(1);
+//     });
+// }
 
 const { windowManager } = require("node-window-manager");
 const { platform } = require("os");
@@ -48,6 +52,8 @@ const EventEmitter = require("events");
 const { marked } = require("marked");
 const markedOptions = require("./_partial/_marked-options.js");
 const robot = require("@hurdlegroup/robotjs");
+const { checkAndPromptForOldVersionUninstall } = require("./nsis-to-squirrel.js");
+const { log } = require("console");
 
 if (process.platform === "win32") {
     app.setAppUserModelId("PhraseVault");
@@ -160,6 +166,11 @@ if (!gotTheLock) {
         mainWindow.webContents.on("did-finish-load", () => {
             setTheme(config.theme);
             mainWindow.webContents.send("change-language", config.language);
+
+            // Check for old NSIS installation (Windows only)
+            if (process.platform === "win32") {
+                checkAndPromptForOldVersionUninstall(mainWindow);
+            }
 
             if (state.shouldShowPurchaseReminder()) {
                 mainWindow.webContents.send("show-purchase-reminder");
@@ -511,6 +522,28 @@ if (!gotTheLock) {
         } catch (error) {
             console.error("Failed to read markdown file:", error);
             event.sender.send("markdown-content", { success: false, error: error.message });
+        }
+    });
+
+    ipcMain.on("render-markdown", (event, content) => {
+        try {
+            marked.setOptions(markedOptions);
+            const htmlContent = marked(content);
+            event.sender.send("markdown-content", { success: true, html: htmlContent });
+        } catch (error) {
+            console.error("Failed to render markdown:", error);
+            event.sender.send("markdown-content", { success: false, error: error.message });
+        }
+    });
+
+    ipcMain.on("run-nsis-uninstall", (event, uninstallString) => {
+        try {
+            const cleanUninstallString = uninstallString.replace(/^"|"$/g, "");
+            exec(`"${cleanUninstallString}"`, { shell: true });
+            event.sender.send("nsis-uninstall-result", { success: true });
+        } catch (err) {
+            console.error("Failed to run old uninstaller:", err);
+            event.sender.send("nsis-uninstall-result", { success: false, error: err.message });
         }
     });
 

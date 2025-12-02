@@ -22,18 +22,18 @@
         "phrase expander",
         "productivity"
     ],
-    "author": "Petermeir Web Solutions",
+    "author": "SPQRK Web Solutions",
     "license": "SEE LICENSE IN LICENSE.md",
     "dependencies": {
         "@hurdlegroup/robotjs": "^0.12.3",
         "electron-json-storage": "^4.6.0",
-        "electron-squirrel-startup": "^1.0.1",
         "i18next": "^23.11.5",
         "i18next-electron-fs-backend": "^3.0.2",
         "marked": "^13.0.1",
         "node-window-manager": "^2.2.4",
         "os-locale": "^6.0.2",
-        "sqlite3": "^5.1.7"
+        "sqlite3": "^5.1.7",
+        "winreg": "^1.2.5"
     },
     "devDependencies": {
         "@electron-forge/cli": "^7.5.0",

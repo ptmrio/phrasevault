@@ -3,17 +3,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById("search");
     const phraseList = document.getElementById("phrase-list");
     const addPhraseButton = document.getElementById("add-phrase");
-    const modal = document.getElementById("phraseModal");
-    const closeButton = modal.querySelector(".close");
 
     // Settings modal elements
     const settingsBtn = document.getElementById("settings-btn");
-    const settingsModal = document.getElementById("settingsModal");
-    const settingsClose = settingsModal.querySelector(".settings-close");
     const statusIndicator = document.getElementById("status-indicator");
 
-    // AbortController for save button event listener management
-    let saveButtonController = null;
+    // Initialize modal module with required DOM elements
+    window.modals.init({
+        statusIndicator: document.getElementById("status-indicator"),
+        settingsStatusIndicator: document.getElementById("settings-status-indicator"),
+        settingsStatusText: document.getElementById("settings-status-text"),
+    });
 
     // Template for optimized SVG icon creation
     const iconTemplate = document.createElement("template");
@@ -58,7 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
     window.electron.receive("change-language", (lng) => {
         window.i18n.changeLanguage(lng);
         applyTranslations();
-
     });
 
     applyTranslations();
@@ -93,7 +92,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const settingsStatusIndicator = document.getElementById("settings-status-indicator");
     const settingsStatusText = document.getElementById("settings-status-text");
     let currentDbStatus = false;
-    let currentDbStatusText = "";
 
     const updateStatusIndicator = (available) => {
         currentDbStatus = available;
@@ -106,9 +104,10 @@ document.addEventListener("DOMContentLoaded", () => {
             settingsStatusIndicator.style.color = color;
         }
 
-        currentDbStatusText = available ? window.i18n.t("Phrases loaded") : window.i18n.t("Loading...");
+        const statusText = available ? window.i18n.t("Phrases loaded") : window.i18n.t("Loading...");
+        window.modals.setCurrentDbStatusText(statusText);
         if (settingsStatusText) {
-            settingsStatusText.textContent = currentDbStatusText;
+            settingsStatusText.textContent = statusText;
         }
     };
 
@@ -128,9 +127,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (settingsStatusIndicator) {
             settingsStatusIndicator.style.color = color;
         }
-        currentDbStatusText = window.i18n.t("Database error");
+        const statusText = window.i18n.t("Database error");
+        window.modals.setCurrentDbStatusText(statusText);
         if (settingsStatusText) {
-            settingsStatusText.textContent = currentDbStatusText;
+            settingsStatusText.textContent = statusText;
         }
     });
 
@@ -138,111 +138,47 @@ document.addEventListener("DOMContentLoaded", () => {
     // Settings Modal
     // =============================================================================
 
-    function openSettingsModal() {
-        settingsModal.style.display = "grid";
-        setTimeout(() => {
-            settingsModal.classList.add("show");
-            settingsModal.querySelector(".modal-content").classList.add("show");
-        }, 10);
-
-        // Sync status indicator
-        if (settingsStatusText) {
-            settingsStatusText.textContent = currentDbStatusText;
-        }
-        if (settingsStatusIndicator) {
-            settingsStatusIndicator.style.color = statusIndicator ? statusIndicator.style.color : "var(--primary-400)";
-        }
-
-        // Request fresh settings data
-        window.electron.send("get-settings");
-        window.electron.send("get-recent-databases");
-    }
-
-    function closeSettingsModal() {
-        settingsModal.querySelector(".modal-content").classList.remove("show");
-        settingsModal.classList.remove("show");
-        settingsModal.addEventListener(
-            "transitionend",
-            () => {
-                if (!settingsModal.classList.contains("show")) {
-                    settingsModal.style.display = "none";
-                }
-            },
-            { once: true }
-        );
-    }
-
-    settingsBtn.addEventListener("click", openSettingsModal);
-    settingsClose.addEventListener("click", closeSettingsModal);
+    settingsBtn.addEventListener("click", window.modals.openSettingsModal);
 
     // =============================================================================
-    // Markdown Viewer Modal
+    // NSIS to Squirrel Migration Prompt
     // =============================================================================
 
-    const markdownModal = document.getElementById("markdownModal");
-    const markdownClose = markdownModal.querySelector(".markdown-close");
-    const markdownTitle = document.getElementById("markdown-modal-title");
-    const markdownContent = document.getElementById("markdown-content");
+    let pendingUninstallString = null;
 
-    // Count currently visible modals for stacking effect
-    function getVisibleModalCount() {
-        return document.querySelectorAll('.modal[style*="display: grid"]').length;
-    }
+    window.electron.receive("show-nsis-uninstall-prompt", (data) => {
+        pendingUninstallString = data.uninstallString;
 
-    function applyModalStackOffset(modalElement) {
-        const visibleCount = getVisibleModalCount();
-        const offset = visibleCount * 32;
-        modalElement.style.setProperty("--stack-offset", offset + "px");
-    }
+        const content = `${window.i18n.t("nsis_message")}
 
-    function openMarkdownModal(filename, title) {
-        markdownTitle.textContent = title || filename;
-        markdownContent.innerHTML = '<p class="loading">' + window.i18n.t("Loading...") + "</p>";
+${window.i18n.t("nsis_reason", { version: data.version })}
 
-        // Apply stacking offset if other modals are open
-        applyModalStackOffset(markdownModal);
+${window.i18n.t("nsis_note")}`;
 
-        markdownModal.style.display = "grid";
-        setTimeout(() => {
-            markdownModal.classList.add("show");
-            markdownModal.querySelector(".modal-content").classList.add("show");
-        }, 10);
+        window.modals.openMarkdownModal({
+            title: window.i18n.t("nsis_title"),
+            content: content,
+            buttons: [
+                {
+                    label: window.i18n.t("nsis_btn_skip"),
+                    className: "btn btn-secondary",
+                },
+                {
+                    label: window.i18n.t("nsis_btn_uninstall"),
+                    className: "btn btn-primary",
+                    onClick: () => {
+                        window.electron.send("run-nsis-uninstall", pendingUninstallString);
+                    },
+                },
+            ],
+        });
+    });
 
-        window.electron.send("read-markdown-file", filename);
-    }
-
-    function closeMarkdownModal() {
-        markdownModal.querySelector(".modal-content").classList.remove("show");
-        markdownModal.classList.remove("show");
-        markdownModal.addEventListener(
-            "transitionend",
-            () => {
-                if (!markdownModal.classList.contains("show")) {
-                    markdownModal.style.display = "none";
-                    markdownContent.innerHTML = "";
-                }
-            },
-            { once: true }
-        );
-    }
-
-    markdownClose.addEventListener("click", closeMarkdownModal);
-
-    window.electron.receive("markdown-content", (data) => {
+    window.electron.receive("nsis-uninstall-result", (data) => {
         if (data.success) {
-            markdownContent.innerHTML = data.html;
-            // Handle links in markdown content to open externally
-            markdownContent.querySelectorAll("a").forEach((link) => {
-                link.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    const href = link.getAttribute("href");
-                    if (href && (href.startsWith("http://") || href.startsWith("https://"))) {
-                        window.electron.send("open-external-url", href);
-                    }
-                });
-            });
+            window.modals.showToast(window.i18n.t("nsis_success"), "success");
         } else {
-            markdownContent.innerHTML = '<p class="error">' + (data.error || "Failed to load content") + "</p>";
+            window.modals.showToast(window.i18n.t("nsis_error"), "error");
         }
     });
 
@@ -298,17 +234,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("link-license").addEventListener("click", (e) => {
         e.preventDefault();
-        openMarkdownModal("license.md", window.i18n.t("View License Agreement"));
-    });
-
-    document.getElementById("link-about").addEventListener("click", (e) => {
-        e.preventDefault();
-        openMarkdownModal("about.md", window.i18n.t("About"));
+        window.modals.openMarkdownModal({ file: "license.md", title: window.i18n.t("View License Agreement") });
     });
 
     document.getElementById("link-thirdparty").addEventListener("click", (e) => {
         e.preventDefault();
-        openMarkdownModal("thirdparty.md", window.i18n.t("Third Party Licenses"));
+        window.modals.openMarkdownModal({ file: "thirdparty.md", title: window.i18n.t("Third Party Licenses") });
+    });
+
+    // Check for Updates - version will be set after init-settings is received
+    let appVersion = "";
+    document.getElementById("check-updates-btn").addEventListener("click", () => {
+        window.electron.send("open-external-url", `https://phrasevault.app/download?currentVersion=${appVersion}`);
     });
 
     // Receive initial settings
@@ -346,6 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // Version
+        appVersion = settings.version;
         document.getElementById("version-text").textContent = `Version ${settings.version}`;
     });
 
@@ -404,30 +342,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // =============================================================================
-    // Phrase Modal
+    // Phrase Modal & List Management
     // =============================================================================
-
-    function openModal() {
-        modal.style.display = "grid";
-        setTimeout(() => {
-            modal.classList.add("show");
-            modal.querySelector(".modal-content").classList.add("show");
-        }, 10);
-    }
-
-    function closeModal() {
-        modal.querySelector(".modal-content").classList.remove("show");
-        modal.classList.remove("show");
-        modal.addEventListener(
-            "transitionend",
-            () => {
-                if (!modal.classList.contains("show")) {
-                    modal.style.display = "none";
-                }
-            },
-            { once: true }
-        );
-    }
 
     const checkScrollbar = () => {
         if (phraseList.scrollHeight > phraseList.clientHeight) {
@@ -450,11 +366,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     addPhraseButton.addEventListener("click", () => {
-        openPhraseForm("", "", "plain", null);
-    });
-
-    closeButton.addEventListener("click", () => {
-        closeModal();
+        window.modals.openPhraseForm("", "", "plain", null);
     });
 
     searchInput.addEventListener("keydown", (e) => {
@@ -500,7 +412,7 @@ document.addEventListener("DOMContentLoaded", () => {
             window.electron.send("search-phrases", searchText);
         } catch (error) {
             console.error("Failed to search phrases:", error);
-            showToast(window.i18n.t("Search failed"), "danger");
+            window.modals.showToast(window.i18n.t("Search failed"), "danger");
         }
     }
 
@@ -596,7 +508,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             window.electron.send("delete-phrase", id);
                         } catch (error) {
                             console.error("Failed to delete phrase:", error);
-                            showToast(window.i18n.t("Failed to delete phrase"), "danger");
+                            window.modals.showToast(window.i18n.t("Failed to delete phrase"), "danger");
                         }
                     }
                     menu.style.display = "none";
@@ -607,16 +519,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 e.stopPropagation();
                 try {
                     window.electron.send("copy-to-clipboard", phrase);
-                    showToast(window.i18n.t("Copied to clipboard"), "success");
+                    window.modals.showToast(window.i18n.t("Copied to clipboard"), "success");
                 } catch (error) {
                     console.error("Failed to copy to clipboard:", error);
-                    showToast(window.i18n.t("Failed to copy"), "danger");
+                    window.modals.showToast(window.i18n.t("Failed to copy"), "danger");
                 }
             });
 
             li.querySelector(".edit-button").addEventListener("click", (e) => {
                 e.stopPropagation();
-                openPhraseForm(phrase.phrase, phrase.expanded_text, phrase.type, phrase.id);
+                window.modals.openPhraseForm(phrase.phrase, phrase.expanded_text, phrase.type, phrase.id);
             });
         });
     });
@@ -628,104 +540,6 @@ document.addEventListener("DOMContentLoaded", () => {
             menu.setAttribute("data-state", "closed");
             menu.style.display = "none";
         });
-    }
-
-    function openPhraseForm(phrase = "", expandedText = "", type = "plain", id = null) {
-        const title = modal.querySelector("#modal-title");
-        const phraseInput = modal.querySelector("#phraseInput");
-        const expandedTextInput = modal.querySelector("#expandedTextInput");
-        const idInput = modal.querySelector("#idInput");
-
-        phraseInput.value = phrase;
-        expandedTextInput.value = expandedText;
-        idInput.value = id || "";
-
-        modal.querySelector('input[name="phraseType"][value="' + type + '"]').checked = true;
-
-        title.textContent = id ? window.i18n.t("Edit Phrase") : window.i18n.t("Add Phrase");
-
-        openModal();
-        phraseInput.focus();
-
-        const saveButton = modal.querySelector("#saveButton");
-
-        if (saveButtonController) {
-            saveButtonController.abort();
-        }
-
-        saveButtonController = new AbortController();
-
-        saveButton.addEventListener("click", () => handleSaveButtonClick(), {
-            signal: saveButtonController.signal,
-        });
-    }
-
-    function handleSaveButtonClick() {
-        const phraseInput = modal.querySelector("#phraseInput");
-        const expandedTextInput = modal.querySelector("#expandedTextInput");
-        const idInput = modal.querySelector("#idInput");
-        const type = modal.querySelector('input[name="phraseType"]:checked').value || "plain";
-
-        const newPhrase = phraseInput.value;
-        const newExpandedText = expandedTextInput.value;
-        const id = idInput.value;
-
-        if (!newPhrase.trim()) {
-            showToast(window.i18n.t("Phrase cannot be empty"), "danger");
-            return;
-        }
-
-        try {
-            if (id) {
-                window.electron.send("edit-phrase", { id, newPhrase, newExpandedText, type });
-            } else {
-                window.electron.send("add-phrase", { newPhrase, newExpandedText, type });
-            }
-        } catch (error) {
-            console.error("Failed to save phrase:", error);
-            showToast(window.i18n.t("Failed to save phrase"), "danger");
-        }
-    }
-
-    // =============================================================================
-    // Toast Notifications
-    // =============================================================================
-
-    function showToast(message, type = "success") {
-        let container = document.querySelector(".toast-container");
-        if (!container) {
-            container = document.createElement("div");
-            container.className = "toast-container";
-            document.body.appendChild(container);
-        }
-
-        const toast = document.createElement("div");
-        toast.className = "toast";
-        toast.classList.add(type);
-        toast.textContent = message;
-        container.appendChild(toast);
-
-        requestAnimationFrame(() => {
-            toast.classList.add("show");
-        });
-
-        setTimeout(() => {
-            toast.classList.remove("show");
-            toast.classList.add("hiding");
-
-            toast.addEventListener(
-                "transitionend",
-                () => {
-                    if (toast.parentNode) {
-                        toast.remove();
-                    }
-                    if (container.children.length === 0) {
-                        container.remove();
-                    }
-                },
-                { once: true }
-            );
-        }, 2500);
     }
 
     // =============================================================================
@@ -745,7 +559,7 @@ document.addEventListener("DOMContentLoaded", () => {
             window.electron.send("insert-phrase-by-id", id);
         } catch (error) {
             console.error("Failed to insert phrase:", error);
-            showToast(window.i18n.t("Failed to insert phrase"), "danger");
+            window.modals.showToast(window.i18n.t("Failed to insert phrase"), "danger");
         }
     }
 
@@ -759,12 +573,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     window.electron.receive("phrase-added", (phrase) => {
-        closeModal();
+        window.modals.closePhraseModal();
         updateList();
     });
 
     window.electron.receive("phrase-edited", (phrase) => {
-        closeModal();
+        window.modals.closePhraseModal();
         updateList();
     });
 
@@ -774,20 +588,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.electron.receive("handle-escape", () => {
         // Close markdown modal first if open
-        if (markdownModal.style.display === "grid") {
-            closeMarkdownModal();
+        if (window.modals.isMarkdownModalOpen()) {
+            window.modals.closeMarkdownModal();
             return;
         }
 
         // Close settings modal if open
-        if (settingsModal.style.display === "grid") {
-            closeSettingsModal();
+        if (window.modals.isSettingsModalOpen()) {
+            window.modals.closeSettingsModal();
             return;
         }
 
         // Close phrase modal if open
-        if (modal.style.display === "grid") {
-            closeModal();
+        if (window.modals.isPhraseModalOpen()) {
+            window.modals.closePhraseModal();
             return;
         }
 
@@ -807,7 +621,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     window.electron.receive("toast-message", (message) => {
-        showToast(message.message, message.type);
+        window.modals.showToast(message.message, message.type);
     });
 
     // =============================================================================
