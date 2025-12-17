@@ -15,6 +15,9 @@ document.addEventListener("DOMContentLoaded", () => {
         settingsStatusText: document.getElementById("settings-status-text"),
     });
 
+    // Track phrases pending deletion (for undo functionality)
+    const pendingDeletions = new Set();
+
     // Template for optimized SVG icon creation
     const iconTemplate = document.createElement("template");
     iconTemplate.innerHTML = '<svg class="icon"><use href=""></use></svg>';
@@ -387,7 +390,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.electron.receive("phrases-list", (phrases) => {
         phraseList.innerHTML = "";
-        phrases.forEach((phrase) => {
+        // Filter out phrases pending deletion
+        const visiblePhrases = phrases.filter((p) => !pendingDeletions.has(String(p.id)));
+        visiblePhrases.forEach((phrase) => {
             const li = document.createElement("li");
             li.tabIndex = 0;
             li.setAttribute("data-id", phrase.id);
@@ -433,8 +438,22 @@ document.addEventListener("DOMContentLoaded", () => {
             // Create menu
             const menu = document.createElement("div");
             menu.className = "menu";
+
+            // Duplicate menu item
+            const duplicateItem = document.createElement("div");
+            duplicateItem.className = "menu-item";
+            duplicateItem.setAttribute("data-action", "duplicate");
+            duplicateItem.setAttribute("data-id", phrase.id);
+            const svgDuplicate = createSvgIcon("icon-copy");
+            const spanDuplicate = document.createElement("span");
+            spanDuplicate.textContent = window.i18n.t("Duplicate Phrase");
+            duplicateItem.appendChild(svgDuplicate);
+            duplicateItem.appendChild(spanDuplicate);
+            menu.appendChild(duplicateItem);
+
+            // Delete menu item
             const menuItem = document.createElement("div");
-            menuItem.className = "menu-item";
+            menuItem.className = "menu-item menu-item-danger";
             menuItem.setAttribute("data-action", "delete");
             menuItem.setAttribute("data-id", phrase.id);
             const svgTrash = createSvgIcon("icon-trash");
@@ -467,11 +486,41 @@ document.addEventListener("DOMContentLoaded", () => {
                     const action = e.currentTarget.getAttribute("data-action");
                     const id = e.currentTarget.getAttribute("data-id");
                     if (action === "delete") {
+                        // Delayed delete with undo - hide immediately, delete after timeout
+                        li.style.display = "none";
+                        pendingDeletions.add(String(id));
+                        let deleteConfirmed = true;
+
+                        const deleteTimeout = setTimeout(() => {
+                            if (deleteConfirmed) {
+                                try {
+                                    window.electron.send("delete-phrase", id);
+                                    pendingDeletions.delete(String(id));
+                                } catch (error) {
+                                    console.error("Failed to delete phrase:", error);
+                                    pendingDeletions.delete(String(id));
+                                    li.style.display = "";
+                                    window.modals.showToast(window.i18n.t("Failed to delete phrase"), "danger");
+                                }
+                            }
+                        }, 8000);
+
+                        window.modals.showToast(window.i18n.t("Phrase deleted"), "success", {
+                            onUndo: () => {
+                                // Cancel deletion and restore visibility
+                                deleteConfirmed = false;
+                                clearTimeout(deleteTimeout);
+                                pendingDeletions.delete(String(id));
+                                li.style.display = "";
+                                window.modals.showToast(window.i18n.t("Deletion cancelled"), "success");
+                            },
+                        });
+                    } else if (action === "duplicate") {
                         try {
-                            window.electron.send("delete-phrase", id);
+                            window.electron.send("duplicate-phrase", id);
                         } catch (error) {
-                            console.error("Failed to delete phrase:", error);
-                            window.modals.showToast(window.i18n.t("Failed to delete phrase"), "danger");
+                            console.error("Failed to duplicate phrase:", error);
+                            window.modals.showToast(window.i18n.t("Failed to duplicate phrase"), "danger");
                         }
                     }
                     menu.style.display = "none";
@@ -538,6 +587,13 @@ document.addEventListener("DOMContentLoaded", () => {
     window.electron.receive("phrase-added", (phrase) => {
         window.modals.closePhraseModal();
         updateList();
+    });
+
+    window.electron.receive("phrase-duplicated", (phrase) => {
+        // Set search bar to the duplicated phrase name and filter
+        searchInput.value = phrase.phrase;
+        updateList(phrase.phrase);
+        searchInput.focus();
     });
 
     window.electron.receive("phrase-edited", (phrase) => {

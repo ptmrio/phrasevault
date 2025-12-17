@@ -80,6 +80,13 @@ const es = {
         "Error upgrading database schema, but a backup was created.": "Error al actualizar el esquema de la base de datos, pero se creó una copia de seguridad.",
         "Autostart enabled": "Inicio automático activado",
         "Autostart disabled": "Inicio automático desactivado",
+        "Undo": "Deshacer",
+        "Phrase deleted": "Frase eliminada",
+        "Deletion cancelled": "Eliminación cancelada",
+        "Duplicate Phrase": "Duplicar Frase",
+        "Phrase duplicated successfully.": "Frase duplicada exitosamente.",
+        "Phrase not found.": "Frase no encontrada.",
+        "Copy of": "Copia de",
 
         // examples
         "My Business Phone": "Mi Teléfono de Empresa",

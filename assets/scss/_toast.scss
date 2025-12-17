@@ -27,7 +27,7 @@
     pointer-events: auto;
     transform: translateY(16px) scale(0.95);
     opacity: 0;
-    transition: 
+    transition:
         transform var(--duration-base) var(--ease-out),
         opacity var(--duration-base) var(--ease-out);
 
@@ -47,5 +47,26 @@
 
     &.danger {
         background: var(--color-danger);
+    }
+}
+
+.toast-undo {
+    margin-left: var(--space-md);
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-white);
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background-color var(--duration-fast);
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    &:active {
+        background: rgba(255, 255, 255, 0.4);
     }
 }

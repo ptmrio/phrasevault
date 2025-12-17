@@ -63,7 +63,26 @@
     // Toast Notifications
     // =============================================================================
 
-    function showToast(message, type = "success") {
+    const TOAST_DURATION_DEFAULT = 2500;
+    const TOAST_DURATION_UNDO = 8000;
+
+    /**
+     * Show a toast notification
+     * @param {string} message - The message to display
+     * @param {string} [type="success"] - Toast type: "success" or "danger"
+     * @param {Object} [options] - Additional options
+     * @param {Function} [options.onUndo] - Callback for undo action (shows undo button)
+     * @param {number} [options.duration] - Custom duration in ms (default: 2500, or 8000 with undo)
+     * @returns {{ dismiss: Function }} Object with dismiss method to programmatically close
+     */
+    function showToast(message, type = "success", options = {}) {
+        // Handle legacy signature: showToast(message, type, undoCallback)
+        if (typeof options === "function") {
+            options = { onUndo: options };
+        }
+
+        const { onUndo, duration } = options;
+
         let container = document.querySelector(".toast-container");
         if (!container) {
             container = document.createElement("div");
@@ -74,14 +93,35 @@
         const toast = document.createElement("div");
         toast.className = "toast";
         toast.classList.add(type);
-        toast.textContent = message;
+
+        const textSpan = document.createElement("span");
+        textSpan.textContent = message;
+        toast.appendChild(textSpan);
+
+        let undoClicked = false;
+        const dismissTimeout = duration ?? (onUndo ? TOAST_DURATION_UNDO : TOAST_DURATION_DEFAULT);
+
+        // Add undo button if callback provided
+        if (onUndo) {
+            const undoBtn = document.createElement("button");
+            undoBtn.className = "toast-undo";
+            undoBtn.textContent = window.i18n.t("Undo");
+            undoBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                undoClicked = true;
+                onUndo();
+                dismissToast();
+            });
+            toast.appendChild(undoBtn);
+        }
+
         container.appendChild(toast);
 
         requestAnimationFrame(() => {
             toast.classList.add("show");
         });
 
-        setTimeout(() => {
+        function dismissToast() {
             toast.classList.remove("show");
             toast.classList.add("hiding");
 
@@ -97,7 +137,15 @@
                 },
                 { once: true }
             );
-        }, 2500);
+        }
+
+        setTimeout(() => {
+            if (!undoClicked) {
+                dismissToast();
+            }
+        }, dismissTimeout);
+
+        return { dismiss: dismissToast };
     }
 
     // =============================================================================
@@ -222,7 +270,10 @@
         title.textContent = id ? window.i18n.t("Edit Phrase") : window.i18n.t("Add Phrase");
 
         openPhraseModal();
-        phraseInput.focus();
+        // Delay focus to ensure modal animation has started and element is visible
+        setTimeout(() => {
+            phraseInput.focus();
+        }, 50);
 
         const saveButton = phraseModal.querySelector("#saveButton");
 

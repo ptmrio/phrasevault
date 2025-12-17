@@ -212,6 +212,37 @@ function checkDuplicatePhrase(phrase, id, callback) {
     );
 }
 
+/**
+ * Generate a unique phrase name for duplication.
+ * If "Copy of XY" exists, tries "Copy of XY (2)", "Copy of XY (3)", etc.
+ */
+function generateUniqueDuplicateName(originalPhrase, callback) {
+    const baseName = i18n.t("Copy of") + " " + originalPhrase;
+
+    // Get all phrases that start with the base name pattern
+    db.all(`SELECT phrase FROM phrases WHERE phrase LIKE ?`, [baseName + "%"], (err, rows) => {
+        if (err) {
+            // Fallback to simple name on error
+            return callback(baseName);
+        }
+
+        const existingNames = new Set(rows.map((r) => r.phrase));
+
+        // If base name doesn't exist, use it
+        if (!existingNames.has(baseName)) {
+            return callback(baseName);
+        }
+
+        // Find the next available number
+        let counter = 2;
+        while (existingNames.has(`${baseName} (${counter})`)) {
+            counter++;
+        }
+
+        callback(`${baseName} (${counter})`);
+    });
+}
+
 function searchPhrases(searchText, callback) {
     checkDatabaseAccessibility((accessible) => {
         if (!accessible) {
@@ -344,7 +375,36 @@ ipcMain.on("delete-phrase", (event, id) => {
                 return;
             }
             event.reply("phrase-deleted", id);
-            event.reply("toast-message", { type: "success", message: i18n.t("Phrase deleted successfully.") });
+            // Toast with undo is handled in renderer
+        });
+    });
+});
+
+ipcMain.on("duplicate-phrase", (event, id) => {
+    checkDatabaseAccessibility((accessible) => {
+        if (!accessible) {
+            return;
+        }
+        db.get(`SELECT * FROM phrases WHERE id = ?`, [id], (err, row) => {
+            if (err) {
+                event.reply("database-error", "Failed to duplicate phrase");
+                return;
+            }
+            if (!row) {
+                event.reply("toast-message", { type: "danger", message: i18n.t("Phrase not found.") });
+                return;
+            }
+
+            generateUniqueDuplicateName(row.phrase, (duplicatePhrase) => {
+                db.run(`INSERT INTO phrases (phrase, expanded_text, type) VALUES (?, ?, ?)`, [duplicatePhrase, row.expanded_text, row.type], function (err) {
+                    if (err) {
+                        event.reply("database-error", "Failed to duplicate phrase");
+                        return;
+                    }
+                    event.reply("phrase-duplicated", { id: this.lastID, phrase: duplicatePhrase, expandedText: row.expanded_text });
+                    event.reply("toast-message", { type: "success", message: i18n.t("Phrase duplicated successfully.") });
+                });
+            });
         });
     });
 });

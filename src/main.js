@@ -1,46 +1,18 @@
 const { app, Menu, globalShortcut, BrowserWindow, ipcMain, clipboard, screen, shell, dialog, nativeTheme } = require("electron");
 
-// Handle Squirrel events FIRST - before any other code runs
-const { handleSquirrelEvents } = require("./squirrel-events.js");
-if (handleSquirrelEvents()) {
-    return;
-}
+// Handle Velopack lifecycle events FIRST - before any other code runs
+const { VelopackApp } = require("velopack");
 
-// Debugging installer
-// if (process.env.DEBUG_SQUIRREL) {
-//     process.on("uncaughtException", (error) => {
-//         const fs = require("fs");
-//         const path = require("path");
-//         const logPath = path.join(require("os").tmpdir(), "phrasevault-error.log");
-
-//         const errorDetails = `
-// === UNCAUGHT EXCEPTION ===
-// Time: ${new Date().toISOString()}
-// Error: ${error.message}
-// Stack: ${error.stack}
-// Process CWD: ${process.cwd()}
-// Exec Path: ${process.execPath}
-// Main Module: ${require.main ? require.main.filename : "unknown"}
-// ========================
-// `;
-
-//         fs.writeFileSync(logPath, errorDetails);
-//         console.error(errorDetails);
-
-//         try {
-//             const { dialog } = require("electron");
-//             dialog.showErrorBox("Fatal Error", `${error.message}\n\nLog saved to: ${logPath}`);
-//         } catch (e) {
-//             // Electron not ready yet
-//         }
-
-//         process.exit(1);
-//     });
-// }
+VelopackApp.build()
+    .onFirstRun((version) => {
+        const { uninstallLegacyNsis } = require("./nsis-cleanup.js");
+        uninstallLegacyNsis();
+    })
+    .run();
 
 const { windowManager } = require("node-window-manager");
 const { platform } = require("os");
-const { createWindow, createTray, updateTitleBarTheme } = require("./window.js");
+const { createWindow, createTray, updateTitleBarTheme, clearBackendBindings } = require("./window.js");
 const path = require("path");
 const fs = require("fs");
 const state = require("./state.js");
@@ -95,17 +67,11 @@ function setLanguage(lng) {
 function setAutoLaunch(enabled) {
     if (process.platform !== "win32" || !app.isPackaged) return;
 
-    const exe = process.execPath;
-    const appFolder = path.dirname(exe);
-    const ourExeName = path.basename(exe);
-    const squirrelStub = path.resolve(appFolder, "..", ourExeName);
-    const useStub = fs.existsSync(squirrelStub);
-    const launchPath = useStub ? squirrelStub : exe;
-
+    // Velopack keeps exe at stable location: {root}/current/PhraseVault.exe
     app.setLoginItemSettings({
         openAtLogin: enabled,
         enabled: enabled,
-        path: launchPath,
+        path: process.execPath,
         args: ["--launched-at-login", "--hidden"],
     });
 }
@@ -131,14 +97,8 @@ function syncAutostart() {
 function isAutoLaunchEnabled() {
     if (process.platform !== "win32" || !app.isPackaged) return false;
 
-    const exe = process.execPath;
-    const appFolder = path.dirname(exe);
-    const ourExeName = path.basename(exe);
-    const squirrelStub = path.resolve(appFolder, "..", ourExeName);
-    const launchPath = fs.existsSync(squirrelStub) ? squirrelStub : exe;
-
     return app.getLoginItemSettings({
-        path: launchPath,
+        path: process.execPath,
         args: ["--launched-at-login", "--hidden"],
     }).openAtLogin;
 }
@@ -596,7 +556,7 @@ if (!gotTheLock) {
         if (process.platform !== "darwin") {
             app.quit();
         } else {
-            backend.clearMainBindings(ipcMain);
+            clearBackendBindings();
         }
     });
 }

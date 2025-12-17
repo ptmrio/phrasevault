@@ -80,6 +80,13 @@ const de = {
         "Error upgrading database schema, but a backup was created.": "Fehler beim Aktualisieren des Datenbankschemas, aber ein Backup wurde erstellt.",
         "Autostart enabled": "Autostart aktiviert",
         "Autostart disabled": "Autostart deaktiviert",
+        "Undo": "Rückgängig",
+        "Phrase deleted": "Phrase gelöscht",
+        "Deletion cancelled": "Löschung abgebrochen",
+        "Duplicate Phrase": "Phrase duplizieren",
+        "Phrase duplicated successfully.": "Phrase erfolgreich dupliziert.",
+        "Phrase not found.": "Phrase nicht gefunden.",
+        "Copy of": "Kopie von",
 
         // examples
         "My Business Phone": "Meine geschäftliche Telefonnummer",

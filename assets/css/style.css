@@ -557,7 +557,7 @@ select.input {
 #phrase-list .menu-item:hover {
   background: var(--bg-surface);
 }
-#phrase-list .menu-item[data-action=delete] {
+#phrase-list .menu-item.menu-item-danger, #phrase-list .menu-item[data-action=delete] {
   color: var(--color-danger);
 }
 #phrase-list .loading {
@@ -1079,6 +1079,25 @@ select.input {
 }
 .toast.danger {
   background: var(--color-danger);
+}
+
+.toast-undo {
+  margin-left: var(--space-md);
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-white);
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--duration-fast);
+}
+.toast-undo:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+.toast-undo:active {
+  background: rgba(255, 255, 255, 0.4);
 }
 
 @keyframes fadeIn {

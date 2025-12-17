@@ -151,4 +151,8 @@ function updateTitleBarTheme(theme) {
     });
 }
 
-module.exports = { createWindow, createTray, updateTitleBarTheme, mainWindow, tray };
+function clearBackendBindings() {
+    backend.clearMainBindings(ipcMain);
+}
+
+module.exports = { createWindow, createTray, updateTitleBarTheme, clearBackendBindings, mainWindow, tray };

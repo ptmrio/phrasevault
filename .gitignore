@@ -4,6 +4,7 @@ node_modules/
 #  Dist
 dist/*
 out/*
+Releases/*
 
 upload.sh
 HOWTORUN.md

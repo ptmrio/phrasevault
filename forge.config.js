@@ -32,34 +32,21 @@ module.exports = {
             },
         ],
         ignore: [
-            // Ignore unnecessary files to reduce package size
             /^\/node_modules\/.*\/(test|tests|__tests__|docs|documentation|examples|\.github)/,
             /^\/node_modules\/.*\/(\.yml|\.yaml)$/i,
             /^\/node_modules\/@hurdlegroup\/robotjs\/prebuilds\/(darwin|linux)-/,
+            /^\/node_modules\/velopack\/lib\/native\/velopack_nodeffi_linux/,
+            /^\/node_modules\/velopack\/lib\/native\/velopack_nodeffi_osx/,
             /^\/\.git/,
             /^\/dist/,
             /^\/out/,
+            /^\/Releases/,
             /^\/\.vscode/,
             /^\/screenshots/,
             /\.map$/,
         ],
     },
-    makers: [
-        {
-            name: "@electron-forge/maker-squirrel",
-            config: {
-                name: "PhraseVault",
-                authors: "SPQRK Web Solutions",
-                exe: "PhraseVault.exe",
-                setupExe: "PhraseVault-Setup-${version}.exe",
-                description: "A phrase management tool",
-                setupIcon: "./assets/img/icon.ico",
-                icon: "./assets/img/icon.ico",
-                iconUrl: "https://phrasevault.app/forge-app-icon.ico",
-                signWithParams: '/n "Gerhard Petermeir" /a /tr http://timestamp.digicert.com /td SHA256 /fd SHA256',
-            },
-        },
-    ],
+    makers: [],
     plugins: [
         {
             name: "@electron-forge/plugin-auto-unpack-natives",

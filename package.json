@@ -1,53 +1,54 @@
 {
-  "name": "phrasevault",
-  "version": "2.2.2",
-  "description": "A phrase management tool",
-  "main": "src/main.js",
-  "scripts": {
-    "start": "cross-env NODE_ENV=development electron-forge start",
-    "package": "cross-env NODE_ENV=production electron-forge package",
-    "make": "npm run thirdparty && npm run copylegal && npm run rebuild && cross-env NODE_ENV=production electron-forge make",
-    "watch": "cross-env NODE_ENV=development electronmon .",
-    "rebuild": "electron-rebuild --force",
-    "postinstall": "electron-rebuild --force",
-    "version-bump": "node version-bump.js",
-    "thirdparty": "license-checker-rseidelsohn --json --production > licenses.json && node generate-thirdparty.js && del licenses.json",
-    "copylegal": "copy LICENSE.md templates\\markdown\\license.md && copy THIRD_PARTY_NOTICES.md templates\\markdown\\thirdparty.md"
-  },
-  "keywords": [
-    "phrase",
-    "management",
-    "tool",
-    "text expander",
-    "phrase expander",
-    "productivity"
-  ],
-  "author": "SPQRK Web Solutions",
-  "license": "SEE LICENSE IN LICENSE.md",
-  "dependencies": {
-    "@hurdlegroup/robotjs": "^0.12.3",
-    "electron-json-storage": "^4.6.0",
-    "i18next": "^23.11.5",
-    "i18next-electron-fs-backend": "^3.0.2",
-    "marked": "^13.0.1",
-    "node-window-manager": "^2.2.4",
-    "os-locale": "^6.0.2",
-    "sqlite3": "^5.1.7",
-    "winreg": "^1.2.5"
-  },
-  "devDependencies": {
-    "@electron-forge/cli": "^7.5.0",
-    "@electron-forge/maker-squirrel": "^7.5.0",
-    "@electron-forge/plugin-auto-unpack-natives": "^7.10.2",
-    "@electron/rebuild": "^4.0.1",
-    "cross-env": "^7.0.3",
-    "electron": "^38.0.0",
-    "electronmon": "^1.0.5",
-    "fs-extra": "^11.3.2",
-    "node-abi": "^4.14.0",
-    "sass": "^1.35.1"
-  },
-  "config": {
-    "forge": "forge.config.js"
-  }
+    "name": "phrasevault",
+    "version": "2.2.3",
+    "description": "A phrase management tool",
+    "main": "src/main.js",
+    "scripts": {
+        "start": "cross-env NODE_ENV=development electron-forge start",
+        "watch": "cross-env NODE_ENV=development electronmon .",
+        "rebuild": "electron-rebuild --force",
+        "postinstall": "electron-rebuild --force",
+        "package": "cross-env NODE_ENV=production electron-forge package",
+        "make": "npm run thirdparty && npm run copylegal && npm run rebuild && npm run package && npm run velopack",
+        "velopack": "node velopack.js",
+        "version-bump": "node version-bump.js",
+        "thirdparty": "license-checker-rseidelsohn --json --production > licenses.json && node generate-thirdparty.js && del licenses.json",
+        "copylegal": "copy LICENSE.md templates\\markdown\\license.md && copy THIRD_PARTY_NOTICES.md templates\\markdown\\thirdparty.md"
+    },
+    "keywords": [
+        "phrase",
+        "management",
+        "tool",
+        "text expander",
+        "phrase expander",
+        "productivity"
+    ],
+    "author": "SPQRK Web Solutions",
+    "license": "SEE LICENSE IN LICENSE.md",
+    "dependencies": {
+        "@hurdlegroup/robotjs": "^0.12.3",
+        "electron-json-storage": "^4.6.0",
+        "i18next": "^23.11.5",
+        "i18next-electron-fs-backend": "^3.0.2",
+        "marked": "^13.0.1",
+        "node-window-manager": "^2.2.4",
+        "os-locale": "^6.0.2",
+        "sqlite3": "^5.1.7",
+        "velopack": "^0.0.1298",
+        "winreg": "^1.2.5"
+    },
+    "devDependencies": {
+        "@electron-forge/cli": "^7.5.0",
+        "@electron-forge/plugin-auto-unpack-natives": "^7.10.2",
+        "@electron/rebuild": "^4.0.1",
+        "cross-env": "^7.0.3",
+        "electron": "^38.0.0",
+        "electronmon": "^1.0.5",
+        "fs-extra": "^11.3.2",
+        "node-abi": "^4.14.0",
+        "sass": "^1.35.1"
+    },
+    "config": {
+        "forge": "forge.config.js"
+    }
 }

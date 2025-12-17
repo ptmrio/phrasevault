@@ -80,6 +80,13 @@ const fr = {
         "Error upgrading database schema, but a backup was created.": "Erreur lors de la mise à jour du schéma de la base de données, mais une sauvegarde a été créée.",
         "Autostart enabled": "Démarrage automatique activé",
         "Autostart disabled": "Démarrage automatique désactivé",
+        "Undo": "Annuler",
+        "Phrase deleted": "Phrase supprimée",
+        "Deletion cancelled": "Suppression annulée",
+        "Duplicate Phrase": "Dupliquer la Phrase",
+        "Phrase duplicated successfully.": "Phrase dupliquée avec succès.",
+        "Phrase not found.": "Phrase non trouvée.",
+        "Copy of": "Copie de",
 
         // examples
         "My Business Phone": "Mon Téléphone Pro",

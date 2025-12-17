@@ -65,6 +65,36 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ---
 
+## @neon-rs/load@0.1.82
+
+- **License:** MIT
+- **Repository:** https://github.com/dherman/neon-rs
+- **Publisher:** Dave Herman
+
+### License Text
+The MIT License (MIT)
+
+Copyright (c) 2023 David Herman
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+---
+
 ## @npmcli/fs@1.1.1
 
 - **License:** ISC
@@ -2327,7 +2357,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ---
 
-## ip-address@10.0.1
+## ip-address@10.1.0
 
 - **License:** MIT
 - **Repository:** https://github.com/beaugunderson/ip-address
@@ -3201,7 +3231,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ---
 
-## node-abi@3.78.0
+## node-abi@3.85.0
 
 - **License:** MIT
 - **Repository:** https://github.com/electron/node-abi
@@ -4517,6 +4547,32 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
+---
+
+## velopack@0.0.1298
+
+- **License:** MIT
+- **Repository:** https://github.com/velopack/velopack
+- **Publisher:** Velopack Ltd, Caelan Sayler
+
+### License Text
+# Velopack
+Velopack is an installation and auto-update framework for cross-platform applications. It's opinionated, extremely easy to use with zero config needed. With just one command you can be up and running with an installable application, and it's lightning fast for your users, too.
+
+- 😍 **Zero config** – Velopack takes your compiler output and generates an installer, updates, delta packages, and self-updating portable package in just one command.
+- 🎯 **Cross platform** – Velopack supports building packages for **Windows**, **OSX**, and **Linux**, so you can use one solution for every target.
+- 🚀 **Automatic migrations** - If you are coming from other popular frameworks (eg. [Squirrel](https://github.com/Squirrel/Squirrel.Windows)), Velopack can automatically migrate your application.
+- ⚡️ **Lightning fast** – Velopack is written in Rust for native performance. Delta packages mean your user only downloads what's changed between versions.
+- 📔 **Language agnostic** - With support for C#, C++, JS, Rust and more. Use a familiar API for updates no matter what language your project is.
+
+- 📖 [Read the docs](https://docs.velopack.io/)
+- ⚡ [Quick start guides](https://docs.velopack.io/category/quick-start)
+- 🕶️ [View example apps](https://docs.velopack.io/category/sample-apps)
+- 📺 [See website & demo](https://velopack.io/)
+
+## Community
+- ❓ Ask questions, get support, or discuss ideas on [Discord](https://discord.gg/CjrCrNzd3F)
+- 🗣️ Report bugs or request features on [GitHub Issues](https://github.com/velopack/velopack/issues)
 ---
 
 ## which@2.0.2

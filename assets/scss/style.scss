@@ -620,6 +620,7 @@ select.input {
             background: var(--bg-surface);
         }
 
+        &.menu-item-danger,
         &[data-action="delete"] {
             color: var(--color-danger);
         }

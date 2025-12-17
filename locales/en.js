@@ -80,6 +80,13 @@ const en = {
         "Error upgrading database schema, but a backup was created.": "Error upgrading database schema, but a backup was created.",
         "Autostart enabled": "Autostart enabled",
         "Autostart disabled": "Autostart disabled",
+        "Undo": "Undo",
+        "Phrase deleted": "Phrase deleted",
+        "Deletion cancelled": "Deletion cancelled",
+        "Duplicate Phrase": "Duplicate Phrase",
+        "Phrase duplicated successfully.": "Phrase duplicated successfully.",
+        "Phrase not found.": "Phrase not found.",
+        "Copy of": "Copy of",
 
         // examples
         "My Business Phone": "My Business Phone",
