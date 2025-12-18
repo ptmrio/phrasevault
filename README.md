@@ -128,7 +128,7 @@ winget upgrade --id ptmrio.phrasevault -e
 
 #### Method 3: Microsoft Store
 
-PhraseVault is also available on the [Microsoft Store](https://apps.microsoft.com/detail/9pc4803p8r9j).
+PhraseVault is also available on the [Microsoft Store](https://apps.microsoft.com/store/detail/XPDM5Q5S84T8KR).
 
 ### Quick Start
 
