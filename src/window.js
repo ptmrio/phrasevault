@@ -22,14 +22,22 @@ let secondaryColor = {
 let theme = state.getConfig().theme;
 let isDark = theme === "dark" || (theme === "system" && nativeTheme.shouldUseDarkColors);
 
-function createWindow() {
-    const isMac = process.platform === "darwin";
+const isMac = process.platform === "darwin";
 
+function getIconPath() {
+    return path.join(__dirname, "../assets/img", isMac ? "icon_256x256.png" : "icon.ico");
+}
+
+function getTrayIconPath() {
+    return path.join(__dirname, "../assets/img", isMac ? "icon_16x16.png" : "tray.ico");
+}
+
+function createWindow() {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
         show: false,
-        icon: path.join(__dirname, "../assets/img/icon.ico"),
+        icon: getIconPath(),
         webPreferences: {
             preload: path.join(__dirname, "preload.js"),
             contextIsolation: true,
@@ -77,7 +85,7 @@ function createWindow() {
         }
         if (tray && !state.getBalloonShown()) {
             tray.displayBalloon({
-                icon: path.join(__dirname, "../assets/img/icon.ico"),
+                icon: getIconPath(),
                 title: "PhraseVault",
                 content: i18n.t("PhraseVault is running in the background."),
             });
@@ -91,7 +99,7 @@ function createWindow() {
             mainWindow.hide();
             if (tray && !state.getBalloonShown()) {
                 tray.displayBalloon({
-                    icon: path.join(__dirname, "../assets/img/icon.ico"),
+                    icon: getIconPath(),
                     title: "PhraseVault",
                     content: i18n.t("PhraseVault is running in the background."),
                 });
@@ -104,7 +112,7 @@ function createWindow() {
 }
 
 function createTray() {
-    tray = new Tray(path.join(__dirname, "../assets/img/tray.ico"));
+    tray = new Tray(getTrayIconPath());
     tray.setToolTip(i18n.t("PhraseVault is running in the background. Press Ctrl+. to show/hide."));
 
     const contextMenu = Menu.buildFromTemplate([
@@ -155,4 +163,4 @@ function clearBackendBindings() {
     backend.clearMainBindings(ipcMain);
 }
 
-module.exports = { createWindow, createTray, updateTitleBarTheme, clearBackendBindings, mainWindow, tray };
+module.exports = { createWindow, createTray, updateTitleBarTheme, clearBackendBindings, getIconPath, mainWindow, tray };

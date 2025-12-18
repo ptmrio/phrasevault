@@ -12,7 +12,7 @@ VelopackApp.build()
 
 const { windowManager } = require("node-window-manager");
 const { platform } = require("os");
-const { createWindow, createTray, updateTitleBarTheme, clearBackendBindings } = require("./window.js");
+const { createWindow, createTray, updateTitleBarTheme, clearBackendBindings, getIconPath } = require("./window.js");
 const path = require("path");
 const fs = require("fs");
 const state = require("./state.js");
@@ -225,7 +225,7 @@ if (!gotTheLock) {
             mainWindow.hide();
             if (tray && !state.getBalloonShown()) {
                 tray.displayBalloon({
-                    icon: path.join(__dirname, "../assets/img/icon.ico"),
+                    icon: getIconPath(),
                     title: "PhraseVault",
                     content: i18n.t("PhraseVault is running in the background."),
                 });

@@ -1,9 +1,29 @@
 const path = require("path");
 const fs = require("fs-extra");
 
+// Determine which velopack native modules to exclude based on target platform
+const isBuiltForMac = process.argv.includes("--platform=darwin") || (process.platform === "darwin" && !process.argv.includes("--platform=win32"));
+const velopackExcludes = isBuiltForMac
+    ? [/^\/node_modules\/velopack\/lib\/native\/velopack_nodeffi_linux/, /^\/node_modules\/velopack\/lib\/native\/velopack_nodeffi_win/]
+    : [/^\/node_modules\/velopack\/lib\/native\/velopack_nodeffi_linux/, /^\/node_modules\/velopack\/lib\/native\/velopack_nodeffi_osx/];
+
+// Exclude robotjs prebuilds for other platforms
+const robotjsExcludes = isBuiltForMac
+    ? [/^\/node_modules\/@hurdlegroup\/robotjs\/prebuilds\/(win32|linux)-/]
+    : [/^\/node_modules\/@hurdlegroup\/robotjs\/prebuilds\/(darwin|linux)-/];
+
 module.exports = {
     packagerConfig: {
-        osxSign: {}, // macOS signing placeholder
+        osxSign: {
+            identity: "Developer ID Application: Gerhard Petermeir (HCJ7D67RFZ)",
+            optionsForFile: () => ({
+                entitlements: "./entitlements.entitlements",
+                hardenedRuntime: true,
+            }),
+        },
+        osxNotarize: {
+            keychainProfile: "PhraseVault-notarize",
+        },
         windowsSign: {
             certificateSubjectName: "Gerhard Petermeir",
             timestampServer: "http://timestamp.digicert.com",
@@ -34,9 +54,8 @@ module.exports = {
         ignore: [
             /^\/node_modules\/.*\/(test|tests|__tests__|docs|documentation|examples|\.github)/,
             /^\/node_modules\/.*\/(\.yml|\.yaml)$/i,
-            /^\/node_modules\/@hurdlegroup\/robotjs\/prebuilds\/(darwin|linux)-/,
-            /^\/node_modules\/velopack\/lib\/native\/velopack_nodeffi_linux/,
-            /^\/node_modules\/velopack\/lib\/native\/velopack_nodeffi_osx/,
+            ...robotjsExcludes,
+            ...velopackExcludes,
             /^\/\.git/,
             /^\/dist/,
             /^\/out/,

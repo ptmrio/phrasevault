@@ -9,11 +9,15 @@
     "rebuild": "electron-rebuild --force",
     "postinstall": "electron-rebuild --force",
     "package": "cross-env NODE_ENV=production electron-forge package",
+    "package:mac": "cross-env NODE_ENV=production electron-forge package --arch=arm64 --platform=darwin",
     "make": "npm run thirdparty && npm run copylegal && npm run rebuild && npm run package && npm run velopack",
+    "make:mac": "npm run thirdparty:mac && npm run copylegal:mac && npm run rebuild && npm run package:mac && npm run velopack",
     "velopack": "node velopack.js",
     "version-bump": "node version-bump.js",
     "thirdparty": "license-checker-rseidelsohn --json --production > licenses.json && node generate-thirdparty.js && del licenses.json",
-    "copylegal": "copy LICENSE.md templates\\markdown\\license.md && copy THIRD_PARTY_NOTICES.md templates\\markdown\\thirdparty.md"
+    "thirdparty:mac": "npx license-checker-rseidelsohn --json --production > licenses.json && node generate-thirdparty.js && rm -f licenses.json",
+    "copylegal": "copy LICENSE.md templates\\markdown\\license.md && copy THIRD_PARTY_NOTICES.md templates\\markdown\\thirdparty.md",
+    "copylegal:mac": "cp LICENSE.md templates/markdown/license.md && cp THIRD_PARTY_NOTICES.md templates/markdown/thirdparty.md"
   },
   "keywords": [
     "phrase",
