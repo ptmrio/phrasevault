@@ -1,4 +1,4 @@
-const { BrowserWindow, app, Tray, Menu, ipcMain, nativeTheme } = require("electron");
+const { BrowserWindow, app, Tray, Menu, ipcMain, nativeTheme, Notification } = require("electron");
 const backend = require("i18next-electron-fs-backend");
 const path = require("path");
 const fs = require("fs");
@@ -30,6 +30,50 @@ function getIconPath() {
 
 function getTrayIconPath() {
     return path.join(__dirname, "../assets/img", isMac ? "icon_16x16.png" : "tray.ico");
+}
+
+/**
+ * Show background notification - uses tray balloon on Windows, Notification API on macOS
+ */
+function showBackgroundNotification(title, body, trayInstance) {
+    if (process.platform === "win32" && trayInstance) {
+        trayInstance.displayBalloon({
+            icon: getIconPath(),
+            title: title,
+            content: body,
+        });
+    } else if (Notification.isSupported()) {
+        new Notification({
+            title: title,
+            body: body,
+            silent: true,
+        }).show();
+    }
+}
+
+/**
+ * Hide window to tray - also hides dock icon on macOS
+ */
+function hideToTray() {
+    if (mainWindow) {
+        mainWindow.hide();
+    }
+    if (isMac && app.dock) {
+        app.dock.hide();
+    }
+}
+
+/**
+ * Show window from tray - also shows dock icon on macOS
+ */
+function showFromTray() {
+    if (isMac && app.dock) {
+        app.dock.show();
+    }
+    if (mainWindow) {
+        mainWindow.show();
+        mainWindow.focus();
+    }
 }
 
 function createWindow() {
@@ -82,13 +126,17 @@ function createWindow() {
             state.setConfig({ showOnStartup: false });
         } else {
             mainWindow.hide();
+            // Hide dock icon on macOS when starting hidden
+            if (isMac && app.dock) {
+                app.dock.hide();
+            }
         }
         if (tray && !state.getBalloonShown()) {
-            tray.displayBalloon({
-                icon: getIconPath(),
-                title: "PhraseVault",
-                content: i18n.t("PhraseVault is running in the background."),
-            });
+            showBackgroundNotification(
+                "PhraseVault",
+                i18n.t("PhraseVault is running in the background."),
+                tray
+            );
             state.setBalloonShown(true);
         }
     });
@@ -96,13 +144,13 @@ function createWindow() {
     mainWindow.on("close", (event) => {
         if (!global.isQuitting) {
             event.preventDefault();
-            mainWindow.hide();
+            hideToTray();
             if (tray && !state.getBalloonShown()) {
-                tray.displayBalloon({
-                    icon: getIconPath(),
-                    title: "PhraseVault",
-                    content: i18n.t("PhraseVault is running in the background."),
-                });
+                showBackgroundNotification(
+                    "PhraseVault",
+                    i18n.t("PhraseVault is running in the background."),
+                    tray
+                );
                 state.setBalloonShown(true);
             }
         }
@@ -113,17 +161,17 @@ function createWindow() {
 
 function createTray() {
     tray = new Tray(getTrayIconPath());
-    tray.setToolTip(i18n.t("PhraseVault is running in the background. Press Ctrl+. to show/hide."));
+    const shortcutKey = isMac ? "⌘." : "Ctrl+.";
+    tray.setToolTip(i18n.t("PhraseVault is running in the background. Press {{shortcut}} to show/hide.", { shortcut: shortcutKey }));
 
     const contextMenu = Menu.buildFromTemplate([
         {
             label: i18n.t("Show/Hide"),
             click: () => {
                 if (mainWindow.isVisible()) {
-                    mainWindow.hide();
+                    hideToTray();
                 } else {
-                    mainWindow.show();
-                    mainWindow.focus();
+                    showFromTray();
                 }
             },
         },
@@ -139,10 +187,9 @@ function createTray() {
 
     tray.on("click", () => {
         if (mainWindow.isVisible()) {
-            mainWindow.hide();
+            hideToTray();
         } else {
-            mainWindow.show();
-            mainWindow.focus();
+            showFromTray();
         }
     });
 
@@ -163,4 +210,4 @@ function clearBackendBindings() {
     backend.clearMainBindings(ipcMain);
 }
 
-module.exports = { createWindow, createTray, updateTitleBarTheme, clearBackendBindings, getIconPath, mainWindow, tray };
+module.exports = { createWindow, createTray, updateTitleBarTheme, clearBackendBindings, getIconPath, hideToTray, showFromTray, showBackgroundNotification, mainWindow, tray };

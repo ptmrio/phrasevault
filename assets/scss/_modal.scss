@@ -35,11 +35,16 @@
     padding-top: calc(var(--space-lg) + var(--stack-offset));
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     opacity: 0;
     visibility: hidden;
     transition:
         opacity var(--duration-base),
         visibility var(--duration-base);
+    // Prevent traffic light jump on macOS by respecting title bar area
+    [data-platform="darwin"] & {
+        top: var(--title-bar-height);
+    }
 
     &.show {
         opacity: 1;

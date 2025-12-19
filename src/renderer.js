@@ -222,14 +222,23 @@ document.addEventListener("DOMContentLoaded", () => {
         const langSelect = document.getElementById("language-select");
         if (langSelect) langSelect.value = settings.language;
 
-        // Autostart (hide on non-Windows)
+        // Autostart (show on Windows and macOS only)
         const autostartSection = document.getElementById("autostart-section");
-        if (settings.platform !== "win32") {
-            autostartSection.style.display = "none";
-        } else {
+        const isMac = settings.platform === "darwin";
+        const isWindows = settings.platform === "win32";
+        if (isWindows || isMac) {
             autostartSection.style.display = "block";
             const autostartToggle = document.getElementById("autostart-toggle");
             if (autostartToggle) autostartToggle.checked = settings.autostart;
+            // Update label based on platform
+            const autostartLabel = autostartSection.querySelector("span[data-i18n]");
+            if (autostartLabel) {
+                const key = isMac ? "Start at Login" : "Start with Windows";
+                autostartLabel.setAttribute("data-i18n", key);
+                autostartLabel.textContent = window.i18n.t(key);
+            }
+        } else {
+            autostartSection.style.display = "none";
         }
 
         // Purchase status

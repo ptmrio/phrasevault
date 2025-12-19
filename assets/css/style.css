@@ -182,7 +182,9 @@ h3 {
   font-weight: 600;
   color: var(--text-muted);
   pointer-events: none;
-  user-select: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
   z-index: 101;
 }
 
@@ -293,6 +295,9 @@ h3 {
   border-radius: var(--radius-md);
   transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
 }
+.input::-moz-placeholder {
+  color: var(--text-secondary);
+}
 .input::placeholder {
   color: var(--text-secondary);
 }
@@ -312,7 +317,9 @@ textarea.input {
 
 select.input {
   cursor: pointer;
-  appearance: none;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right var(--space-sm) center;
@@ -339,7 +346,9 @@ select.input {
 }
 
 .radio-input {
-  appearance: none;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
   width: 18px;
   height: 18px;
   border: 2px solid var(--border-color);
@@ -397,14 +406,18 @@ select.input {
   border-radius: var(--radius-sm);
   opacity: 0;
   pointer-events: none;
+  background: transparent;
+  border: none;
   transition: opacity var(--duration-fast), color var(--duration-fast);
 }
 .search-wrapper .search-clear.visible {
   opacity: 1;
   pointer-events: auto;
+  cursor: pointer;
 }
 .search-wrapper .search-clear:hover {
   color: var(--text-primary);
+  background: var(--bg-surface);
 }
 .search-wrapper .search-clear .icon {
   width: 14px;
@@ -449,7 +462,9 @@ select.input {
   background: var(--bg-surface);
   border-radius: var(--radius-md);
   cursor: pointer;
-  user-select: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
   transition: background-color var(--duration-fast);
   animation: fadeIn var(--duration-slow) ease-out;
 }
@@ -654,7 +669,9 @@ select.input {
   color: var(--text-primary);
 }
 .settings-option input[type=radio] {
-  appearance: none;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
   width: 16px;
   height: 16px;
   border: 2px solid var(--border-color);
@@ -688,7 +705,9 @@ select.input {
   font-size: var(--text-sm);
 }
 .settings-toggle input[type=checkbox] {
-  appearance: none;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
   width: 18px;
   height: 18px;
   border: 2px solid var(--border-color);
@@ -785,9 +804,13 @@ select.input {
   padding-top: calc(var(--space-lg) + var(--stack-offset));
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   opacity: 0;
   visibility: hidden;
   transition: opacity var(--duration-base), visibility var(--duration-base);
+}
+[data-platform=darwin] .modal {
+  top: var(--title-bar-height);
 }
 .modal.show {
   opacity: 1;
@@ -1009,7 +1032,8 @@ select.input {
   justify-content: center;
   padding: var(--space-xl);
   background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
 }
 
 .purchase-reminder-content {

@@ -24,6 +24,7 @@ const it = {
         "Quit": "Esci",
         "Startup": "Avvio",
         "Start with Windows": "Avvia con Windows",
+        "Start at Login": "Avvia al login",
         "Light Theme": "Tema Chiaro",
         "Dark Theme": "Tema Scuro",
         "System Preference": "Preferenza di Sistema",
@@ -52,7 +53,13 @@ const it = {
         // Tray and System Notifications
         "Show/Hide": "Mostra/Nascondi",
         "PhraseVault is running in the background.": "PhraseVault è in esecuzione in background.",
-        "PhraseVault is running in the background. Press Ctrl+. to show/hide.": "PhraseVault è in esecuzione in background. Premere Ctrl+. per mostrare/nascondere.",
+        "PhraseVault is running in the background. Press {{shortcut}} to show/hide.": "PhraseVault è in esecuzione in background. Premere {{shortcut}} per mostrare/nascondere.",
+
+        // Accessibility (macOS)
+        "Accessibility Permission Required": "Autorizzazione accessibilità richiesta",
+        "PhraseVault requires accessibility permissions to paste text into other applications.": "PhraseVault richiede le autorizzazioni di accessibilità per incollare il testo in altre applicazioni.",
+        "Please enable PhraseVault in System Settings > Privacy & Security > Accessibility.": "Abilitare PhraseVault in Impostazioni di Sistema > Privacy e Sicurezza > Accessibilità.",
+        "OK": "OK",
 
         // Modal
         "Phrase": "Frase",

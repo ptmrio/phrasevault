@@ -46,7 +46,23 @@ if (platform === "darwin") {
     }
 }
 
+console.log("Running vpk with args:", args.join(" "));
+
 const r = spawnSync("vpk", args, { stdio: "inherit" });
+
+if (r.error) {
+    console.error("Failed to run vpk:", r.error.message);
+    if (r.error.code === "ENOENT") {
+        console.error("The 'vpk' command was not found. Make sure Velopack CLI is installed.");
+        console.error("Install it with: dotnet tool install -g vpk");
+    }
+    process.exit(1);
+}
+
+if (r.status !== 0) {
+    console.error(`vpk exited with status code: ${r.status}`);
+    process.exit(r.status ?? 1);
+}
 
 if (r.status === 0) {
     // Copy versioned files to dist folder
@@ -78,4 +94,4 @@ if (r.status === 0) {
     }
 }
 
-process.exit(r.status ?? 1);
+process.exit(0);

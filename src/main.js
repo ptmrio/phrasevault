@@ -12,7 +12,7 @@ VelopackApp.build()
 
 const { windowManager } = require("node-window-manager");
 const { platform } = require("os");
-const { createWindow, createTray, updateTitleBarTheme, clearBackendBindings, getIconPath } = require("./window.js");
+const { createWindow, createTray, updateTitleBarTheme, clearBackendBindings, getIconPath, hideToTray, showFromTray, showBackgroundNotification } = require("./window.js");
 const path = require("path");
 const fs = require("fs");
 const state = require("./state.js");
@@ -65,15 +65,22 @@ function setLanguage(lng) {
 }
 
 function setAutoLaunch(enabled) {
-    if (process.platform !== "win32" || !app.isPackaged) return;
+    if (!app.isPackaged) return;
 
-    // Velopack keeps exe at stable location: {root}/current/PhraseVault.exe
-    app.setLoginItemSettings({
-        openAtLogin: enabled,
-        enabled: enabled,
-        path: process.execPath,
-        args: ["--launched-at-login", "--hidden"],
-    });
+    if (process.platform === "darwin") {
+        // macOS 13+ uses SMAppService (mainAppService type by default)
+        app.setLoginItemSettings({
+            openAtLogin: enabled,
+        });
+    } else if (process.platform === "win32") {
+        // Velopack keeps exe at stable location: {root}/current/PhraseVault.exe
+        app.setLoginItemSettings({
+            openAtLogin: enabled,
+            enabled: enabled,
+            path: process.execPath,
+            args: ["--launched-at-login", "--hidden"],
+        });
+    }
 }
 
 /**
@@ -95,12 +102,17 @@ function syncAutostart() {
 }
 
 function isAutoLaunchEnabled() {
-    if (process.platform !== "win32" || !app.isPackaged) return false;
+    if (!app.isPackaged) return false;
 
-    return app.getLoginItemSettings({
-        path: process.execPath,
-        args: ["--launched-at-login", "--hidden"],
-    }).openAtLogin;
+    if (process.platform === "darwin") {
+        return app.getLoginItemSettings().openAtLogin;
+    } else if (process.platform === "win32") {
+        return app.getLoginItemSettings({
+            path: process.execPath,
+            args: ["--launched-at-login", "--hidden"],
+        }).openAtLogin;
+    }
+    return false;
 }
 
 const gotTheLock = app.requestSingleInstanceLock();
@@ -122,7 +134,17 @@ if (!gotTheLock) {
         // Sync autostart on first run after NSIS->Squirrel migration
         syncAutostart();
 
-        windowManager.requestAccessibility();
+        // Request accessibility permissions (macOS only, no-op on Windows)
+        const hasAccessibility = windowManager.requestAccessibility();
+        if (process.platform === "darwin" && !hasAccessibility) {
+            dialog.showMessageBox({
+                type: "warning",
+                title: i18n.t("Accessibility Permission Required"),
+                message: i18n.t("PhraseVault requires accessibility permissions to paste text into other applications."),
+                detail: i18n.t("Please enable PhraseVault in System Settings > Privacy & Security > Accessibility."),
+                buttons: [i18n.t("OK")],
+            });
+        }
 
         if (!languageToUse || typeof languageToUse !== "string") {
             const { osLocaleSync } = require("os-locale");
@@ -172,8 +194,12 @@ if (!gotTheLock) {
                 const pathParts = normalizedPath.split(path.sep);
                 const filename = pathParts[pathParts.length - 1].toLowerCase();
 
-                const isPhraseVaultExecutable = filename === "phrasevault.exe";
-                const isLocalElectronExecutable = normalizedPath.toLowerCase().includes(path.join("phrasevault-electron", "node_modules", "electron", "dist", "electron.exe"));
+                const isPhraseVaultExecutable = process.platform === "darwin"
+                    ? filename === "phrasevault" || normalizedPath.toLowerCase().includes("phrasevault.app")
+                    : filename === "phrasevault.exe";
+                const isLocalElectronExecutable = process.platform === "darwin"
+                    ? normalizedPath.toLowerCase().includes(path.join("electron.app", "contents", "macos", "electron"))
+                    : normalizedPath.toLowerCase().includes(path.join("phrasevault-electron", "node_modules", "electron", "dist", "electron.exe"));
 
                 if (!isPhraseVaultExecutable && !isLocalElectronExecutable) {
                     previousWindow = previousWindowCandidate;
@@ -222,13 +248,13 @@ if (!gotTheLock) {
         });
 
         ipcMain.on("minimize-window", () => {
-            mainWindow.hide();
+            hideToTray();
             if (tray && !state.getBalloonShown()) {
-                tray.displayBalloon({
-                    icon: getIconPath(),
-                    title: "PhraseVault",
-                    content: i18n.t("PhraseVault is running in the background."),
-                });
+                showBackgroundNotification(
+                    "PhraseVault",
+                    i18n.t("PhraseVault is running in the background."),
+                    tray
+                );
                 state.setBalloonShown(true);
             }
             if (previousWindow) {
@@ -236,14 +262,40 @@ if (!gotTheLock) {
             }
         });
 
-        // Minimal menu for keyboard shortcuts only (no visible menu bar)
-        const minimalMenu = Menu.buildFromTemplate([
-            {
-                label: "Edit",
-                submenu: [{ role: "undo" }, { role: "redo" }, { type: "separator" }, { role: "cut" }, { role: "copy" }, { role: "paste" }, { role: "selectAll" }],
-            },
-        ]);
-        Menu.setApplicationMenu(minimalMenu);
+        // Platform-aware menu bar
+        const isMac = process.platform === "darwin";
+        const menuTemplate = [
+            // App menu (macOS only)
+            ...(isMac ? [{
+                label: app.name,
+                submenu: [
+                    { role: "about" },
+                    { type: "separator" },
+                    {
+                        label: i18n.t("Settings") + "...",
+                        accelerator: "CmdOrCtrl+,",
+                        click: () => {
+                            if (mainWindow && !mainWindow.isDestroyed()) {
+                                mainWindow.webContents.send("open-settings");
+                            }
+                        }
+                    },
+                    { type: "separator" },
+                    { role: "services" },
+                    { type: "separator" },
+                    { role: "hide" },
+                    { role: "hideOthers" },
+                    { role: "unhide" },
+                    { type: "separator" },
+                    { role: "quit" }
+                ]
+            }] : []),
+            // Edit menu - use role for automatic OS localization
+            { role: "editMenu" },
+            // Window menu (macOS only) - use role for automatic OS localization
+            ...(isMac ? [{ role: "windowMenu" }] : [])
+        ];
+        Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate));
 
         app.on("activate", () => {
             if (BrowserWindow.getAllWindows().length === 0) mainWindow = createWindow();
@@ -546,6 +598,11 @@ if (!gotTheLock) {
             app.relaunch();
             app.exit();
         }, 1500);
+    });
+
+    // Handle system-initiated quit (macOS shutdown, Cmd+Q, etc.)
+    app.on("before-quit", () => {
+        global.isQuitting = true;
     });
 
     app.on("will-quit", () => {

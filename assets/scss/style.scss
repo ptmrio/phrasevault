@@ -440,6 +440,8 @@ select.input {
         border-radius: var(--radius-sm);
         opacity: 0;
         pointer-events: none;
+        background: transparent;
+        border: none;
         transition:
             opacity var(--duration-fast),
             color var(--duration-fast);
@@ -447,10 +449,12 @@ select.input {
         &.visible {
             opacity: 1;
             pointer-events: auto;
+            cursor: pointer;
         }
 
         &:hover {
             color: var(--text-primary);
+            background: var(--bg-surface);
         }
 
         .icon {

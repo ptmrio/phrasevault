@@ -20,7 +20,7 @@
     "copylegal:mac": "cp LICENSE.md templates/markdown/license.md && cp THIRD_PARTY_NOTICES.md templates/markdown/thirdparty.md"
   },
   "keywords": [
-    "phrase",
+    "phrase", 
     "management",
     "tool",
     "text expander",
@@ -38,8 +38,7 @@
     "node-window-manager": "^2.2.4",
     "os-locale": "^6.0.2",
     "sqlite3": "^5.1.7",
-    "velopack": "^0.0.1298",
-    "winreg": "^1.2.5"
+    "velopack": "^0.0.1298"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.5.0",

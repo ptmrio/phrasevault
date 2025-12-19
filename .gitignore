@@ -8,3 +8,7 @@ Releases/*
 
 upload.sh
 HOWTORUN.md
+
+// MacOS
+.DS_Store
+**/.DS_Store

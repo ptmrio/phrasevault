@@ -87,3 +87,11 @@ contextBridge.exposeInMainWorld("i18n", {
     t: i18n.t.bind(i18n),
     changeLanguage: i18n.changeLanguage.bind(i18n),
 });
+
+// Expose platform immediately for CSS styling (avoids async flash)
+contextBridge.exposeInMainWorld("platform", process.platform);
+
+// Set platform data attribute immediately when DOM is ready
+document.addEventListener("DOMContentLoaded", () => {
+    document.documentElement.dataset.platform = process.platform;
+});
