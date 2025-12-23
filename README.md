@@ -2,7 +2,7 @@
 
 > **Save text once, insert anywhere.**
 
-PhraseVault is an easy-to-use **text expander** and **snippet manager** for Windows that organizes and inserts frequently used phrases, email templates, AI prompts, as well as text and code snippets. Whether you're composing emails, writing code, or filling out forms, PhraseVault simplifies repetitive typing tasks and makes your workflow more efficient.
+PhraseVault is an easy-to-use **text expander** and **snippet manager** for Windows and macOS that organizes and inserts frequently used phrases, email templates, AI prompts, as well as text and code snippets. Whether you're composing emails, writing code, or filling out forms, PhraseVault simplifies repetitive typing tasks and makes your workflow more efficient.
 
 **Try it free for 14 days**, then unlock lifetime access with a small one-time payment.
 
@@ -42,16 +42,16 @@ PhraseVault is also excellent for storing and managing prompts for AI tools like
 
 ### ⚡ Quick Access
 
-- **Global Keyboard Shortcut** (`Ctrl + .`): Instantly open PhraseVault from any application.
+- **Global Keyboard Shortcut** (`Ctrl + .` on Windows, `Cmd + .` on macOS): Instantly open PhraseVault from any application.
 - **Fuzzy Search**: Find phrases quickly even with partial or misspelled queries.
 - **Full Keyboard Navigation**: Navigate and insert phrases without touching the mouse.
 - **Seamless Clipboard Integration**: Phrases are inserted directly into your active text field.
 
-### 🔒 Privacy-First & Open Source
+### 🔒 Privacy-First & Source Available
 
 - **No Cloud Storage**: Your data stays on your device—nothing is sent to external servers.
 - **No Tracking or Telemetry**: We don't collect usage data or analytics.
-- **Source Code Transparency**: Full source code available on [GitHub](https://github.com/ptmrio/phrasevault) for review.
+- **Source Code Transparency**: Full source code available on [GitHub](https://github.com/ptmrio/phrasevault) for review and audit.
 
 ### 🎨 User-Friendly Interface
 
@@ -62,7 +62,7 @@ PhraseVault is also excellent for storing and managing prompts for AI tools like
 
 ### 🌍 Universal Compatibility
 
-- **Works Everywhere**: Compatible with virtually any Windows application.
+- **Works Everywhere**: Compatible with virtually any Windows or macOS application.
 - **Multi-Language Support**: Available in English, German, Spanish, French, Italian, and Portuguese.
 - **Flexible Database Location**: Store your database on a cloud drive (Google Drive, Dropbox, etc.) for sync across devices.
 
@@ -106,17 +106,20 @@ PhraseVault is built on transparency and trust. We believe you should be able to
 
 ### Prerequisites
 
-- Windows 10, Windows 11
+- Windows 10 or later, or macOS 11 (Big Sur) or later
 
 ### Installation Instructions
 
-#### Method 1: Download from the Website (Recommended)
+#### Download from the Website (Recommended)
 
-1. **Download the Installer**: Visit [phrasevault.app/download](https://phrasevault.app/download) and download the latest `.exe` installer.
-2. **Run the Installer**: Double-click the downloaded file and follow the on-screen instructions.
-3. **Launch the Application**: Open PhraseVault from the Start Menu or desktop shortcut.
+Visit [phrasevault.app/download](https://phrasevault.app/download) and download the installer for your platform:
 
-#### Method 2: Install via Winget
+| Platform | Installer | Instructions                                                                                          |
+| -------- | --------- | ----------------------------------------------------------------------------------------------------- |
+| Windows  | `.exe`    | Double-click and follow the on-screen instructions. Launch from the Start Menu or desktop shortcut.   |
+| macOS    | `.pkg`    | Double-click and follow the on-screen instructions. Launch from the Applications folder or Spotlight. |
+
+#### Windows: Install via Winget
 
 ```bash
 # Install PhraseVault
@@ -126,13 +129,13 @@ winget install --id ptmrio.phrasevault -e
 winget upgrade --id ptmrio.phrasevault -e
 ```
 
-#### Method 3: Microsoft Store
+#### Windows: Microsoft Store
 
 PhraseVault is also available on the [Microsoft Store](https://apps.microsoft.com/store/detail/XPDM5Q5S84T8KR).
 
 ### Quick Start
 
-1. Open PhraseVault using `Ctrl + .`
+1. Open PhraseVault using `Ctrl + .` (Windows) or `Cmd + .` (macOS)
 2. Search for your desired phrase
 3. Press `Enter` to insert it
 
@@ -140,7 +143,7 @@ PhraseVault is also available on the [Microsoft Store](https://apps.microsoft.co
 
 ### Basic Usage Instructions
 
-- **Open the App**: Use the shortcut `Ctrl + .` to open the PhraseVault window.
+- **Open the App**: Use the shortcut `Ctrl + .` (Windows) or `Cmd + .` (macOS) to open the PhraseVault window.
 - **Search for a Phrase**: Start typing in the search bar to quickly find the phrase you need.
 - **Select the Desired Phrase**: Press the arrow down key to navigate through the search results and select the desired phrase.
 - **Insert the Phrase**: Press `Enter` to have PhraseVault paste the expanded phrase text into the active field.
@@ -149,7 +152,7 @@ PhraseVault is also available on the [Microsoft Store](https://apps.microsoft.co
     - **Edit**: Click the "Edit" button next to a phrase to modify it.
     - **Delete**: Click the "Delete" button next to a phrase to remove it from the database.
     - **Copy to Clipboard**: Click the "Copy" button to copy the phrase to the clipboard.
-- **Minimize PhraseVault**: Press `Escape` to minimize the PhraseVault window. It will remain accessible from the system tray.
+- **Minimize PhraseVault**: Press `Escape` to minimize the PhraseVault window. It will remain accessible from the system tray (Windows) or menu bar (macOS).
 - **Theme Selection**: Choose between light and dark themes to match your preference.
 - **Database Location**: You can freely choose the location of the database file, allowing it to be stored on a cloud drive (such as Google Drive, Dropbox, etc.) for easy access and synchronization across devices.
 
@@ -169,7 +172,7 @@ PhraseVault's source code is available for transparency and personal modificatio
 - [Node.js](https://nodejs.org/) (LTS version recommended)
 - [Git](https://git-scm.com/)
 - [.NET SDK](https://dotnet.microsoft.com/download/dotnet) (required for the `vpk` packaging tool)
-- Windows 10 or 11
+- Windows 10/11 or macOS 11+
 
 ### Install Velopack CLI
 
