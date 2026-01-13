@@ -67,6 +67,13 @@ const pt = {
         "Plain Text": "Texto Simples",
         "Markdown": "Markdown",
         "HTML": "HTML",
+        "Cancel": "Cancelar",
+
+        // Dynamic inserts
+        "Fill in Details": "Preencher detalhes",
+        "Insert": "Inserir",
+        "Value": "Valor",
+        "Text": "Texto",
 
         // database status
         "Phrases loaded": "Banco de dados de frases carregado com sucesso",
@@ -77,6 +84,7 @@ const pt = {
 
         // toasts
         "Phrase already exists.": "A frase já existe.",
+        "A phrase cannot reference itself.": "Uma frase não pode fazer referência a si mesma.",
         "Phrase added successfully.": "Frase adicionada com sucesso.",
         "Phrase edited successfully.": "Frase editada com sucesso.",
         "Phrase deleted successfully.": "Frase excluída com sucesso.",
@@ -94,20 +102,23 @@ const pt = {
         "Phrase duplicated successfully.": "Frase duplicada com sucesso.",
         "Phrase not found.": "Frase não encontrada.",
         "Copy of": "Cópia de",
+         "Copy ID": "Copiar ID",
+         "Phrase ID copied": "ID da frase copiado",
+         "No ID available": "Nenhum ID disponível",
 
-        // examples
-        "My Business Phone": "Meu Telefone Comercial",
-        "examplePhrase1": "+55 11 98765-4321",
-        "My Tax ID": "Meu CNPJ",
-        "examplePhrase2": "12.345.678/0001-90",
-        "Email Signature": "Assinatura de Email",
-        "examplePhrase3": "Atenciosamente,\n\nJoão Silva\nDesenvolvedor Senior\nEmpresa Ltda.\nTel: +55 11 98765-4321",
-        "Out of Office": "Fora do Escritório",
-        "examplePhrase4": "Olá,\n\nObrigado pela sua mensagem. Estou fora do escritório e retornarei em [Data].\n\nAtenciosamente,\nJoão Silva",
-        "AI Prompt": "Prompt de IA",
-        "examplePhrase5": "Por favor, resuma o texto a seguir e liste os pontos principais:",
-        "Polite Follow-up": "Acompanhamento Cordial",
-        "examplePhrase6": "Olá,\n\nGostaria de dar continuidade à minha mensagem anterior. Por favor, me avise se precisar de mais informações.\n\nObrigado!",
+        // examples - simple, practical phrases for new users
+        "email": "email",
+        "examplePhrase1": "joao.silva@exemplo.com.br",
+        "phone": "tel",
+        "examplePhrase2": "+55 11 98765-4321",
+        "addr": "end",
+        "examplePhrase3": "Rua das Flores 123\nSão Paulo, SP 01310-100\nBrasil",
+        "sig": "assinatura",
+        "examplePhrase4": "Atenciosamente,\n\nJoão Silva\nEmpresa Ltda.\n{{phrase:PHONE_ID}}",
+        "ty": "obrigado",
+        "examplePhrase5": "Obrigado pela mensagem. Retornarei em breve.",
+        "today": "hoje",
+        "examplePhrase6": "Data de hoje: {{date}}",
 
         // License Agreement
         "License Agreement": "Contrato de licença",

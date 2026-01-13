@@ -362,6 +362,150 @@
     }
 
     // =============================================================================
+    // Dynamic Prompt Modal
+    // =============================================================================
+
+    let dynamicModal, dynamicModalClose, dynamicModalTitle, dynamicModalForm, dynamicModalSubmit, dynamicModalCancel;
+    let currentDynamicData = null;
+
+    function initDynamicModal() {
+        dynamicModal = document.getElementById("dynamicPromptModal");
+        if (!dynamicModal) return; // Modal not in DOM yet
+
+        dynamicModalClose = dynamicModal.querySelector(".dynamic-close");
+        dynamicModalTitle = document.getElementById("dynamic-modal-title");
+        dynamicModalForm = document.getElementById("dynamic-form");
+        dynamicModalSubmit = document.getElementById("dynamic-submit");
+        dynamicModalCancel = document.getElementById("dynamic-cancel");
+
+        dynamicModalClose.addEventListener("click", cancelDynamicModal);
+        dynamicModalCancel.addEventListener("click", cancelDynamicModal);
+        dynamicModalSubmit.addEventListener("click", submitDynamicForm);
+
+        // Handle Enter key to submit (except in textarea)
+        dynamicModalForm.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && e.target.tagName !== "TEXTAREA") {
+                e.preventDefault();
+                submitDynamicForm();
+            }
+        });
+
+        // ESC to cancel
+        dynamicModal.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                e.preventDefault();
+                cancelDynamicModal();
+            }
+        });
+
+        // Listen for dynamic prompt requests from main process
+        window.electron.removeAllListeners("show-dynamic-prompt");
+        window.electron.receive("show-dynamic-prompt", (data) => {
+            openDynamicModal(data);
+        });
+    }
+
+    function openDynamicModal(data) {
+        currentDynamicData = data;
+        dynamicModalTitle.textContent = window.i18n.t("Fill in Details");
+        dynamicModalForm.innerHTML = "";
+
+        // Build form fields for each promptable placeholder
+        data.placeholders.forEach((p, index) => {
+            const fieldId = `dynamic-field-${index}`;
+            const label = p.label || window.i18n.t(p.type === "textarea" ? "Text" : "Value");
+
+            const wrapper = document.createElement("div");
+            wrapper.className = "form-field";
+
+            const labelEl = document.createElement("label");
+            labelEl.htmlFor = fieldId;
+            labelEl.textContent = label;
+            wrapper.appendChild(labelEl);
+
+            let input;
+
+            if (p.type === "select") {
+                input = document.createElement("select");
+                input.className = "input";
+                p.options.choices.forEach((choice) => {
+                    const option = document.createElement("option");
+                    option.value = choice.value;
+                    option.textContent = choice.value;
+                    if (choice.default) option.selected = true;
+                    input.appendChild(option);
+                });
+            } else if (p.type === "textarea") {
+                input = document.createElement("textarea");
+                input.className = "input";
+                input.rows = 3;
+                input.value = p.options?.default || "";
+            } else {
+                input = document.createElement("input");
+                input.type = "text";
+                input.className = "input";
+                input.value = p.options?.default || "";
+            }
+
+            input.id = fieldId;
+            input.dataset.label = p.label || `__${p.type}_${index}`;
+            wrapper.appendChild(input);
+
+            dynamicModalForm.appendChild(wrapper);
+        });
+
+        showModal(dynamicModal);
+
+        // Focus first input after modal animation
+        setTimeout(() => {
+            const firstInput = dynamicModalForm.querySelector("input, select, textarea");
+            if (firstInput) firstInput.focus();
+        }, 50);
+    }
+
+    function cancelDynamicModal() {
+        hideModal(dynamicModal, () => {
+            dynamicModalForm.innerHTML = "";
+            currentDynamicData = null;
+        });
+    }
+
+    function closeDynamicModal() {
+        hideModal(dynamicModal, () => {
+            dynamicModalForm.innerHTML = "";
+            currentDynamicData = null;
+        });
+    }
+
+    function submitDynamicForm() {
+        if (!currentDynamicData) return;
+
+        // Collect values from form
+        const values = {};
+        dynamicModalForm.querySelectorAll("input, select, textarea").forEach((el) => {
+            if (el.dataset.label) {
+                values[el.dataset.label] = el.value;
+            }
+        });
+
+        // Send response to main process
+        window.electron.send("dynamic-prompt-response", {
+            phraseId: currentDynamicData.phraseId,
+            phraseType: currentDynamicData.phraseType,
+            text: currentDynamicData.text,
+            values,
+            clipboardContent: currentDynamicData.clipboardContent,
+        });
+
+        // Close modal without sending cancel
+        closeDynamicModal();
+    }
+
+    function isDynamicModalOpen() {
+        return dynamicModal && dynamicModal.style.display === "grid";
+    }
+
+    // =============================================================================
     // Module Exports
     // =============================================================================
 
@@ -384,5 +528,14 @@
         openPhraseForm,
         closePhraseModal,
         isPhraseModalOpen,
+
+        // Dynamic Prompt Modal
+        openDynamicModal,
+        closeDynamicModal,
+        cancelDynamicModal,
+        isDynamicModalOpen,
     };
+
+    // Initialize dynamic modal after DOM elements are set up
+    document.addEventListener("DOMContentLoaded", initDynamicModal);
 })();

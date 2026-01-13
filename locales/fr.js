@@ -65,6 +65,13 @@ const fr = {
         "Plain Text": "Texte Brut",
         "Markdown": "Markdown",
         "HTML": "HTML",
+        "Cancel": "Annuler",
+
+        // Dynamic inserts
+        "Fill in Details": "Remplir les détails",
+        "Insert": "Insérer",
+        "Value": "Valeur",
+        "Text": "Texte",
 
         // database status
         "Phrases loaded": "Base de données de phrases chargée avec succès",
@@ -75,6 +82,7 @@ const fr = {
 
         // toasts
         "Phrase already exists.": "La phrase existe déjà.",
+        "A phrase cannot reference itself.": "Une phrase ne peut pas faire référence à elle-même.",
         "Phrase added successfully.": "Phrase ajoutée avec succès.",
         "Phrase edited successfully.": "Phrase modifiée avec succès.",
         "Phrase deleted successfully.": "Phrase supprimée avec succès.",
@@ -92,20 +100,23 @@ const fr = {
         "Phrase duplicated successfully.": "Phrase dupliquée avec succès.",
         "Phrase not found.": "Phrase non trouvée.",
         "Copy of": "Copie de",
+         "Copy ID": "Copier l'ID",
+         "Phrase ID copied": "ID de phrase copié",
+         "No ID available": "Aucun ID disponible",
 
-        // examples
-        "My Business Phone": "Mon Téléphone Pro",
-        "examplePhrase1": "+33 6 12 34 56 78",
-        "My Tax ID": "Mon N° TVA",
-        "examplePhrase2": "FR12345678901",
-        "Email Signature": "Signature Email",
-        "examplePhrase3": "Cordialement,\n\nJean Dupont\nDéveloppeur Senior\nEntreprise SARL\nTél: +33 6 12 34 56 78",
-        "Out of Office": "Message d'Absence",
-        "examplePhrase4": "Bonjour,\n\nMerci pour votre message. Je suis actuellement absent et serai de retour le [Date].\n\nCordialement,\nJean Dupont",
-        "AI Prompt": "Prompt IA",
-        "examplePhrase5": "Veuillez résumer le texte suivant et lister les points clés :",
-        "Polite Follow-up": "Relance Polie",
-        "examplePhrase6": "Bonjour,\n\nJe souhaitais faire suite à mon précédent message. N'hésitez pas à me contacter si vous avez besoin d'informations supplémentaires.\n\nMerci !",
+        // examples - simple, practical phrases for new users
+        "email": "email",
+        "examplePhrase1": "jean.dupont@exemple.fr",
+        "phone": "tel",
+        "examplePhrase2": "+33 6 12 34 56 78",
+        "addr": "adr",
+        "examplePhrase3": "123 Rue de la Paix\n75001 Paris\nFrance",
+        "sig": "signature",
+        "examplePhrase4": "Cordialement,\n\nJean Dupont\nEntreprise SARL\n{{phrase:PHONE_ID}}",
+        "ty": "merci",
+        "examplePhrase5": "Merci pour votre message. Je vous répondrai rapidement.",
+        "today": "aujourdhui",
+        "examplePhrase6": "Date du jour : {{date}}",
 
         // License Agreement
         "License Agreement": "Contrat de licence",

@@ -16,7 +16,7 @@ const { createWindow, createTray, updateTitleBarTheme, clearBackendBindings, get
 const path = require("path");
 const fs = require("fs");
 const state = require("./state.js");
-const { initDatabase } = require("./database.js");
+const { initDatabase, getPhraseByShortId } = require("./database.js");
 const { exec } = require("child_process");
 const i18n = require("./i18n.js");
 const { availableLanguages } = require("./i18n.js");
@@ -25,6 +25,7 @@ const { marked } = require("marked");
 const markedOptions = require("./_partial/_marked-options.js");
 const robot = require("@hurdlegroup/robotjs");
 const { log } = require("console");
+const dynamicInserts = require("./dynamic-inserts.js");
 
 if (process.platform === "win32") {
     app.setAppUserModelId("PhraseVault");
@@ -302,68 +303,135 @@ if (!gotTheLock) {
         });
 
         databaseEvents.on("insert-text", async (event, phrase) => {
-            mainWindow.hide();
-            if (previousWindow) {
-                previousWindow.bringToTop();
-            }
+            let textToInsert = phrase.expanded_text;
 
-            let originalClipboardContent;
-            let originalHtmlContent;
-            try {
-                originalClipboardContent = clipboard.readText();
-                originalHtmlContent = clipboard.readHTML();
-            } catch (error) {
-                console.error("Failed to read clipboard content:", error);
-                originalClipboardContent = "";
-                originalHtmlContent = "";
-            }
-
-            try {
-                if (phrase.type === "markdown" || phrase.type === "mdwysiwyg") {
-                    marked.setOptions(markedOptions);
-                    let htmlText = marked(phrase.expanded_text);
-
-                    clipboard.write({
-                        text: phrase.expanded_text,
-                        html: htmlText,
-                    });
-                } else if (phrase.type === "html") {
-                    clipboard.write({
-                        text: phrase.expanded_text,
-                        html: phrase.expanded_text,
-                    });
-                } else {
-                    clipboard.writeText(phrase.expanded_text);
+            // Step 1: Resolve cross-inserts (nested phrases) first
+            if (dynamicInserts.hasCrossInserts(textToInsert)) {
+                const visitedIds = new Set();
+                if (phrase.short_id) {
+                    visitedIds.add(phrase.short_id); // Prevent self-reference
                 }
-            } catch (error) {
-                console.error("Failed to write to clipboard:", error);
-                return;
+                textToInsert = await dynamicInserts.resolveCrossInserts(
+                    textToInsert,
+                    getPhraseByShortId,
+                    visitedIds
+                );
             }
 
-            try {
-                setTimeout(() => {
-                    const pasteModifier = platform() === "darwin" ? ["command"] : ["control"];
-                    robot.keyTap("v", pasteModifier);
-                    ipcMain.emit("increment-usage", event, phrase.id);
+            // Step 2: Check for dynamic content (date, input, etc.)
+            if (dynamicInserts.hasDynamicContent(textToInsert)) {
+                const currentClipboard = clipboard.readText();
+                const placeholders = dynamicInserts.parsePlaceholders(textToInsert);
+                const promptable = dynamicInserts.getPromptablePlaceholders(placeholders);
 
-                    setTimeout(() => {
-                        try {
-                            clipboard.write({
-                                text: originalClipboardContent,
-                                html: originalHtmlContent,
-                            });
-                        } catch (error) {
-                            console.error("Failed to restore original clipboard content:", error);
-                        }
-                    }, 100);
-                }, 100);
-            } catch (error) {
-                console.error("Failed to simulate paste command:", error);
+                if (promptable.length > 0) {
+                    // Need user input - show prompt modal
+                    if (mainWindow && !mainWindow.isDestroyed()) {
+                        mainWindow.webContents.send("show-dynamic-prompt", {
+                            phraseId: phrase.id,
+                            phraseType: phrase.type,
+                            text: textToInsert,
+                            placeholders: promptable,
+                            clipboardContent: currentClipboard
+                        });
+                    }
+                    return; // Wait for response via IPC
+                }
+
+                // No prompts needed - resolve auto placeholders only
+                textToInsert = dynamicInserts.processPhrase(textToInsert, currentClipboard, {});
             }
+
+            // Proceed with paste
+            performPaste(phrase, textToInsert);
         });
     });
 
-    databaseEvents.on("database-status", (statusData) => {
+    /**
+     * Performs the clipboard paste operation
+     * @param {Object} phrase - The phrase object with id and type
+     * @param {string} textToInsert - The processed text to insert
+     */
+    function performPaste(phrase, textToInsert) {
+        if (mainWindow && !mainWindow.isDestroyed()) {
+            mainWindow.hide();
+        }
+        if (previousWindow) {
+            previousWindow.bringToTop();
+        }
+
+        let originalClipboardContent;
+        let originalHtmlContent;
+        try {
+            originalClipboardContent = clipboard.readText();
+            originalHtmlContent = clipboard.readHTML();
+        } catch (error) {
+            console.error("Failed to read clipboard content:", error);
+            originalClipboardContent = "";
+            originalHtmlContent = "";
+        }
+
+        try {
+            if (phrase.type === "markdown" || phrase.type === "mdwysiwyg") {
+                marked.setOptions(markedOptions);
+                let htmlText = marked(textToInsert);
+
+                clipboard.write({
+                    text: textToInsert,
+                    html: htmlText,
+                });
+            } else if (phrase.type === "html") {
+                clipboard.write({
+                    text: textToInsert,
+                    html: textToInsert,
+                });
+            } else {
+                clipboard.writeText(textToInsert);
+            }
+        } catch (error) {
+            console.error("Failed to write to clipboard:", error);
+            return;
+        }
+
+        try {
+            setTimeout(() => {
+                const pasteModifier = platform() === "darwin" ? ["command"] : ["control"];
+                robot.keyTap("v", pasteModifier);
+                ipcMain.emit("increment-usage", null, phrase.id);
+
+                setTimeout(() => {
+                    try {
+                        clipboard.write({
+                            text: originalClipboardContent,
+                            html: originalHtmlContent,
+                        });
+                    } catch (error) {
+                        console.error("Failed to restore original clipboard content:", error);
+                    }
+                }, 100);
+            }, 100);
+        } catch (error) {
+            console.error("Failed to simulate paste command:", error);
+        }
+    }
+
+    // Handle dynamic prompt response
+    ipcMain.on("dynamic-prompt-response", (event, data) => {
+        const { phraseId, phraseType, text, values, clipboardContent } = data;
+
+        // Process with user values
+        const processedText = dynamicInserts.processPhrase(text, clipboardContent, values);
+
+        // Create phrase object and perform paste
+        const phrase = {
+            id: phraseId,
+            type: phraseType
+        };
+
+        performPaste(phrase, processedText);
+    });
+
+    databaseEvents.on("database-status",(statusData) => {
         if (mainWindow && mainWindow.webContents) {
             mainWindow.webContents.send("database-status", statusData);
         }

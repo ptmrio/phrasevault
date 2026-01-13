@@ -31,6 +31,12 @@
                 <path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" />
                 <path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" />
             </symbol>
+            <symbol id="icon-link" viewBox="0 0 24 24">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M9 15l6 -6" />
+                <path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" />
+                <path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" />
+            </symbol>
             <symbol id="icon-edit" viewBox="0 0 24 24">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
@@ -309,6 +315,34 @@
             </div>
             <div class="modal-body markdown-body" id="markdown-content"></div>
             <div class="modal-footer markdown-modal-footer" id="markdown-modal-footer" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Dynamic Prompt Modal -->
+    <div id="dynamicPromptModal" class="modal">
+        <div class="modal-content dynamic-modal-content">
+            <div class="modal-header">
+                <h2 id="dynamic-modal-title" data-i18n="Fill in Details">Fill in Details</h2>
+                <button class="btn btn-ghost btn-icon dynamic-close">
+                    <svg class="icon">
+                        <use href="#icon-x"></use>
+                    </svg>
+                </button>
+            </div>
+            <form id="dynamic-form" class="dynamic-form" onsubmit="return false">
+                <!-- Fields generated dynamically by JavaScript -->
+            </form>
+            <div class="modal-footer">
+                <button type="button" id="dynamic-submit" class="btn btn-primary">
+                    <svg class="icon">
+                        <use href="#icon-check"></use>
+                    </svg>
+                    <span data-i18n="Insert">Insert</span>
+                </button>
+                <button type="button" id="dynamic-cancel" class="btn btn-secondary">
+                    <span data-i18n="Cancel">Cancel</span>
+                </button>
+            </div>
         </div>
     </div>
 

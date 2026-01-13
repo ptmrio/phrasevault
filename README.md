@@ -47,6 +47,27 @@ PhraseVault is also excellent for storing and managing prompts for AI tools like
 - **Full Keyboard Navigation**: Navigate and insert phrases without touching the mouse.
 - **Seamless Clipboard Integration**: Phrases are inserted directly into your active text field.
 
+### 🔄 Dynamic Inserts
+
+Phrases support dynamic placeholders that are resolved at insertion time:
+
+| Type | Syntax | Example |
+|------|--------|---------|
+| Date | `{{date}}` `{{date:long}}` `{{date:+7}}` | `2024-01-15`, `January 15, 2024` |
+| Date+Format | `{{date:-7\|long}}` `{{date:+30\|DD/MM/YYYY}}` | Offset with format |
+| Time | `{{time}}` `{{time:12h}}` | `14:30`, `2:30 PM` |
+| DateTime | `{{datetime}}` `{{datetime:-1\|short}}` | `2024-01-15 14:30` |
+| Clipboard | `{{clipboard}}` | Current clipboard content |
+| Input | `{{input:Name}}` `{{input:Email=default}}` | Prompts user for value |
+| Select | `{{select:Size=S,*M,L}}` | Dropdown (`*` = default) |
+| Textarea | `{{textarea:Notes}}` | Multi-line input |
+| Locale | `{{date@de}}` `{{date:long@en-US}}` | Localized formatting |
+| Cross-Insert | `{{phrase:a1b2c3d}}` | Embeds another phrase by ID |
+
+**Escape syntax:** `\{{date}}` inserts literal `{{date}}`
+
+**Cross-Insert:** Reference other phrases using their short ID (copy via three-dots menu → "Copy ID"). Nested phrases resolve recursively with cycle protection.
+
 ### 🔒 Privacy-First & Source Available
 
 - **No Cloud Storage**: Your data stays on your device—nothing is sent to external servers.
@@ -194,6 +215,9 @@ npm install
 
 # Run in development mode
 npm start
+
+# Run tests
+npm test
 
 # Build for production (creates installer in Releases folder)
 npm run make --nosign

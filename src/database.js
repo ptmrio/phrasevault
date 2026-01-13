@@ -8,6 +8,8 @@ const { upgrades } = require("./database-upgrades.js");
 const { marked } = require("marked");
 const markedOptions = require("./_partial/_marked-options.js");
 const { set } = require("electron-json-storage");
+const { generateShortId } = require("./nanoid.js");
+const { extractPhraseRefs } = require("./dynamic-inserts.js");
 
 const dbPath = state.getConfig().dbPath;
 
@@ -50,6 +52,7 @@ function initializeDatabase() {
                             phrase TEXT,
                             expanded_text TEXT,
                             type TEXT DEFAULT 'plain',
+                            short_id TEXT UNIQUE,
                             usageCount INTEGER DEFAULT 0,
                             dateAdd DATETIME DEFAULT CURRENT_TIMESTAMP,
                             dateLastUsed DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -68,16 +71,18 @@ function initializeDatabase() {
                                     }
 
                                     if (row && row.count === 0) {
+                                        // Fixed short_id for phone so signature cross-reference works
+                                        const phoneId = "ph0n31d";
                                         const phrases = [
-                                            { phrase: i18n.t("My Business Phone"), expanded_text: i18n.t("examplePhrase1") },
-                                            { phrase: i18n.t("My Tax ID"), expanded_text: i18n.t("examplePhrase2") },
-                                            { phrase: i18n.t("Email Signature"), expanded_text: i18n.t("examplePhrase3") },
-                                            { phrase: i18n.t("Out of Office"), expanded_text: i18n.t("examplePhrase4") },
-                                            { phrase: i18n.t("AI Prompt"), expanded_text: i18n.t("examplePhrase5") },
-                                            { phrase: i18n.t("Polite Follow-up"), expanded_text: i18n.t("examplePhrase6") },
+                                            { phrase: i18n.t("email"), expanded_text: i18n.t("examplePhrase1"), type: "plain", short_id: generateShortId() },
+                                            { phrase: i18n.t("phone"), expanded_text: i18n.t("examplePhrase2"), type: "plain", short_id: phoneId },
+                                            { phrase: i18n.t("addr"), expanded_text: i18n.t("examplePhrase3"), type: "plain", short_id: generateShortId() },
+                                            { phrase: i18n.t("sig"), expanded_text: i18n.t("examplePhrase4").replace("{{phrase:PHONE_ID}}", `{{phrase:${phoneId}}}`), type: "plain", short_id: generateShortId() },
+                                            { phrase: i18n.t("ty"), expanded_text: i18n.t("examplePhrase5"), type: "plain", short_id: generateShortId() },
+                                            { phrase: i18n.t("today"), expanded_text: i18n.t("examplePhrase6"), type: "plain", short_id: generateShortId() },
                                         ];
-                                        const stmt = db.prepare("INSERT INTO phrases (phrase, expanded_text) VALUES (?, ?)");
-                                        phrases.forEach((p) => stmt.run(p.phrase, p.expanded_text));
+                                        const stmt = db.prepare("INSERT INTO phrases (phrase, expanded_text, type, short_id) VALUES (?, ?, ?, ?)");
+                                        phrases.forEach((p) => stmt.run(p.phrase, p.expanded_text, p.type, p.short_id));
                                         stmt.finalize(() => {
                                             searchPhrases("", (err, rows) => {
                                                 if (err) {
@@ -324,12 +329,13 @@ ipcMain.on("add-phrase", (event, { newPhrase, newExpandedText, type }) => {
                 return;
             }
 
-            db.run(`INSERT INTO phrases (phrase, expanded_text, type) VALUES (?, ?, ?)`, [newPhrase, newExpandedText, type], function (err) {
+            const shortId = generateShortId();
+            db.run(`INSERT INTO phrases (phrase, expanded_text, type, short_id) VALUES (?, ?, ?, ?)`, [newPhrase, newExpandedText, type, shortId], function (err) {
                 if (err) {
                     event.reply("database-error", "Failed to add phrase");
                     return;
                 }
-                event.reply("phrase-added", { id: this.lastID, phrase: newPhrase, expandedText: newExpandedText });
+                event.reply("phrase-added", { id: this.lastID, phrase: newPhrase, expandedText: newExpandedText, shortId: shortId });
                 event.reply("toast-message", { type: "success", message: i18n.t("Phrase added successfully.") });
             });
         });
@@ -352,13 +358,27 @@ ipcMain.on("edit-phrase", (event, { id, newPhrase, newExpandedText, type }) => {
                 return;
             }
 
-            db.run(`UPDATE phrases SET phrase = ?, expanded_text = ?, type = ? WHERE id = ?`, [newPhrase, newExpandedText, type, id], function (err) {
-                if (err) {
+            // Check for self-reference
+            db.get(`SELECT short_id FROM phrases WHERE id = ?`, [id], (err, row) => {
+                if (err || !row) {
                     event.reply("database-error", "Failed to edit phrase");
                     return;
                 }
-                event.reply("phrase-edited", { id: id, phrase: newPhrase, expandedText: newExpandedText });
-                event.reply("toast-message", { type: "success", message: i18n.t("Phrase edited successfully.") });
+
+                const referencedIds = extractPhraseRefs(newExpandedText);
+                if (row.short_id && referencedIds.includes(row.short_id.toLowerCase())) {
+                    event.reply("toast-message", { type: "danger", message: i18n.t("A phrase cannot reference itself.") });
+                    return;
+                }
+
+                db.run(`UPDATE phrases SET phrase = ?, expanded_text = ?, type = ? WHERE id = ?`, [newPhrase, newExpandedText, type, id], function (err) {
+                    if (err) {
+                        event.reply("database-error", "Failed to edit phrase");
+                        return;
+                    }
+                    event.reply("phrase-edited", { id: id, phrase: newPhrase, expandedText: newExpandedText });
+                    event.reply("toast-message", { type: "success", message: i18n.t("Phrase edited successfully.") });
+                });
             });
         });
     });
@@ -396,12 +416,13 @@ ipcMain.on("duplicate-phrase", (event, id) => {
             }
 
             generateUniqueDuplicateName(row.phrase, (duplicatePhrase) => {
-                db.run(`INSERT INTO phrases (phrase, expanded_text, type) VALUES (?, ?, ?)`, [duplicatePhrase, row.expanded_text, row.type], function (err) {
+                const shortId = generateShortId();
+                db.run(`INSERT INTO phrases (phrase, expanded_text, type, short_id) VALUES (?, ?, ?, ?)`, [duplicatePhrase, row.expanded_text, row.type, shortId], function (err) {
                     if (err) {
                         event.reply("database-error", "Failed to duplicate phrase");
                         return;
                     }
-                    event.reply("phrase-duplicated", { id: this.lastID, phrase: duplicatePhrase, expandedText: row.expanded_text });
+                    event.reply("phrase-duplicated", { id: this.lastID, phrase: duplicatePhrase, expandedText: row.expanded_text, shortId: shortId });
                     event.reply("toast-message", { type: "success", message: i18n.t("Phrase duplicated successfully.") });
                 });
             });
@@ -432,10 +453,8 @@ ipcMain.on("increment-usage", (event, id) => {
         }
         db.run(`UPDATE phrases SET usageCount = usageCount + 1, dateLastUsed = CURRENT_TIMESTAMP WHERE id = ?`, [id], function (err) {
             if (err) {
-                event.reply("database-error", "Failed to increment usage");
-                return;
+                console.error("Failed to increment usage:", err);
             }
-            event.reply("usage-incremented", id);
         });
     });
 });
@@ -457,4 +476,22 @@ function initDatabase() {
     checkDatabaseAccessibility(() => {});
 }
 
-module.exports = { db, initDatabase };
+/**
+ * Get a phrase by its short_id (for cross-insert resolution)
+ * @param {string} shortId - 7-character short ID
+ * @returns {Promise<Object|null>}
+ */
+function getPhraseByShortId(shortId) {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not initialized'));
+            return;
+        }
+        db.get("SELECT * FROM phrases WHERE short_id = ?", [shortId], (err, row) => {
+            if (err) reject(err);
+            else resolve(row || null);
+        });
+    });
+}
+
+module.exports = { db, initDatabase, getPhraseByShortId };

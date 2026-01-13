@@ -67,6 +67,13 @@ const de = {
         "Plain Text": "Klartext",
         "Markdown": "Markdown",
         "HTML": "HTML",
+        "Cancel": "Abbrechen",
+
+        // Dynamic inserts
+        "Fill in Details": "Details ausfüllen",
+        "Insert": "Einfügen",
+        "Value": "Wert",
+        "Text": "Text",
 
         // database status
         "Phrases loaded": "Phrasendatenbank erfolgreich geladen",
@@ -77,6 +84,7 @@ const de = {
 
         // toasts
         "Phrase already exists.": "Phrase existiert bereits.",
+        "A phrase cannot reference itself.": "Eine Phrase kann nicht auf sich selbst verweisen.",
         "Phrase added successfully.": "Phrase erfolgreich hinzugefügt.",
         "Phrase edited successfully.": "Phrase erfolgreich bearbeitet.",
         "Phrase deleted successfully.": "Phrase erfolgreich gelöscht.",
@@ -94,20 +102,23 @@ const de = {
         "Phrase duplicated successfully.": "Phrase erfolgreich dupliziert.",
         "Phrase not found.": "Phrase nicht gefunden.",
         "Copy of": "Kopie von",
+        "Copy ID": "ID kopieren",
+        "Phrase ID copied": "Phrasen-ID kopiert",
+        "No ID available": "Keine ID verfügbar",
 
-        // examples
-        "My Business Phone": "Meine geschäftliche Telefonnummer",
-        "examplePhrase1": "+49 (0) 123 456789",
-        "My Tax ID": "Meine USt-IdNr.",
-        "examplePhrase2": "DE123456789",
-        "Email Signature": "E-Mail-Signatur",
-        "examplePhrase3": "Mit freundlichen Grüßen,\n\nMax Mustermann\nSenior Entwickler\nMusterfirma GmbH\nTel: +49 (0) 123 456789",
-        "Out of Office": "Abwesenheitsnotiz",
-        "examplePhrase4": "Hallo,\n\nvielen Dank für Ihre Nachricht. Ich bin derzeit außer Haus und werde am [Datum] zurückkehren.\n\nMit freundlichen Grüßen,\nMax Mustermann",
-        "AI Prompt": "KI-Anfrage",
-        "examplePhrase5": "Bitte fasse den folgenden Text zusammen und liste die wichtigsten Punkte auf:",
-        "Polite Follow-up": "Höfliche Nachfrage",
-        "examplePhrase6": "Hallo,\n\nich wollte mich nach meiner letzten Nachricht erkundigen. Bitte lassen Sie mich wissen, falls Sie weitere Informationen benötigen.\n\nVielen Dank!",
+        // examples - simple, practical phrases for new users
+        "email": "email",
+        "examplePhrase1": "max.mustermann@beispiel.de",
+        "phone": "telefon",
+        "examplePhrase2": "+49 123 456789",
+        "addr": "adresse",
+        "examplePhrase3": "Musterstraße 123\n10115 Berlin\nDeutschland",
+        "sig": "signatur",
+        "examplePhrase4": "Mit freundlichen Grüßen,\n\nMax Mustermann\nMusterfirma GmbH\n{{phrase:PHONE_ID}}",
+        "ty": "danke",
+        "examplePhrase5": "Vielen Dank für Ihre Nachricht. Ich melde mich in Kürze.",
+        "today": "heute",
+        "examplePhrase6": "Heutiges Datum: {{date}}",
 
         // License Agreement
         "License Agreement": "Lizenzvereinbarung",

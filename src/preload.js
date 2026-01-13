@@ -23,14 +23,12 @@ const validChannels = [
     "phrase-duplicated",
     "phrase-edited",
     "phrase-deleted",
-    "usage-incremented",
     "insert-phrase-by-id",
     "focus-search",
     "get-theme",
     "set-theme",
     "toast-message",
-    "save-success",
-    "open-db-location-dialog",
+    "open-external-url",
     "change-language",
     "get-language",
     "database-status",
@@ -51,13 +49,15 @@ const validChannels = [
     "recent-databases",
     "show-database",
     "confirm-purchase",
-    "quit-app",
     "read-markdown-file",
     "render-markdown",
     "markdown-content",
     "show-license-agreement",
     "accept-license",
     "decline-license",
+    "show-dynamic-prompt",
+    "dynamic-prompt-response",
+
 ];
 
 contextBridge.exposeInMainWorld("electron", {

@@ -67,6 +67,13 @@ const it = {
         "Plain Text": "Testo Semplice",
         "Markdown": "Markdown",
         "HTML": "HTML",
+        "Cancel": "Annulla",
+
+        // Dynamic inserts
+        "Fill in Details": "Compila i dettagli",
+        "Insert": "Inserisci",
+        "Value": "Valore",
+        "Text": "Testo",
 
         // database status
         "Phrases loaded": "Database delle frasi caricato con successo",
@@ -77,6 +84,7 @@ const it = {
 
         // toasts
         "Phrase already exists.": "La frase esiste già.",
+        "A phrase cannot reference itself.": "Una frase non può fare riferimento a se stessa.",
         "Phrase added successfully.": "Frase aggiunta con successo.",
         "Phrase edited successfully.": "Frase modificata con successo.",
         "Phrase deleted successfully.": "Frase eliminata con successo.",
@@ -94,20 +102,23 @@ const it = {
         "Phrase duplicated successfully.": "Frase duplicata con successo.",
         "Phrase not found.": "Frase non trovata.",
         "Copy of": "Copia di",
+         "Copy ID": "Copia ID",
+         "Phrase ID copied": "ID frase copiato",
+         "No ID available": "Nessun ID disponibile",
 
-        // examples
-        "My Business Phone": "Il Mio Telefono Aziendale",
-        "examplePhrase1": "+39 333 123 4567",
-        "My Tax ID": "La Mia Partita IVA",
-        "examplePhrase2": "IT12345678901",
-        "Email Signature": "Firma Email",
-        "examplePhrase3": "Cordiali saluti,\n\nMario Rossi\nSviluppatore Senior\nAzienda S.r.l.\nTel: +39 333 123 4567",
-        "Out of Office": "Messaggio di Assenza",
-        "examplePhrase4": "Buongiorno,\n\nGrazie per il messaggio. Sono attualmente assente e tornerò il [Data].\n\nCordiali saluti,\nMario Rossi",
-        "AI Prompt": "Prompt IA",
-        "examplePhrase5": "Per favore riassumi il seguente testo ed elenca i punti chiave:",
-        "Polite Follow-up": "Sollecito Cortese",
-        "examplePhrase6": "Buongiorno,\n\nVolevo dare seguito al mio messaggio precedente. Mi faccia sapere se ha bisogno di ulteriori informazioni.\n\nGrazie!",
+        // examples - simple, practical phrases for new users
+        "email": "email",
+        "examplePhrase1": "mario.rossi@esempio.it",
+        "phone": "tel",
+        "examplePhrase2": "+39 333 123 4567",
+        "addr": "indir",
+        "examplePhrase3": "Via Roma 123\n00100 Roma\nItalia",
+        "sig": "firma",
+        "examplePhrase4": "Cordiali saluti,\n\nMario Rossi\nAzienda S.r.l.\n{{phrase:PHONE_ID}}",
+        "ty": "grazie",
+        "examplePhrase5": "Grazie per il messaggio. Risponderò a breve.",
+        "today": "oggi",
+        "examplePhrase6": "Data di oggi: {{date}}",
 
         // License Agreement
         "License Agreement": "Contratto di licenza",

@@ -448,6 +448,18 @@ document.addEventListener("DOMContentLoaded", () => {
             const menu = document.createElement("div");
             menu.className = "menu";
 
+            // Copy ID menu item
+            const copyIdItem = document.createElement("div");
+            copyIdItem.className = "menu-item";
+            copyIdItem.setAttribute("data-action", "copy-id");
+            copyIdItem.setAttribute("data-short-id", phrase.short_id || "");
+            const svgLink = createSvgIcon("icon-link");
+            const spanCopyId = document.createElement("span");
+            spanCopyId.textContent = window.i18n.t("Copy ID");
+            copyIdItem.appendChild(svgLink);
+            copyIdItem.appendChild(spanCopyId);
+            menu.appendChild(copyIdItem);
+
             // Duplicate menu item
             const duplicateItem = document.createElement("div");
             duplicateItem.className = "menu-item";
@@ -494,7 +506,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 item.addEventListener("click", (e) => {
                     const action = e.currentTarget.getAttribute("data-action");
                     const id = e.currentTarget.getAttribute("data-id");
-                    if (action === "delete") {
+                    if (action === "copy-id") {
+                        const shortId = e.currentTarget.getAttribute("data-short-id");
+                        if (shortId) {
+                            const idText = `{{phrase:${shortId}}}`;
+                            navigator.clipboard.writeText(idText).then(() => {
+                                window.modals.showToast(window.i18n.t("Phrase ID copied"), "success");
+                            }).catch(() => {
+                                window.modals.showToast(window.i18n.t("Failed to copy"), "danger");
+                            });
+                        } else {
+                            window.modals.showToast(window.i18n.t("No ID available"), "warning");
+                        }
+                    } else if (action === "delete") {
                         // Delayed delete with undo - hide immediately, delete after timeout
                         li.style.display = "none";
                         pendingDeletions.add(String(id));

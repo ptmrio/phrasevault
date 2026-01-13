@@ -182,9 +182,7 @@ h3 {
   font-weight: 600;
   color: var(--text-muted);
   pointer-events: none;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
+  user-select: none;
   z-index: 101;
 }
 
@@ -295,9 +293,6 @@ h3 {
   border-radius: var(--radius-md);
   transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
 }
-.input::-moz-placeholder {
-  color: var(--text-secondary);
-}
 .input::placeholder {
   color: var(--text-secondary);
 }
@@ -317,9 +312,7 @@ textarea.input {
 
 select.input {
   cursor: pointer;
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right var(--space-sm) center;
@@ -346,9 +339,7 @@ select.input {
 }
 
 .radio-input {
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
   width: 18px;
   height: 18px;
   border: 2px solid var(--border-color);
@@ -462,9 +453,7 @@ select.input {
   background: var(--bg-surface);
   border-radius: var(--radius-md);
   cursor: pointer;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
+  user-select: none;
   transition: background-color var(--duration-fast);
   animation: fadeIn var(--duration-slow) ease-out;
 }
@@ -669,9 +658,7 @@ select.input {
   color: var(--text-primary);
 }
 .settings-option input[type=radio] {
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
   width: 16px;
   height: 16px;
   border: 2px solid var(--border-color);
@@ -705,9 +692,7 @@ select.input {
   font-size: var(--text-sm);
 }
 .settings-toggle input[type=checkbox] {
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  appearance: none;
   width: 18px;
   height: 18px;
   border: 2px solid var(--border-color);
@@ -1032,8 +1017,7 @@ select.input {
   justify-content: center;
   padding: var(--space-xl);
   background: rgba(0, 0, 0, 0.6);
-  -webkit-backdrop-filter: blur(8px);
-          backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 
 .purchase-reminder-content {
@@ -1061,6 +1045,61 @@ select.input {
   display: flex;
   justify-content: flex-end;
   gap: var(--space-sm);
+}
+
+.dynamic-modal-content {
+  width: min(90vw, 420px);
+}
+.dynamic-modal-content .modal-header {
+  padding-bottom: var(--space-sm);
+}
+
+.dynamic-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-sm) 0;
+  max-height: 50vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+.dynamic-form::-webkit-scrollbar {
+  width: 8px;
+}
+.dynamic-form::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border-radius: var(--radius-full);
+}
+.dynamic-form::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: var(--radius-full);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+.form-field label {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+.form-field .input {
+  width: 100%;
+}
+.form-field select.input {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M2.5 4.5L6 8l3.5-3.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2rem;
+}
+.form-field textarea.input {
+  resize: vertical;
+  min-height: 80px;
 }
 
 .toast-container {
@@ -1133,4 +1172,4 @@ select.input {
     transform: translate(0, 0);
     opacity: 1;
   }
-}/*# sourceMappingURL=style.css.map */
+}

@@ -329,3 +329,55 @@
     justify-content: flex-end;
     gap: var(--space-sm);
 }
+
+// =============================================================================
+// Dynamic Prompt Modal
+// =============================================================================
+
+.dynamic-modal-content {
+    width: min(90vw, 420px);
+
+    .modal-header {
+        padding-bottom: var(--space-sm);
+    }
+}
+
+.dynamic-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    padding: var(--space-sm) 0;
+    max-height: 50vh;
+    overflow-y: auto;
+    @include modal-scrollbar;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+
+    label {
+        font-size: var(--text-sm);
+        font-weight: 500;
+        color: var(--text-secondary);
+    }
+
+    .input {
+        width: 100%;
+    }
+
+    select.input {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M2.5 4.5L6 8l3.5-3.5'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        padding-right: 2rem;
+    }
+
+    textarea.input {
+        resize: vertical;
+        min-height: 80px;
+    }
+}

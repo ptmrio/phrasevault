@@ -67,6 +67,13 @@ const en = {
         "Plain Text": "Plain Text",
         "Markdown": "Markdown",
         "HTML": "HTML",
+        "Cancel": "Cancel",
+
+        // Dynamic inserts
+        "Fill in Details": "Fill in Details",
+        "Insert": "Insert",
+        "Value": "Value",
+        "Text": "Text",
 
         // database status
         "Phrases loaded": "Phrase database loaded successfully",
@@ -77,6 +84,7 @@ const en = {
 
         // toasts
         "Phrase already exists.": "Phrase already exists.",
+        "A phrase cannot reference itself.": "A phrase cannot reference itself.",
         "Phrase added successfully.": "Phrase added successfully.",
         "Phrase edited successfully.": "Phrase edited successfully.",
         "Phrase deleted successfully.": "Phrase deleted successfully.",
@@ -94,20 +102,23 @@ const en = {
         "Phrase duplicated successfully.": "Phrase duplicated successfully.",
         "Phrase not found.": "Phrase not found.",
         "Copy of": "Copy of",
+        "Copy ID": "Copy ID",
+        "Phrase ID copied": "Phrase ID copied",
+        "No ID available": "No ID available",
 
-        // examples
-        "My Business Phone": "My Business Phone",
-        "examplePhrase1": "+1 (555) 123-4567",
-        "My Tax ID": "My Tax ID",
-        "examplePhrase2": "12-3456789",
-        "Email Signature": "Email Signature",
-        "examplePhrase3": "Best regards,\n\nJohn Doe\nSenior Developer\nAcme Inc.\nPhone: +1 (555) 123-4567",
-        "Out of Office": "Out of Office",
-        "examplePhrase4": "Hello,\n\nThank you for your email. I am currently out of the office and will return on [Date].\n\nBest regards,\nJohn Doe",
-        "AI Prompt": "AI Prompt",
-        "examplePhrase5": "Please summarize the following text and list the key points:",
-        "Polite Follow-up": "Polite Follow-up",
-        "examplePhrase6": "Hi,\n\nI wanted to follow up on my previous message. Please let me know if you need any additional information.\n\nThank you!",
+        // examples - simple, practical phrases for new users
+        "email": "email",
+        "examplePhrase1": "john.doe@example.com",
+        "phone": "phone",
+        "examplePhrase2": "+1 (555) 123-4567",
+        "addr": "addr",
+        "examplePhrase3": "123 Main Street\nApt 4B\nNew York, NY 10001\nUSA",
+        "sig": "sig",
+        "examplePhrase4": "Best regards,\n\nJohn Doe\nAcme Inc.\n{{phrase:PHONE_ID}}",
+        "ty": "ty",
+        "examplePhrase5": "Thank you for your message. I'll get back to you shortly.",
+        "today": "today",
+        "examplePhrase6": "Today's date: {{date}}",
 
         // License Agreement
         "License Agreement": "License Agreement",
