@@ -28,7 +28,7 @@ PhraseVault is for people who type the same things all day: support replies, ema
 
 This repository is the **source-available** tree for PhraseVault 3.0 (the app plus `@spqrkapps/shared` so you can rebuild it). It is a small pnpm workspace, **not** OSI open source. Signed installers: [phrasevault.app/download](https://phrasevault.app/download).
 
-![PhraseVault](screenshots/phrasevault-github-screenshot.png)
+![PhraseVault](screenshots/phrasevault-3.0.png)
 
 ## License
 
@@ -45,7 +45,13 @@ Building from this tree does **not** grant a free commercial license. The app st
 
 ## Build
 
-**Requirements:** Windows 10/11 x64 or macOS 13+ (arm64) · [Node.js](https://nodejs.org/) **22.12+** · [pnpm](https://pnpm.io/) **10** (pinned `pnpm@10.28.2`) · native build tools for `sqlite3`, `@hurdlegroup/robotjs`, and `node-window-manager`. Optional, for installers: [.NET SDK](https://dotnet.microsoft.com/download/dotnet) and [Velopack `vpk`](https://docs.velopack.io/) (`dotnet tool install -g vpk`).
+### Requirements
+
+- Windows 10/11 x64 or macOS 13+ (arm64)
+- [Node.js](https://nodejs.org/) **22.12 or newer**
+- [pnpm](https://pnpm.io/) **10** (pinned `pnpm@10.28.2`)
+- Native build tools for `sqlite3`, `@hurdlegroup/robotjs`, and `node-window-manager` (Visual Studio Build Tools on Windows; Xcode CLI tools on macOS)
+- Optional, for installers: [.NET SDK](https://dotnet.microsoft.com/download/dotnet) and [Velopack `vpk`](https://docs.velopack.io/) (`dotnet tool install -g vpk`)
 
 On Windows, run install / start / make from **PowerShell**. WSL can edit files but native Electron rebuilds fail there.
 
