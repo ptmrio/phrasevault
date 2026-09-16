@@ -1,0 +1,43 @@
+{
+  "name": "@spqrkapps/shared",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./main": "./src/main/index.ts",
+    "./renderer": "./src/renderer/index.ts",
+    "./preload": "./src/preload/index.ts",
+    "./types": "./src/types/index.ts",
+    "./build": "./src/build/index.ts",
+    "./e2e": "./src/e2e/index.ts",
+    "./css": "./src/css/index.css",
+    "./css/*": "./src/css/*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "generate:colors": "tsx src/build/generate-colors.ts"
+  },
+  "devDependencies": {
+    "@electron-forge/maker-dmg": "^7.11.0",
+    "@electron-forge/maker-squirrel": "^7.11.0",
+    "@electron-forge/maker-zip": "^7.11.0",
+    "@electron-forge/shared-types": "^7.11.0",
+    "@types/culori": "^4.0.1",
+    "electron": "catalog:",
+    "glob": "^11.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.9.0"
+  },
+  "peerDependencies": {
+    "electron": ">=42.0.0",
+    "@playwright/test": ">=1.63.0"
+  },
+  "dependencies": {
+    "@noble/ed25519": "^3.2.0",
+    "culori": "^4.0.2",
+    "i18next": "^26.4.2",
+    "marked": "^18.0.11"
+  }
+}

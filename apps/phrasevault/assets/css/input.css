@@ -1,0 +1,996 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+@import "./generated-colors.css";
+@import "../../../../packages/shared/src/css/index.css";
+
+/* =============================================================================
+   Source Paths - Tell Tailwind where to scan for classes
+   ============================================================================= */
+@source "../../../../packages/shared/src/**/*.{ts,css}";
+@source "../../templates/**/*.html";
+@source "../../src/**/*.ts";
+
+/* =============================================================================
+   Theme Configuration - PhraseVault Design System
+   Color palette generated via: pnpm colors (in generated-colors.css)
+   ============================================================================= */
+@theme {
+  /* Font families */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Noto Sans JP", "Helvetica Neue", Arial, sans-serif;
+  --font-heading: "Marcellus", Georgia, "Times New Roman", serif;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+
+  /* Border radius */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+
+  /* Transitions */
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 300ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* =============================================================================
+   CSS Variables - Theme-dependent colors
+   ============================================================================= */
+:root {
+  --titlebar-height: 32px;
+
+  /* Light theme */
+  --bg-body: var(--color-secondary-50);
+  --bg-surface: var(--color-secondary-100);
+  --bg-input: white;
+  --bg-highlight: var(--color-primary-100);
+  --text-highlight: var(--color-secondary-800);
+
+  /* Wave 0 surfaces are a PhraseVault-local group: promoting them shared
+     collapsed --bg-secondary onto --bg-tertiary and deleted the secondary
+     button hover in all three apps. Light needs canvas/secondary/elevated to
+     separate, so --bg-tertiary moves one palette step the way the shared dark
+     column already does (800 secondary / 700 tertiary), keeping the hover.
+     Dark keeps the shared mapping, which already separates those roles. */
+  --bg-secondary: var(--color-secondary-100, #f1f5f9);
+  --bg-tertiary: var(--color-secondary-200, #e2e8f0);
+  --bg-elevated: #ffffff;
+
+  /* Palette contrast/selection (local override of the shared neutral muted tone) */
+  --text-muted: var(--color-secondary-600);
+  --palette-action: var(--color-secondary-600);
+  --palette-selected: var(--color-primary-100);
+  --palette-selected-text: var(--color-secondary-900);
+  --palette-selected-action: var(--color-primary-700);
+  --palette-outline: var(--color-primary-500);
+  --palette-danger: var(--color-danger-500);
+
+  /* PhraseVault owns its focus tone: the palette outline is the P0 ring, and
+     the shared consumers read --focus-ring. */
+  --focus-ring: var(--palette-outline);
+
+  /* Database status roles. The dot is small and sits on the titlebar, the gear's
+     hover surface and the settings body, so each shade is chosen to clear 3:1 on
+     the lightest of those surfaces. */
+  --palette-status-ok: var(--color-success-500);
+  --palette-status-error: var(--color-danger-500);
+  --palette-status-loading: var(--color-primary-600);
+}
+
+/* Dark theme */
+.dark {
+  --bg-body: var(--color-secondary-800);
+  --bg-surface: var(--color-secondary-700);
+  --bg-input: var(--color-secondary-800);
+  --bg-highlight: var(--color-primary-800);
+  --text-highlight: white;
+
+  /* Same local surface group. These repeat the shared dark mapping because the
+     local :root block above outranks the shared .dark block on source order. */
+  --bg-secondary: var(--color-secondary-800, #1e293b);
+  --bg-tertiary: var(--color-secondary-700, #334155);
+  --bg-elevated: var(--color-secondary-800, #1e293b);
+
+  --text-muted: var(--color-secondary-300);
+  --palette-action: var(--color-secondary-300);
+  --palette-selected: var(--color-primary-800);
+  --palette-selected-text: var(--color-secondary-50);
+  --palette-selected-action: var(--color-primary-200);
+  --palette-outline: var(--color-primary-300);
+  --palette-danger: var(--color-danger-300);
+
+  --focus-ring: var(--palette-outline);
+
+  --palette-status-ok: var(--color-success-300);
+  --palette-status-error: var(--color-danger-300);
+  --palette-status-loading: var(--color-primary-300);
+}
+
+/* =============================================================================
+   Font Face
+   ============================================================================= */
+@font-face {
+  font-family: "Marcellus";
+  src: url("../font/marcellus-v14-latin-regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* =============================================================================
+   Base Layer
+   ============================================================================= */
+@layer base {
+  html,
+  body {
+    height: 100%;
+    font-family: var(--font-sans);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+    line-break: normal;
+    background: var(--bg-body);
+    color: var(--text-primary);
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-heading);
+  }
+}
+
+/* =============================================================================
+   PhraseVault Components
+   ============================================================================= */
+
+/* Phrase List Item
+   Rows never animate: selection must be readable the instant results land. */
+.phrase-item {
+  @apply relative flex items-center gap-2 px-3 py-2 mb-1
+         bg-secondary-100 dark:bg-secondary-800 rounded-md
+         cursor-pointer select-none;
+  animation: none;
+}
+
+.phrase-item:hover,
+.phrase-item:focus-within,
+.phrase-item.is-selected,
+.palette-create.is-selected {
+  background: var(--palette-selected);
+  color: var(--palette-selected-text);
+}
+
+.phrase-item.is-selected,
+.phrase-item:focus-visible,
+.palette-create.is-selected,
+.palette-create:focus-visible {
+  outline: 2px solid var(--palette-outline);
+  outline-offset: -2px;
+}
+
+/* Phrase Action Button */
+.phrase-action {
+  @apply flex items-center justify-center p-1 rounded transition-all;
+  color: var(--palette-action);
+}
+
+.phrase-action:active {
+  transform: scale(0.92);
+}
+
+.phrase-item:hover .phrase-action,
+.phrase-item:focus-within .phrase-action,
+.phrase-item.is-selected .phrase-action,
+.phrase-item.is-selected .palette-enter-hint,
+.palette-create .palette-enter-hint {
+  color: var(--palette-selected-action);
+}
+
+.phrase-action:hover,
+.phrase-action:focus-visible,
+.phrase-item:hover .phrase-action:hover,
+.phrase-item:focus-within .phrase-action:hover {
+  color: var(--palette-selected-action);
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.dark .phrase-action:hover,
+.dark .phrase-action:focus-visible,
+.dark .phrase-item:hover .phrase-action:hover,
+.dark .phrase-item:focus-within .phrase-action:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.phrase-action:focus-visible {
+  outline: 2px solid var(--palette-outline);
+  outline-offset: -2px;
+}
+
+/* Explicit Create row and its Enter affordance */
+.palette-create {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.25rem;
+  border-radius: var(--radius-md);
+  text-align: left;
+  cursor: pointer;
+}
+
+.palette-enter-hint {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-family: inherit;
+}
+
+.palette-enter-hint[hidden] {
+  display: none;
+}
+
+.palette-status-row {
+  color: var(--text-muted);
+  padding: 0.5rem 0.75rem;
+}
+
+.settings-status-muted {
+  color: var(--text-muted);
+}
+
+/* Shared .settings-hint is unlayered, so it beats @layer utilities .text-danger-500.
+   Keep PhraseVault error hints on the danger token without retokening shared. */
+.settings-hint.text-danger-500,
+#license-error,
+#shortcut-error,
+#license-status-trial.text-danger-500 {
+  color: var(--palette-danger);
+}
+
+/* Phrase Menu Dropdown */
+.phrase-menu {
+  @apply hidden absolute top-full right-0 mt-1 z-10 min-w-[140px]
+         bg-secondary-50 dark:bg-secondary-800
+         border border-secondary-200 dark:border-secondary-600
+         rounded-md shadow-md overflow-hidden;
+}
+
+.phrase-menu[data-state="open"] {
+  @apply block;
+}
+
+.phrase-menu-item {
+  @apply flex items-center gap-2 px-3 py-2 text-sm whitespace-nowrap
+         cursor-pointer transition-colors
+         hover:bg-secondary-100 dark:hover:bg-secondary-700;
+  width: 100%;
+  text-align: left;
+}
+
+.phrase-menu-item[data-action="delete"] {
+  @apply text-danger-500;
+}
+
+/* =============================================================================
+   Palette chrome
+
+   Search owns one input surface: a leading magnifier, the editable field, a
+   trailing Clear that only exists while the raw query is non-empty, and the
+   trailing primary Add. Settings lives in the shared titlebar actions slot.
+
+   Z-index strategy (low to high):
+   - Dropdowns/menus (relative to parent): 10
+   - Titlebar: 100
+   - Shared :focus-visible promotion (--focus-z): 101
+   - Controls overlaying the search field: 102
+   - Modals: 1000+
+   - Toasts: 1100
+
+   The shared focus ring promotes a focused element to position: relative and
+   z-index 101 so it clears the titlebar. Without a higher layer the focused
+   input would paint over the controls that sit inside its own box.
+   ============================================================================= */
+.palette-search {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+}
+
+.palette-search > #search {
+  min-width: 0;
+  padding-left: 40px;
+  padding-right: 80px;
+}
+
+#search-btn,
+#search-clear {
+  position: absolute;
+  z-index: 102;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+#search-btn {
+  left: 4px;
+}
+
+#search-clear {
+  right: 44px;
+}
+
+#search-clear[hidden] {
+  display: none;
+}
+
+#add-phrase {
+  position: absolute;
+  z-index: 102;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  /* btn-icon marks this as icon-only for shared checks; its aspect-ratio would
+     override the top/bottom constraint and overflow the field height. */
+  aspect-ratio: auto;
+  min-height: 0;
+  padding: 0;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+/* The two titlebar actions are one slot: 12 + 28 + 8 + 28 + 12 = 88px, using the
+   shared .titlebar-actions padding and gap. Do not add local insets here. */
+#btn-settings,
+#btn-db-status {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  min-height: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+#btn-settings > .icon-main,
+#db-status-glyph,
+#settings-status-indicator > svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+#search-btn:hover,
+#search-clear:hover,
+#btn-settings:hover,
+#btn-db-status:hover {
+  background: var(--bg-surface);
+}
+
+#search-btn:focus-visible,
+#search-clear:focus-visible,
+#add-phrase:focus-visible,
+#btn-settings:focus-visible,
+#btn-db-status:focus-visible {
+  outline: 2px solid var(--palette-outline);
+  outline-offset: -2px;
+}
+
+/* Add is the only filled chrome control. --palette-outline is itself a primary
+   tone, so inset on the .btn-primary fill it reads as ~1.35:1 in light mode. The
+   button's own foreground is the one colour already required to stay legible on
+   every primary state (default, hover, active), in both themes. Geometry is
+   unchanged: the ring stays 2px at -2px inside the 40px trailing slot. */
+#add-phrase:focus-visible {
+  outline-color: currentColor;
+}
+
+/* The last row keeps its full outline and actions inside the list viewport,
+   so a drop-up is the only correction when a row menu would clip the bottom. */
+#phrase-list .phrase-menu[data-placement="above"] {
+  top: auto;
+  bottom: 100%;
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+}
+
+
+/* =============================================================================
+   Settings layout
+
+   The header, the pinned activation row and the footer are non-scrolling
+   siblings of the one scrolling body, so an inline license error may shorten
+   the body without ever overlaying the footer.
+   ============================================================================= */
+/* The shared overlay is an auto-sized centred grid, so a `width: 100%` dialog
+   otherwise resolves against its own max-content instead of the shared modal-lg
+   maximum. One fill track restores that maximum without changing it. */
+#modal-settings {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+#modal-settings > .modal {
+  height: min(568px, calc(100vh - 2rem));
+}
+
+#modal-settings > .modal > .modal-header,
+#modal-settings > .modal > .modal-footer,
+#modal-settings > .modal > #license-section-trial {
+  flex-shrink: 0;
+}
+
+#modal-settings > .modal > #license-section-trial {
+  margin: 0;
+  padding: 0.625rem 0.875rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+/* The layout is the non-scrolling frame: the rail sits in column 1 and every
+   panel in column 2, so a switch cannot move the rail, band or footer. */
+#settings-layout.modal-body {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  padding: 0;
+  gap: 0;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+#settings-layout > [role="tabpanel"] {
+  grid-column: 2;
+  grid-row: 1;
+  padding: 14px;
+  min-height: 0;
+  min-width: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Beats #settings-preferences { display: flex } below: an unselected panel is
+   not displayed at all, so there are never two panes or two scrollbars. */
+#modal-settings #settings-layout > [role="tabpanel"][hidden] {
+  display: none;
+}
+
+#settings-tabs {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 8px;
+  gap: 4px;
+  min-width: 0;
+  overflow: hidden;
+  border-right: 1px solid var(--border-light);
+}
+
+#settings-tabs > [role="tab"] {
+  width: 100%;
+  min-height: 32px;
+  padding: 6px 8px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  font-size: var(--font-size-md, 0.9375rem);
+  text-align: left;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+#settings-tabs > [role="tab"]:hover {
+  background: var(--bg-surface);
+}
+
+/* Selection is a tint plus its own inset edge, so it never depends on colour
+   alone and stays distinguishable from the keyboard ring. */
+#settings-tabs > [role="tab"][aria-selected="true"] {
+  background: var(--palette-selected);
+  color: var(--palette-selected-text);
+  outline: 2px solid var(--palette-outline);
+  outline-offset: -2px;
+}
+
+#settings-tabs > [role="tab"]:focus-visible {
+  outline: 2px solid var(--palette-outline);
+  outline-offset: -2px;
+}
+
+#settings-tabs > [role="tab"]:disabled {
+  cursor: default;
+}
+
+#license-section-trial > * + * {
+  margin-top: 0.375rem;
+}
+
+.license-activation-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.license-activation-row > #license-key-input {
+  flex: 1 1 10rem;
+}
+
+#settings-preferences {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+#settings-preferences .settings-section,
+#settings-preferences .settings-field {
+  margin: 0;
+}
+
+#modal-settings .settings-preference-row {
+  display: grid;
+  grid-template-columns: minmax(0, 8rem) minmax(0, 1fr);
+  align-items: start;
+  gap: 0.5rem;
+}
+
+/* Theme and Language sit beside padded <select>s. `start` left their labels
+   hanging high against the control text; autostart already centers. Shortcut
+   stays stacked via the 1-column override below. */
+#modal-settings .settings-field.settings-preference-row {
+  align-items: center;
+}
+
+#modal-settings .settings-preference-row > *,
+#license-key-input {
+  min-width: 0;
+}
+
+#modal-settings .settings-label {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Local contrast override of the shared link tone, like the --text-muted
+   override above: on this dialog surface the shared dark primary-400 measures
+   4.19:1, below the 4.5:1 the contrast gate requires of body text. Light already
+   clears it at 6.2:1 and keeps the shared tones. */
+.dark #modal-settings .settings-link {
+  color: var(--color-primary-300);
+}
+
+.dark #modal-settings .settings-link:hover {
+  color: var(--color-primary-200);
+}
+
+#modal-settings .shortcut-input-wrapper {
+  flex-wrap: wrap;
+}
+
+#modal-settings .shortcut-input {
+  min-width: 4rem;
+}
+
+#modal-settings #shortcut-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+#modal-settings #autostart-section {
+  align-items: center;
+}
+
+/* The shortcut row is the one full-width preference: label above the field, with
+   Record and Reset kept together when a translation wraps. */
+#modal-settings #shortcut-section > .settings-preference-row {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+#settings-database > * + *,
+#settings-about > * + * {
+  margin-top: 0.5rem;
+}
+
+/* Long transfer/database labels wrap locally instead of letting the shared
+   button nowrap force the panel into horizontal overflow. */
+#settings-database .btn {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: left;
+}
+
+#recent-databases .btn {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Neutral, readable tone for identity, ID and version instead of the shared
+   low-contrast direct utilities. */
+#modal-settings #license-email,
+#modal-settings .settings-version {
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
+#modal-settings #license-id-display {
+  overflow-wrap: anywhere;
+}
+
+/* Wave 1-2 local contrast boundary: both dialogs keep their 1px rules on a
+   token that measures, without waiting for the shared Wave 0 promotion. */
+#modal-settings,
+#modal-phrase {
+  --border-light: var(--color-secondary-200);
+}
+
+.dark #modal-settings,
+.dark #modal-phrase {
+  --border-light: var(--color-secondary-700);
+}
+
+#modal-settings .input:focus-visible,
+#modal-settings .input:focus,
+#modal-phrase .input:focus-visible,
+#modal-phrase .input:focus {
+  outline: 2px solid var(--palette-outline);
+  outline-offset: -2px;
+}
+
+#modal-settings .modal-close:focus-visible,
+#modal-phrase .modal-close:focus-visible,
+#modal-settings .toggle-switch input:focus-visible + .toggle-track,
+#modal-settings .settings-option input:focus-visible,
+#modal-phrase .settings-option input:focus-visible {
+  outline: 2px solid var(--palette-outline);
+  outline-offset: 2px;
+}
+
+/* Filled dialog buttons: --palette-outline is itself a primary tone, so the
+   button's own legible foreground carries the ring. */
+#modal-settings .btn-primary:focus-visible,
+#modal-phrase .btn-primary:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: -2px;
+}
+
+#modal-settings .btn-secondary:focus-visible,
+#modal-settings .btn-ghost:focus-visible,
+#modal-phrase .btn-secondary:focus-visible,
+#modal-phrase .btn-ghost:focus-visible {
+  outline: 2px solid var(--palette-outline);
+  outline-offset: -2px;
+}
+
+/* =============================================================================
+   Wave 2 composer: labelled groups, insert shelf and its in-flow disclosure
+
+   The textarea remains the source of truth. The shelf only edits it, so nothing
+   here introduces a second editor surface, a fixed chip width or motion.
+   ============================================================================= */
+
+/* A definite height, never above the shared maximum, so opening More, wrapping
+   the shelf or dragging the editor taller scrolls the body instead of growing
+   the dialog and pushing the footer down. Same shape as the Settings sheet. */
+#modal-phrase > .modal {
+  height: min(568px, calc(100vh - var(--modal-inset, 2rem)));
+}
+
+.composer-name {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.composer-expanded {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+#phrase-insert-shelf,
+#modal-phrase .phrase-insert-secondary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  min-width: 0;
+}
+
+/* Explicit local suppression: the region's own flex layout must never resurrect
+   a hidden disclosure or expose its controls to Tab. */
+#modal-phrase #phrase-insert-more-panel[hidden],
+#modal-phrase #phrase-picker-retry[hidden] {
+  display: none;
+}
+
+#modal-phrase #phrase-insert-more-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+#modal-phrase .phrase-insert-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  /* 24px is the WCAG 2.2 SC 2.5.8 AA target minimum. This is a deliberate
+     compact-desktop size, not a touch-friendly one. */
+  min-height: 24px;
+  padding: 2px 6px;
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.2;
+  text-align: left;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+#modal-phrase .phrase-insert-chip:hover:not(:disabled) {
+  background: var(--bg-surface);
+  border-color: var(--border-color);
+}
+
+#modal-phrase .phrase-insert-chip:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+#modal-phrase .phrase-insert-chip:focus-visible {
+  outline: 2px solid var(--palette-outline);
+  outline-offset: -2px;
+}
+
+#modal-phrase .phrase-insert-chevron {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* The picker row wraps instead of clipping Retry, and the select yields width
+   before the button does. */
+#modal-phrase .phrase-picker-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+/* The shared label component carries margin-bottom: 0.25rem for stacked Settings
+   fields, so on this centred row align-items: center centres a box 4px taller
+   than its text and the label sits ~2px high. Settings already zeroes it
+   locally; scope the same zero to the picker row. The shared rule is untouched. */
+#modal-phrase .phrase-picker-row .settings-label {
+  margin: 0;
+}
+
+/* Matches the 24px chip rhythm above. No explicit height, and the UA rendering
+   is left alone so the native arrow survives. */
+#modal-phrase #phrase-picker {
+  flex: 1 1 8rem;
+  min-width: 0;
+  min-height: 24px;
+  padding: 2px 6px;
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+#modal-phrase #phrase-picker-retry {
+  flex: 0 0 auto;
+}
+
+#modal-phrase #phrase-picker-status:empty {
+  display: none;
+}
+
+#modal-phrase #phrase-format {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+#modal-phrase #phrase-format-label {
+  padding: 0;
+  margin-bottom: 6px;
+}
+
+/* Proportional text and a bounded, resizable editor: only the shared body may
+   scroll when More opens, the shelf wraps or the textarea is dragged taller. */
+#modal-phrase #expandedTextInput {
+  font-family: var(--font-sans);
+  resize: vertical;
+  height: 180px;
+  min-height: 180px;
+  max-height: 260px;
+  flex-shrink: 0;
+}
+
+/* =============================================================================
+   Shortcut Input
+   ============================================================================= */
+.shortcut-input-wrapper {
+  @apply flex gap-2 items-center;
+}
+
+.shortcut-input {
+  @apply flex-1 font-mono text-center;
+}
+
+.shortcut-input.recording {
+  @apply border-primary-500;
+  animation: pulse 1s infinite;
+}
+
+.shortcut-input.invalid {
+  @apply border-danger-500;
+}
+
+.shortcut-input.valid {
+  @apply border-success-500;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(var(--color-primary-500-rgb, 217, 119, 6), 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(var(--color-primary-500-rgb, 217, 119, 6), 0);
+  }
+}
+
+/* =============================================================================
+   Import Preview Modal
+   ============================================================================= */
+
+/* File info row: name + source badge */
+.import-file-info {
+  @apply flex items-center gap-2 flex-wrap;
+}
+
+.import-file-name {
+  @apply text-sm font-medium truncate;
+}
+
+.import-file-source {
+  @apply text-xs px-1.5 py-0.5 rounded
+         bg-secondary-100 dark:bg-secondary-700
+         text-secondary-500 dark:text-secondary-300;
+}
+
+.import-total {
+  @apply text-sm text-secondary-500 dark:text-secondary-400 mt-1;
+}
+
+/* Stat badges row */
+.import-stats {
+  @apply flex flex-wrap gap-1.5 mt-2;
+}
+
+.import-stat {
+  @apply text-xs font-medium px-2 py-0.5 rounded-full;
+}
+
+.import-stat-new {
+  @apply bg-success-50 text-success-700
+         dark:bg-success-900/30 dark:text-success-400;
+}
+
+.import-stat-conflict {
+  @apply bg-warning-50 text-warning-700
+         dark:bg-warning-900/30 dark:text-warning-400;
+}
+
+.import-stat-skipped {
+  @apply bg-secondary-100 text-secondary-500
+         dark:bg-secondary-700 dark:text-secondary-400;
+}
+
+/* Section header with inline actions */
+.import-section-header {
+  @apply flex items-center justify-between gap-2;
+}
+
+.import-section-actions {
+  @apply flex gap-1 flex-shrink-0;
+}
+
+/* Scrollable conflict checklist */
+.import-conflict-list {
+  @apply flex flex-col gap-1 max-h-[200px] overflow-y-auto mt-1.5;
+}
+
+.import-conflict-row {
+  @apply px-2 py-1.5 bg-secondary-50 dark:bg-secondary-800 rounded;
+}
+
+.import-conflict-name {
+  @apply font-mono truncate flex-1 min-w-0;
+}
+
+/* Warnings box */
+.import-warnings-inner {
+  @apply text-xs text-secondary-500 dark:text-secondary-400
+         p-2.5 bg-secondary-50 dark:bg-secondary-800 rounded
+         flex flex-col gap-1;
+}
+
+/* =============================================================================
+   Reduced Motion
+   ============================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Composer footer: the lock checkbox takes the leading slack so Cancel and Save
+   keep their places. The shared .modal-footer rule is not touched. */
+#modal-phrase .modal-footer {
+  flex-wrap: nowrap;
+}
+
+#modal-phrase #phrase-lock-label {
+  margin-inline-end: auto;
+  min-height: 24px;
+  min-width: 0;
+  flex: 0 1 auto;
+  white-space: nowrap;
+}
+
+#modal-phrase #phrase-lock {
+  border-color: var(--text-secondary);
+}
+
+#modal-phrase #btn-phrase-cancel,
+#modal-phrase #saveButton {
+  flex: 0 0 auto;
+}
+
+/* A protected row shows a glyph instead of a body preview. */
+.phrase-lock-glyph {
+  display: inline-block;
+  vertical-align: text-bottom;
+  color: var(--text-secondary);
+}
+
+/* The Security timeout row greys out when there is no PIN to govern. */
+#vault-timeout-section.is-disabled {
+  opacity: 0.6;
+}

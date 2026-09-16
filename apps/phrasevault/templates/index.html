@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'">
+    <title>PhraseVault</title>
+    <link rel="stylesheet" href="../assets/css/output.css">
+</head>
+
+<body class="app-shell">
+    <!-- Title bar drag region -->
+    <div class="titlebar" id="title-bar">
+        <div class="titlebar-left">
+            <!-- App Icon (clipboard with V - outline style matching app icon) -->
+            <svg class="w-4 h-4 text-primary-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/>
+                <path d="M9 4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V4z"/>
+                <g transform="translate(7.5, 9) scale(0.54)" fill="currentColor" stroke="currentColor" stroke-width="0.4mm">
+                    <path d="M 0 0 L 3.211 0 L 3.211 0.047 Q 3.188 0.105 3.176 0.223 Q 3.164 0.34 3.164 0.434 Q 3.164 0.797 3.264 1.236 Q 3.363 1.676 3.645 2.332 L 8.836 14.039 L 13.852 2.426 Q 14.027 1.992 14.227 1.477 Q 14.426 0.961 14.426 0.434 Q 14.426 0.293 14.402 0.193 Q 14.379 0.094 14.355 0.047 L 14.355 0 L 16.758 0 L 16.758 0.047 Q 16.535 0.27 16.219 0.844 Q 15.902 1.418 15.527 2.262 L 8.813 17.168 L 7.875 17.168 L 1.512 2.836 Q 1.289 2.332 1.049 1.863 Q 0.809 1.395 0.598 1.014 Q 0.387 0.633 0.223 0.375 Q 0.059 0.117 0 0.047 L 0 0 Z" vector-effect="non-scaling-stroke"/>
+                </g>
+            </svg>
+            <span class="titlebar-title titlebar-brand">PhraseVault</span>
+        </div>
+        <div class="titlebar-actions">
+            <!-- Database status: its own control, shape-coded, opens the Database pane.
+                 Its accessible name and tooltip carry the translated state, so status is
+                 never colour-only and the gear stays Settings alone. -->
+            <button
+                type="button"
+                id="btn-db-status"
+                data-testid="btn-db-status"
+                aria-haspopup="dialog"
+                aria-controls="modal-settings"
+            >
+                <svg id="db-status-glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+            </button>
+            <button
+                type="button"
+                id="btn-settings"
+                aria-label="Settings"
+                data-i18n="Settings"
+                data-i18n-attribute="aria-label"
+            >
+                <svg class="icon-main" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div id="app" class="flex flex-col gap-3 px-3 pb-3 h-full overflow-hidden" style="padding-top: calc(var(--titlebar-height, 32px) + 0.75rem);">
+        <!-- Search: leading magnifier, input, trailing clear, trailing Add -->
+        <div class="palette-search">
+            <button
+                type="button"
+                id="search-btn"
+                aria-label="Search"
+                data-i18n="Search"
+                data-i18n-attribute="aria-label"
+            >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <circle cx="10" cy="10" r="7"/>
+                    <path d="M21 21l-6-6"/>
+                </svg>
+            </button>
+            <input
+                type="search"
+                id="search"
+                class="input flex-1 [&::-webkit-search-cancel-button]:hidden"
+                placeholder=""
+                data-i18n="Search..."
+                data-i18n-attribute="placeholder"
+                aria-describedby="palette-status"
+            />
+            <button
+                type="button"
+                id="search-clear"
+                aria-label="Clear"
+                data-i18n="Clear"
+                data-i18n-attribute="aria-label"
+                hidden
+                disabled
+            >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+            <button
+                type="button"
+                id="add-phrase"
+                class="btn btn-primary btn-icon"
+                aria-label="Add Phrase"
+                data-i18n="Add Phrase"
+                data-i18n-attribute="aria-label"
+            >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+            </button>
+        </div>
+
+        <p id="palette-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+
+        <!-- Phrase List -->
+        <ul id="phrase-list" class="flex-1 overflow-y-auto"></ul>
+    </div>
+
+    <!-- Purchase Reminder Modal (Trial expired - new users) -->
+    <div id="modal-purchase-reminder" class="modal-overlay modal-sm" data-testid="modal-purchase-reminder">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="purchase-reminder-title">
+            <div class="modal-header">
+                <h2 id="purchase-reminder-title" data-i18n="trial_ended_title">Your 14-day trial has ended.</h2>
+                <button id="btn-purchase-reminder-close" class="modal-close" data-testid="btn-purchase-reminder-close" aria-label="Close">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M18 6l-12 12" />
+                        <path d="M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <p class="text-sm" data-i18n="trial_ended_p1">PhraseVault saves you tons of time by inserting commonly used phrases, snippets, and prompts every day.</p>
+                <p class="text-sm" data-i18n="trial_ended_p2">It's open source, privacy-first with no telemetry, and requires only a one-time payment for a lifetime license.</p>
+                <p class="text-sm" data-i18n="trial_ended_p3">Support the project by purchasing a lifetime license.</p>
+            </div>
+            <div class="modal-footer justify-center">
+                <button id="btn-purchase-reminder-later" class="btn btn-secondary" data-testid="btn-purchase-reminder-later" data-i18n="Remind Me Later">Remind Me Later</button>
+                <button id="btn-purchase-reminder-buy" class="btn btn-primary" data-testid="btn-purchase-reminder-buy" data-i18n="Buy License">Buy License</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Legacy Migration Modal (for honor-system users) -->
+    <div id="modal-legacy-migration" class="modal-overlay modal-md" data-testid="modal-legacy-migration">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="legacy-migration-title">
+            <div class="modal-header">
+                <h2 id="legacy-migration-title" data-i18n="legacy_migration_title">Quick Update for Existing Customers</h2>
+                <button id="btn-legacy-migration-close" class="modal-close" data-testid="btn-legacy-migration-close" aria-label="Close">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M18 6l-12 12" />
+                        <path d="M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="text-sm" data-i18n="legacy_migration_intro">We've improved how PhraseVault handles purchases.</p>
+                <p class="text-sm" data-i18n="legacy_migration_benefit_intro">You can now get a personal license key tied to your purchase email. This means:</p>
+                <ul class="text-sm list-disc pl-6 space-y-1">
+                    <li data-i18n="legacy_migration_benefit_1">Transfer to new computers - your key works anywhere</li>
+                    <li data-i18n="legacy_migration_benefit_2">Never lose your license - recover it anytime from our website</li>
+                    <li data-i18n="legacy_migration_benefit_3">Still 100% offline - your key is verified locally, we never phone home</li>
+                </ul>
+                <p class="text-sm font-medium" data-i18n="legacy_migration_privacy_title">Your data stays private.</p>
+                <p class="text-sm" data-i18n="legacy_migration_privacy">PhraseVault still works completely offline. Your snippets never leave your computer. The only online step is a one-time visit to get your key.</p>
+            </div>
+            <div class="modal-footer justify-center flex-wrap">
+                <button id="btn-legacy-migration-later" class="btn btn-secondary" data-testid="btn-legacy-migration-later" data-i18n="legacy_migration_btn_later">Remind Me Later</button>
+                <button id="btn-legacy-migration-enter" class="btn btn-secondary" data-testid="btn-legacy-migration-enter" data-i18n="legacy_migration_btn_enter">Enter License Key</button>
+                <button id="btn-legacy-migration-get" class="btn btn-primary" data-testid="btn-legacy-migration-get" data-i18n="legacy_migration_btn_get">Get My License Key</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phrase Modal -->
+    <div id="modal-phrase" class="modal-overlay modal-lg" data-testid="modal-phrase">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+            <div class="modal-header">
+                <h2 id="modal-title"></h2>
+                <button id="btn-phrase-close" class="modal-close" data-testid="btn-phrase-close" aria-label="Close" data-i18n="Close" data-i18n-attribute="aria-label">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M18 6l-12 12" />
+                        <path d="M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="composer-name">
+                    <label id="phrase-name-label" class="settings-label" for="phraseInput" data-i18n="composer_name">Name</label>
+                    <input type="text" id="phraseInput" class="input" spellcheck="false" autocomplete="off">
+                </div>
+
+                <!-- Label, shelf, its in-flow disclosure and the textarea form one
+                     group: the shelf edits the textarea below it, and the hidden
+                     secondary region stays in the flow instead of floating. -->
+                <div class="composer-expanded">
+                    <label id="phrase-expanded-label" class="settings-label" for="expandedTextInput" data-i18n="composer_expanded_text">Expanded text</label>
+
+                    <div id="phrase-insert-shelf" role="group" data-testid="phrase-insert-shelf"
+                         data-i18n="composer_insert_group" data-i18n-attribute="aria-label" aria-label="Insert dynamic text">
+                        <button type="button" id="phrase-insert-date" class="phrase-insert-chip" data-testid="phrase-insert-date" data-i18n="composer_insert_date">Date</button>
+                        <button type="button" id="phrase-insert-time" class="phrase-insert-chip" data-testid="phrase-insert-time" data-i18n="composer_insert_time">Time</button>
+                        <button type="button" id="phrase-insert-clipboard" class="phrase-insert-chip" data-testid="phrase-insert-clipboard" data-i18n="composer_insert_clipboard">Clipboard</button>
+                        <button type="button" id="phrase-insert-field" class="phrase-insert-chip" data-testid="phrase-insert-field" data-i18n="composer_insert_field">Field</button>
+                        <button type="button" id="phrase-insert-choice" class="phrase-insert-chip" data-testid="phrase-insert-choice" data-i18n="composer_insert_choice">Choice</button>
+                        <button type="button" id="phrase-insert-more" class="phrase-insert-chip" data-testid="phrase-insert-more"
+                                aria-expanded="false" aria-controls="phrase-insert-more-panel">
+                            <span data-i18n="More">More</span>
+                            <svg class="phrase-insert-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                                <path d="M6 9l6 6 6-6" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div id="phrase-insert-more-panel" data-testid="phrase-insert-more-panel" aria-labelledby="phrase-insert-more" hidden>
+                        <div class="phrase-insert-secondary">
+                            <button type="button" id="phrase-insert-datetime" class="phrase-insert-chip" data-testid="phrase-insert-datetime" data-i18n="composer_insert_datetime">Date and time</button>
+                            <button type="button" id="phrase-insert-weekday" class="phrase-insert-chip" data-testid="phrase-insert-weekday" data-i18n="composer_insert_weekday">Weekday</button>
+                            <button type="button" id="phrase-insert-month" class="phrase-insert-chip" data-testid="phrase-insert-month" data-i18n="composer_insert_month">Month</button>
+                            <button type="button" id="phrase-insert-year" class="phrase-insert-chip" data-testid="phrase-insert-year" data-i18n="composer_insert_year">Year</button>
+                            <button type="button" id="phrase-insert-textarea" class="phrase-insert-chip" data-testid="phrase-insert-textarea" data-i18n="composer_insert_textarea">Multiline field</button>
+                        </div>
+                        <div class="phrase-picker-row">
+                            <label id="phrase-picker-label" class="settings-label" for="phrase-picker" data-i18n="composer_phrase_label">Phrase</label>
+                            <select id="phrase-picker" class="input" data-testid="phrase-picker" aria-describedby="phrase-picker-status" disabled></select>
+                            <button type="button" id="phrase-picker-retry" class="phrase-insert-chip" data-testid="phrase-picker-retry" data-i18n="Retry" hidden>Retry</button>
+                        </div>
+                        <p id="phrase-picker-status" class="settings-hint" role="status" aria-live="polite" aria-atomic="true"></p>
+                    </div>
+
+                    <textarea id="expandedTextInput" class="input" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
+                </div>
+
+                <fieldset id="phrase-format">
+                    <legend id="phrase-format-label" data-i18n="composer_format">Format</legend>
+                    <div class="flex flex-wrap gap-3">
+                        <label class="settings-option">
+                            <input type="radio" name="phraseType" value="text" checked>
+                            <span data-i18n="Plain Text">Plain Text</span>
+                        </label>
+                        <label class="settings-option">
+                            <input type="radio" name="phraseType" value="markdown">
+                            <span data-i18n="Markdown">Markdown</span>
+                        </label>
+                        <label class="settings-option">
+                            <input type="radio" name="phraseType" value="html">
+                            <span data-i18n="HTML">HTML</span>
+                        </label>
+                    </div>
+                </fieldset>
+                <input type="hidden" id="idInput">
+            </div>
+            <div class="modal-footer">
+                <label id="phrase-lock-label" class="settings-checkbox" for="phrase-lock">
+                    <input type="checkbox" id="phrase-lock" data-testid="phrase-lock">
+                    <span data-i18n="composer_lock">Lock with PIN</span>
+                </label>
+                <button type="button" id="btn-phrase-cancel" class="btn btn-secondary" data-testid="btn-phrase-cancel" data-i18n="Cancel">Cancel</button>
+                <button id="saveButton" class="btn btn-primary" data-i18n="Save">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="modal-settings" class="modal-overlay modal-lg" data-testid="modal-settings">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settings-modal-title">
+            <div class="modal-header">
+                <h2 id="settings-modal-title" data-i18n="Settings">Settings</h2>
+                <button id="btn-settings-close" class="modal-close" data-testid="btn-settings-close" aria-label="Close" data-i18n="Close" data-i18n-attribute="aria-label">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M18 6l-12 12" />
+                        <path d="M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Pinned activation row: never collapsed, never scrolls away -->
+            <div id="license-section-trial">
+                <p id="license-status-trial" class="text-sm settings-status-muted"></p>
+                <div class="license-activation-row">
+                    <label class="settings-label sr-only" for="license-key-input" data-i18n="License Key">License Key</label>
+                    <input type="text" id="license-key-input" class="input font-mono text-sm" placeholder="PV-xxxx..." spellcheck="false" autocomplete="off" />
+                    <button type="button" id="license-activate-btn" class="btn btn-primary" data-i18n="Activate">Activate</button>
+                    <button type="button" id="license-buy-btn" class="btn btn-secondary" data-i18n="Buy">Buy</button>
+                </div>
+                <p id="license-error" class="settings-hint text-danger-500" style="display: none;"></p>
+                <p class="settings-hint">
+                    <span data-i18n="license_hint_prefix">Don't have a key?</span>
+                    <a href="#" id="license-recovery-link" class="settings-link" data-i18n="license_hint_link">Get one at phrasevault.app</a>
+                </p>
+            </div>
+
+            <!-- Rail plus one displayed panel. The layout itself never scrolls:
+                 only the selected panel does, so the rail, the pinned band and
+                 the footer keep their boxes through every category switch. -->
+            <div id="settings-layout" class="modal-body">
+                <div id="settings-tabs" role="tablist" aria-orientation="vertical"
+                     data-i18n="settings_sections" data-i18n-attribute="aria-label" aria-label="Settings sections">
+                    <button type="button" id="settings-tab-preferences" data-testid="settings-tab-preferences"
+                            role="tab" aria-controls="settings-preferences" aria-selected="true" tabindex="0"
+                            data-i18n="Preferences">Preferences</button>
+                    <button type="button" id="settings-tab-database" data-testid="settings-tab-database"
+                            role="tab" aria-controls="settings-database" aria-selected="false" tabindex="-1"
+                            data-i18n="Database">Database</button>
+                    <button type="button" id="settings-tab-security" data-testid="settings-tab-security"
+                            role="tab" aria-controls="settings-security" aria-selected="false" tabindex="-1"
+                            data-i18n="Security">Security</button>
+                    <button type="button" id="settings-tab-about" data-testid="settings-tab-about"
+                            role="tab" aria-controls="settings-about" aria-selected="false" tabindex="-1"
+                            data-i18n="About">About</button>
+                </div>
+
+                <!-- Daily preferences -->
+                <div id="settings-preferences" role="tabpanel" aria-labelledby="settings-tab-preferences" tabindex="0">
+                    <div class="settings-section" id="shortcut-section">
+                        <div class="settings-preference-row">
+                            <label class="settings-label" for="shortcut-input" data-i18n="Summon Shortcut">Summon Shortcut</label>
+                            <div class="shortcut-input-wrapper">
+                                <input type="text" id="shortcut-input" class="input shortcut-input" readonly aria-describedby="shortcut-hint" />
+                                <button type="button" id="shortcut-record-btn" class="btn btn-secondary btn-sm" data-i18n="Record">Record</button>
+                                <button type="button" id="shortcut-reset-btn" class="btn btn-ghost btn-sm" data-i18n="Reset">Reset</button>
+                            </div>
+                        </div>
+                        <p id="shortcut-error" class="settings-hint text-danger-500" style="display: none;"></p>
+                        <p id="shortcut-hint" class="settings-hint" data-i18n="shortcut_hint">Press Record, then press your desired key combination</p>
+                    </div>
+
+                    <div class="settings-field settings-preference-row">
+                        <label class="settings-label" for="settings-theme" data-i18n="Theme">Theme</label>
+                        <select id="settings-theme" class="input">
+                            <option value="system" data-i18n="System">System</option>
+                            <option value="light" data-i18n="Light">Light</option>
+                            <option value="dark" data-i18n="Dark">Dark</option>
+                        </select>
+                    </div>
+
+                    <div class="settings-field settings-preference-row">
+                        <label class="settings-label" for="language-select" data-i18n="Language">Language</label>
+                        <select id="language-select" class="input">
+                            <option value="en">English</option>
+                            <option value="es">Español</option>
+                            <option value="pt">Português</option>
+                            <option value="fr">Français</option>
+                            <option value="de">Deutsch</option>
+                            <option value="it">Italiano</option>
+                            <option value="ja">日本語</option>
+                        </select>
+                    </div>
+
+                    <div class="settings-section settings-preference-row" id="autostart-section">
+                        <label class="settings-label" for="autostart-toggle">
+                            <span data-i18n="Start with Windows">Start with Windows</span>
+                        </label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="autostart-toggle">
+                            <span class="toggle-track"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="settings-database" role="tabpanel" aria-labelledby="settings-tab-database" tabindex="0" hidden>
+                    <div id="settings-db-status" class="flex items-center gap-2" role="status" aria-live="polite" aria-atomic="true">
+                        <span id="settings-status-indicator" class="flex items-center">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+                        </span>
+                        <span id="settings-status-text" class="text-sm settings-status-muted"></span>
+                    </div>
+
+                    <div class="settings-section">
+                        <div class="settings-grid">
+                            <button type="button" id="new-db-btn" class="btn btn-secondary" data-i18n="New Database">New Database</button>
+                            <button type="button" id="open-db-btn" class="btn btn-secondary" data-i18n="Open Database">Open Database</button>
+                        </div>
+                        <div id="recent-databases" class="grid gap-0.5 mt-2 mb-3"></div>
+                        <button type="button" id="show-db-btn" class="btn btn-secondary btn-sm" data-i18n="Open Current Database Location">Open Current Database Location</button>
+                    </div>
+
+                    <div class="settings-section">
+                        <div class="settings-grid">
+                            <button type="button" id="import-btn" class="btn btn-secondary" data-i18n="Import Phrases">Import Phrases</button>
+                            <button type="button" id="export-all-btn" class="btn btn-secondary" data-i18n="Export All">Export All</button>
+                        </div>
+                        <button type="button" id="export-filtered-btn" class="btn btn-secondary btn-sm mt-2 hidden" data-i18n="Export Filtered">Export Filtered</button>
+                        <p class="settings-hint" data-i18n="export_hint">Search first, then open settings to export only matching phrases</p>
+                    </div>
+                </div>
+
+                <!-- Security: the PIN lock. Timeout is a draft that commits with
+                     Save; Lock now and Change PIN act immediately. -->
+                <div id="settings-security" role="tabpanel" aria-labelledby="settings-tab-security" tabindex="0" hidden>
+                    <div class="settings-section">
+                        <p id="vault-status-text" class="settings-hint" role="status" aria-live="polite"></p>
+                        <p id="vault-empty-hint" class="settings-hint" data-i18n="vault_empty_hint">No PIN yet. Open a phrase, tick "Lock with PIN", and you will be asked to set one.</p>
+                    </div>
+
+                    <div class="settings-section settings-preference-row" id="vault-timeout-section">
+                        <label class="settings-label" id="vault-timeout-label" for="vault-timeout-toggle">
+                            <span data-i18n="vault_timeout_label">Lock automatically after</span>
+                        </label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="vault-timeout-toggle" data-testid="vault-timeout-toggle">
+                            <span class="toggle-track"></span>
+                        </label>
+                    </div>
+                    <div class="settings-section">
+                        <label class="settings-label sr-only" for="vault-timeout-select" data-i18n="vault_timeout_label">Lock automatically after</label>
+                        <select id="vault-timeout-select" class="input" data-testid="vault-timeout-select">
+                            <option value="5" data-i18n="vault_timeout_5">5 minutes</option>
+                            <option value="15" data-i18n="vault_timeout_15">15 minutes</option>
+                            <option value="60" data-i18n="vault_timeout_60">1 hour</option>
+                            <option value="240" data-i18n="vault_timeout_240">4 hours</option>
+                            <option value="1440" data-i18n="vault_timeout_1440">24 hours</option>
+                        </select>
+                    </div>
+
+                    <div class="settings-section">
+                        <div class="settings-grid settings-grid-2">
+                            <button type="button" id="btn-vault-lock-now" class="btn btn-secondary" data-testid="btn-vault-lock-now" data-i18n="vault_lock_now">Lock now</button>
+                            <button type="button" id="btn-vault-change-pin" class="btn btn-secondary" data-testid="btn-vault-change-pin" data-i18n="vault_change_pin">Change PIN</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-section settings-section-bordered">
+                        <p id="vault-hint" class="settings-hint" data-i18n="vault_hint_honest">Locked phrases are encrypted inside the database file.</p>
+                    </div>
+                </div>
+
+                <div id="settings-about" role="tabpanel" aria-labelledby="settings-tab-about" tabindex="0" hidden>
+                    <!-- License Section (Licensed state) -->
+                    <div class="settings-section" id="license-section-active" style="display: none;">
+                        <p class="flex items-center gap-1 text-success-500 font-medium text-sm mb-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M20 6L9 17l-5-5"/>
+                            </svg>
+                            <span data-i18n="license_active_prefix">Licensed to:</span>
+                            <span id="license-email" class="text-secondary-700 dark:text-secondary-200"></span>
+                        </p>
+                        <p id="license-id-display" class="text-sm settings-status-muted ml-5 mb-2" style="display: none;"></p>
+                        <button type="button" id="license-deactivate-btn" class="btn btn-secondary btn-sm" data-i18n="Deactivate">Deactivate</button>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3 data-i18n="Updates">Updates</h3>
+                        <button type="button" id="check-updates-btn" class="btn btn-secondary" data-i18n="Check for Updates">Check for Updates</button>
+                    </div>
+
+                    <div class="settings-section settings-section-bordered">
+                        <h3 data-i18n="Help">Help</h3>
+                        <div class="settings-grid settings-grid-2">
+                            <a href="#" id="link-docs" class="settings-link" data-i18n="Documentation">Documentation</a>
+                            <a href="#" id="link-issues" class="settings-link" data-i18n="Report Issue">Report Issue</a>
+                            <a href="#" id="link-license" class="settings-link" data-i18n="View License Agreement">License Agreement</a>
+                            <a href="#" id="link-thirdparty" class="settings-link" data-i18n="Third Party Licenses">Third Party Licenses</a>
+                        </div>
+                    </div>
+
+                    <div class="settings-footer">
+                        <p class="settings-version">
+                            <span id="version-text"></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="btn-settings-cancel" class="btn btn-secondary" data-i18n="Cancel">Cancel</button>
+                <button type="button" id="btn-settings-save" class="btn btn-primary" data-i18n="Save preferences">Save preferences</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PIN Modal: one dialog, three modes. Each mode shows only what it needs. -->
+    <div id="modal-vault-pin" class="modal-overlay modal-sm" data-testid="modal-vault-pin">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="vault-pin-title">
+            <div class="modal-header">
+                <h2 id="vault-pin-title" data-i18n="vault_pin_title_unlock">Enter your PIN</h2>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section" id="vault-pin-current-row">
+                    <label class="settings-label" id="vault-pin-current-label" for="vault-pin-current" data-i18n="vault_pin_current">Current PIN</label>
+                    <input type="password" id="vault-pin-current" class="input" data-testid="vault-pin-current" autocomplete="off" spellcheck="false">
+                </div>
+                <div class="settings-section">
+                    <label class="settings-label" id="vault-pin-new-label" for="vault-pin-new" data-i18n="vault_pin_enter">PIN</label>
+                    <input type="password" id="vault-pin-new" class="input" data-testid="vault-pin-new" autocomplete="off" spellcheck="false">
+                </div>
+                <div class="settings-section" id="vault-pin-confirm-row">
+                    <label class="settings-label" id="vault-pin-confirm-label" for="vault-pin-confirm" data-i18n="vault_pin_confirm">Confirm PIN</label>
+                    <input type="password" id="vault-pin-confirm" class="input" data-testid="vault-pin-confirm" autocomplete="off" spellcheck="false">
+                </div>
+                <p id="vault-pin-error" class="settings-hint text-danger-500" role="alert" hidden></p>
+                <p id="vault-pin-hint" class="settings-hint" data-i18n="vault_pin_hint_setup">At least 4 characters.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn-vault-pin-cancel" class="btn btn-secondary" data-testid="btn-vault-pin-cancel" data-i18n="Cancel">Cancel</button>
+                <button type="button" id="btn-vault-pin-submit" class="btn btn-primary" data-testid="btn-vault-pin-submit" data-i18n="vault_pin_submit">Unlock</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Preview Modal -->
+    <div id="modal-import-preview" class="modal-overlay" data-testid="modal-import-preview">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="import-preview-title">
+            <div class="modal-header">
+                <h2 id="import-preview-title" data-i18n="Import Phrases">Import Phrases</h2>
+                <button id="btn-import-close" class="modal-close" data-testid="btn-import-close" aria-label="Close">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M18 6l-12 12" />
+                        <path d="M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="import-summary"></div>
+                <div id="import-conflicts" class="hidden"></div>
+                <div id="import-warnings" class="hidden"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-import-cancel" class="btn btn-secondary" data-i18n="Cancel">Cancel</button>
+                <button id="btn-import-confirm" class="btn btn-primary" data-i18n="Import">Import</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Markdown Viewer Modal -->
+    <div id="modal-markdown" class="modal-overlay modal-lg" data-testid="modal-markdown">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="markdown-modal-title">
+            <div class="modal-header">
+                <h2 id="markdown-modal-title"></h2>
+                <button id="btn-markdown-close" class="modal-close" data-testid="btn-markdown-close" aria-label="Close">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M18 6l-12 12" />
+                        <path d="M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="markdown-modal-content" class="markdown-content"></div>
+            </div>
+            <div id="markdown-modal-footer" class="modal-footer">
+                <button id="btn-markdown-ok" class="btn btn-secondary">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dynamic Prompt Modal -->
+    <div id="modal-dynamic" class="modal-overlay modal-md" data-testid="modal-dynamic">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="dynamic-modal-title">
+            <div class="modal-header">
+                <h2 id="dynamic-modal-title" data-i18n="Fill in Details">Fill in Details</h2>
+                <button id="btn-dynamic-close" class="modal-close" data-testid="btn-dynamic-close" aria-label="Close">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M18 6l-12 12" />
+                        <path d="M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="dynamic-form" class="flex flex-col gap-4" onsubmit="return false">
+                    <!-- Fields generated dynamically by JavaScript -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn-dynamic-cancel" class="btn btn-secondary" data-i18n="Cancel">Cancel</button>
+                <button type="button" id="btn-dynamic-insert" class="btn btn-primary" data-i18n="Insert">Insert</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-root"></div>
+
+    <script type="module" src="../src/renderer.js"></script>
+</body>
+
+</html>

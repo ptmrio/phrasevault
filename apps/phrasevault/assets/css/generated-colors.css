@@ -1,0 +1,97 @@
+/**
+ * Generated Color Palette - Tailwind v4
+ * 
+ * Generated: 2026-02-02T13:47:56.590Z
+ * Generator: @spqrkapps/shared generate-colors
+ * 
+ * Input colors:
+ *   primary: hsl(30, 85%, 50%)
+ *   secondary: hsl(212, 15%, 47%)
+ *   success: hsl(142, 70%, 42%)
+ *   danger: hsl(0, 72%, 51%)
+ *   warning: hsl(45, 100%, 51%)
+ *   info: hsl(199, 89%, 48%)
+ * 
+ * Usage: @import "./generated-colors.css" in your input.css
+ */
+
+@theme {
+  /* Primary */
+  --color-primary-50: #fff3ea;
+  --color-primary-100: #fae3d3;
+  --color-primary-200: #f7caaa;
+  --color-primary-300: #f0a36a;
+  --color-primary-400: #e07a18;
+  --color-primary-500: #a95a0d;
+  --color-primary-600: #8d4900;
+  --color-primary-700: #6d3803;
+  --color-primary-800: #502600;
+  --color-primary-900: #331701;
+  --color-primary-950: #160700;
+
+  /* Secondary */
+  --color-secondary-50: #f2f5fa;
+  --color-secondary-100: #e4e8ed;
+  --color-secondary-200: #ced5de;
+  --color-secondary-300: #acb9c7;
+  --color-secondary-400: #899aae;
+  --color-secondary-500: #637386;
+  --color-secondary-600: #4f5f72;
+  --color-secondary-700: #3a495b;
+  --color-secondary-800: #2b343e;
+  --color-secondary-900: #182029;
+  --color-secondary-950: #080b10;
+
+  /* Success */
+  --color-success-50: #e5fce8;
+  --color-success-100: #d8efdb;
+  --color-success-200: #b3e2bb;
+  --color-success-300: #79ce8b;
+  --color-success-400: #1fb557;
+  --color-success-500: #12883f;
+  --color-success-600: #027131;
+  --color-success-700: #065725;
+  --color-success-800: #013f18;
+  --color-success-900: #01270d;
+  --color-success-950: #001003;
+
+  /* Danger */
+  --color-danger-50: #fff2f0;
+  --color-danger-100: #ffe0db;
+  --color-danger-200: #fdc4bd;
+  --color-danger-300: #ff968a;
+  --color-danger-400: #fd574e;
+  --color-danger-500: #d2181e;
+  --color-danger-600: #b10612;
+  --color-danger-700: #89090e;
+  --color-danger-800: #650206;
+  --color-danger-900: #420203;
+  --color-danger-950: #1f0001;
+
+  /* Warning */
+  --color-warning-50: #fff8e9;
+  --color-warning-100: #f9edd5;
+  --color-warning-200: #f3dbaa;
+  --color-warning-300: #e3cb9a;
+  --color-warning-400: #e2b75b;
+  --color-warning-500: #d1a74a;
+  --color-warning-600: #be9019;
+  --color-warning-700: #997411;
+  --color-warning-800: #6c5009;
+  --color-warning-900: #423001;
+  --color-warning-950: #1e1401;
+
+  /* Info */
+  --color-info-50: #ecf7ff;
+  --color-info-100: #d6ebfa;
+  --color-info-200: #b1dbf7;
+  --color-info-300: #74c1f2;
+  --color-info-400: #10a3e8;
+  --color-info-500: #067aaf;
+  --color-info-600: #096591;
+  --color-info-700: #004d72;
+  --color-info-800: #033752;
+  --color-info-900: #002235;
+  --color-info-950: #000d17;
+
+}

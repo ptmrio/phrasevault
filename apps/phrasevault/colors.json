@@ -1,0 +1,8 @@
+{
+  "primary": "hsl(30, 85%, 50%)",
+  "secondary": "hsl(212, 15%, 47%)",
+  "success": "hsl(142, 70%, 42%)",
+  "danger": "hsl(0, 72%, 51%)",
+  "warning": "hsl(45, 100%, 51%)",
+  "info": "hsl(199, 89%, 48%)"
+}

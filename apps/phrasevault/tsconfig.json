@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "types": ["node"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "allowJs": true,
+    "checkJs": false
+  },
+  "include": ["src/**/*", "locales/**/*", "test/**/*"],
+  "exclude": ["node_modules", "dist", "out"]
+}

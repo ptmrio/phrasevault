@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'" />
+    <title>{{APP_TITLE}}</title>
+    <link rel="stylesheet" href="../assets/css/output.css" />
+  </head>
+  <body class="app-shell">
+    <!-- Title Bar Drag Region -->
+    <div class="titlebar">
+      <div class="titlebar-left">
+        <!-- App icon optional -->
+        <!-- <img class="titlebar-icon" src="../assets/img/icon.png" alt="" /> -->
+        <span class="titlebar-title">{{APP_TITLE}}</span>
+      </div>
+      <div class="titlebar-actions">
+        <!-- Optional buttons (e.g. settings) -->
+      </div>
+    </div>
+
+    <!-- App Content -->
+    <div id="app" class="titlebar-offset app-container">
+      <!-- App-specific content -->
+    </div>
+
+    <!-- Shared modal root (optional) -->
+    <div id="modal-root"></div>
+  </body>
+</html>

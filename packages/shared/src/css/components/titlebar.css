@@ -1,0 +1,84 @@
+/**
+ * Titlebar Component - Shared across all apps
+ *
+ * Provides a flexible, customizable title bar system for Electron apps.
+ * The caption buttons are in-page and live in window-controls.css; the bar
+ * spans the full window width with no reserved native void.
+ *
+ * CSS Variables (override in app CSS):
+ *   --titlebar-height: Height of the title bar (default: 32px)
+ *   --titlebar-bg: Background color (default: var(--bg-primary))
+ *   --titlebar-z: Z-index (default: 100)
+ *   --titlebar-font-size: Title text font size (default: 12px)
+ *   --titlebar-font-weight: Title text font weight (default: 500)
+ *
+ * Usage:
+ *   <div class="titlebar">
+ *     <span class="titlebar-title">App Name</span>
+ *   </div>
+ *   <main class="titlebar-offset">...</main>
+ */
+
+/* Base titlebar - drag region */
+.titlebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--titlebar-height, 32px);
+  -webkit-app-region: drag;
+  z-index: var(--titlebar-z, 100);
+  display: flex;
+  align-items: center;
+  background: var(--titlebar-bg, var(--bg-primary));
+  user-select: none;
+}
+
+/* Titlebar layout helpers */
+.titlebar-left,
+.titlebar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  min-width: 0;
+}
+
+.titlebar-actions {
+  margin-left: auto;
+}
+
+.titlebar-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Title text - displayed within the title bar */
+.titlebar-title {
+  font-size: var(--titlebar-font-size, 12px);
+  font-weight: var(--titlebar-font-weight, 500);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+/* Non-draggable elements within title bar */
+.titlebar button,
+.titlebar input,
+.titlebar a,
+.titlebar [data-no-drag],
+.titlebar .no-drag {
+  -webkit-app-region: no-drag;
+}
+
+/* Content area offset - use on main content to account for title bar */
+.titlebar-offset {
+  padding-top: var(--titlebar-height, 32px);
+}
+
+/* While a modal is open the whole bar stops dragging. Electron drag regions
+   bypass pointer events, so the z-1000 backdrop alone does not stop a drag
+   starting under it. */
+html[data-modal-open="true"] .titlebar,
+html[data-modal-open="true"] .titlebar * {
+  -webkit-app-region: no-drag;
+}

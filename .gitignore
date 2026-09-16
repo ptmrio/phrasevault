@@ -1,14 +1,38 @@
-# Node modules
+# Dependencies
 node_modules/
+.pnpm-store/
 
-#  Dist
-dist/*
-out/*
-Releases/*
+# Build artifacts (anchored — do not ignore packages/shared/src/build)
+/build/
+/dist/
+/out/
+apps/phrasevault/build/
+apps/phrasevault/dist/
+apps/phrasevault/out/
+apps/phrasevault/Releases/
+apps/phrasevault/.package-stage/
+apps/phrasevault/.vite/
 
-upload.sh
-HOWTORUN.md
+# Generated renderer emit
+apps/phrasevault/src/renderer.js
+apps/phrasevault/src/modal.js
+apps/phrasevault/src/types.js
+apps/phrasevault/src/*.map
+apps/phrasevault/src/chunks/
+apps/phrasevault/assets/css/output.css
 
-// MacOS
+# Reports / secrets
+playwright-report/
+e2e-results/
+test-results/
+coverage/
+*.log
+.env
+.env.*
+metadata.json
+*.pem
+*.pfx
+*.p12
+*.asar
 .DS_Store
-**/.DS_Store
+Thumbs.db

@@ -1,0 +1,45 @@
+/**
+ * Shared CSS Components - @spqrkapps/shared
+ *
+ * Import this file in your app's main CSS after tailwindcss and generated colors:
+ *
+ *   @import "tailwindcss";
+ *   @import "./generated-colors.css";
+ *   @source "../../../packages/shared/src/**\/*.{ts,css}";
+ *
+ * Required: Apps must run `pnpm colors` to generate the color palette CSS.
+ *
+ * Z-Index Hierarchy:
+ *   100   - Titlebar/header
+ *   1000  - Modals
+ *   1100  - Toasts (must be above modals)
+ *   10000 - Skip links (accessibility)
+ */
+
+/* Tailwind Typography Plugin for prose styling */
+@plugin "@tailwindcss/typography";
+
+/* Theme variables must load first - provides semantic color mappings */
+@import './theme-variables.css';
+
+/* Base reset - supplements Tailwind Preflight */
+@import './base-reset.css';
+
+/* Typography system - unified font sizes */
+@import './typography.css';
+
+/* Component styles */
+@import './components/buttons.css';
+@import './components/inputs.css';
+@import './components/cards.css';
+@import './components/modals.css';
+@import './components/settings.css';
+@import './components/toasts.css';
+@import './components/prose.css';
+@import './components/titlebar.css';
+@import './components/window-controls.css';
+
+/* Utilities */
+@import './animations.css';
+@import './platform.css';
+@import './accessibility.css';

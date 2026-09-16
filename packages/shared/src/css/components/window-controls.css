@@ -1,0 +1,213 @@
+/**
+ * Window Controls - in-page caption buttons
+ *
+ * Replaces the native Windows Control Overlay and the macOS hiddenInset
+ * traffic lights, which paint above the webview and cannot be covered by
+ * .modal-overlay. These are ordinary buttons in the same stacking hierarchy
+ * as the modal backdrop.
+ *
+ * Geometry is locked: win32 is three 46x32 cells flush right (138px total);
+ * darwin is 8px + three 20x32 cells + 10px (78px total), which puts the first
+ * 12px circle at exactly (12, 10) - the coordinates the retired
+ * trafficLightPosition produced.
+ *
+ * 46px and #e81123 are project tokens, not OS guarantees.
+ */
+
+:root {
+  --wc-cell-w: 46px;
+  --wc-close-hover: #e81123;
+  --wc-close-active: #f1707a;
+  --wc-mac-close: #ff5f57;
+  --wc-mac-minimize: #febc2e;
+  --wc-mac-zoom: #28c840;
+  --wc-mac-inactive: #d6d6d6;
+  --wc-mac-glyph: rgba(0, 0, 0, 0.55);
+}
+
+.dark {
+  --wc-mac-inactive: #4a4a4a;
+}
+
+.window-controls {
+  display: flex;
+  flex: 0 0 auto;
+  direction: ltr;
+  align-items: stretch;
+  height: var(--titlebar-height, 32px);
+  -webkit-app-region: no-drag;
+}
+
+.window-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--titlebar-height, 32px);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: default;
+  -webkit-app-region: no-drag;
+}
+
+.window-control:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+}
+
+.window-control:disabled {
+  opacity: 0.4;
+}
+
+.window-control:disabled:hover {
+  background: transparent;
+}
+
+/* ---------- Windows cluster: 3 x 46x32, flush right, 138px ---------- */
+
+.window-controls[data-platform-cluster="win32"] {
+  width: calc(var(--wc-cell-w, 46px) * 3);
+}
+
+.window-controls[data-platform-cluster="win32"] .window-control {
+  width: var(--wc-cell-w, 46px);
+}
+
+.window-controls[data-platform-cluster="win32"] .window-control svg {
+  width: 10px;
+  height: 10px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.window-controls[data-platform-cluster="win32"][data-focused="false"] .window-control {
+  color: var(--text-muted);
+}
+
+/* Windows keeps caption hover feedback on unfocused windows. */
+.window-controls[data-platform-cluster="win32"] .window-control:not(:disabled):hover {
+  background: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.window-controls[data-platform-cluster="win32"] .window-control:not(:disabled):active {
+  background: color-mix(in srgb, currentColor 20%, transparent);
+}
+
+.window-controls[data-platform-cluster="win32"]
+  .window-control[data-window-action="close"]:not(:disabled):hover {
+  background: var(--wc-close-hover);
+  color: #ffffff;
+}
+
+.window-controls[data-platform-cluster="win32"]
+  .window-control[data-window-action="close"]:not(:disabled):active {
+  background: var(--wc-close-active);
+  color: #000000;
+}
+
+/* ---------- macOS cluster: 8px + 3 x 20x32 + 10px = 78px ---------- */
+
+.window-controls[data-platform-cluster="darwin"] {
+  padding: 0 10px 0 8px;
+}
+
+.window-controls[data-platform-cluster="darwin"] .window-control {
+  position: relative;
+  width: 20px;
+}
+
+.window-controls[data-platform-cluster="darwin"] .window-control::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 50%;
+  background: var(--wc-dot, var(--wc-mac-inactive));
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.window-controls[data-platform-cluster="darwin"] .window-control svg {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: var(--wc-mac-glyph);
+  stroke-width: 1.35;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.window-controls[data-platform-cluster="darwin"][data-focused="true"]
+  .window-control[data-window-action="close"] {
+  --wc-dot: var(--wc-mac-close);
+}
+
+.window-controls[data-platform-cluster="darwin"][data-focused="true"]
+  .window-control[data-window-action="minimize"] {
+  --wc-dot: var(--wc-mac-minimize);
+}
+
+.window-controls[data-platform-cluster="darwin"][data-focused="true"]
+  .window-control[data-window-action="fullscreen"],
+.window-controls[data-platform-cluster="darwin"][data-focused="true"]
+  .window-control[data-window-action="zoom"] {
+  --wc-dot: var(--wc-mac-zoom);
+}
+
+/* Glyphs are hidden at rest; the whole group reveals on hover, or when any
+   control in it takes a visible keyboard focus. An inactive window never
+   reveals - activity comes from the main-process focus state, never from
+   document.hasFocus() or input focus. */
+.window-controls[data-platform-cluster="darwin"][data-focused="true"]:hover
+  .window-control:not(:disabled) svg,
+.window-controls[data-platform-cluster="darwin"][data-focused="true"]:has(
+    .window-control:focus-visible
+  )
+  .window-control:not(:disabled) svg {
+  opacity: 1;
+}
+
+/* ---------- Forced colors: keep contrast, drop the red ---------- */
+
+@media (forced-colors: active) {
+  .window-control {
+    forced-color-adjust: none;
+    color: ButtonText;
+    background: ButtonFace;
+  }
+
+  .window-controls[data-platform-cluster="win32"] .window-control:not(:disabled):hover,
+  .window-controls[data-platform-cluster="win32"] .window-control:not(:disabled):active,
+  .window-controls[data-platform-cluster="win32"]
+    .window-control[data-window-action="close"]:not(:disabled):hover,
+  .window-controls[data-platform-cluster="win32"]
+    .window-control[data-window-action="close"]:not(:disabled):active {
+    background: Highlight;
+    color: HighlightText;
+  }
+
+  .window-controls[data-platform-cluster="darwin"] .window-control::before {
+    background: ButtonText;
+    box-shadow: none;
+  }
+
+  .window-controls[data-platform-cluster="darwin"] .window-control svg {
+    stroke: ButtonFace;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .window-controls[data-platform-cluster="darwin"] .window-control svg {
+    transition: none;
+  }
+}

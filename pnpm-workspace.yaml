@@ -1,0 +1,17 @@
+packages:
+  - packages/*
+  - apps/*
+
+catalog:
+  electron: 44.2.0
+
+ignoredBuiltDependencies:
+  - esbuild
+  - extract-file-icon
+  - sharp
+
+onlyBuiltDependencies:
+  - '@hurdlegroup/robotjs'
+  - electron
+  - node-window-manager
+  - sqlite3

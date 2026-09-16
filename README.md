@@ -1,257 +1,62 @@
-﻿# PhraseVault
+# PhraseVault source
 
-> **Save text once, insert anywhere.**
+This repository is the **source-available** tree for [PhraseVault](https://phrasevault.app) 3.0: the app plus the `@spqrkapps/shared` utilities it needs to build. It is a small pnpm workspace, not OSI open source.
 
-PhraseVault is an easy-to-use **text expander** and **snippet manager** for Windows and macOS that organizes and inserts frequently used phrases, email templates, AI prompts, as well as text and code snippets. Whether you're composing emails, writing code, or filling out forms, PhraseVault simplifies repetitive typing tasks and makes your workflow more efficient.
+**License:** [SPQRK Software License v1.1](LICENSE.md) applies to PhraseVault **and** to the `@spqrkapps/shared` source in `packages/shared/`. You may inspect the code and, with a licensed seat, modify it for your own internal use. You may **not** redistribute PhraseVault (source or binaries, original or modified) without written permission. Third-party libraries keep their own licenses; see `apps/phrasevault/THIRD_PARTY_NOTICES.md`.
 
-**Try it free for 14 days**, then unlock lifetime access with a small one-time payment.
+Building from this tree does **not** grant a free commercial license. The app still uses a 14-day trial, then a purchased license key (`PV-…`). Keys are verified on-device; there is no online activation.
 
-![PhraseVault Demo Screenshot](https://github.com/ptmrio/phrasevault/blob/main/screenshots/phrasevault-github-screenshot.png)
+Official downloads (signed installers): [phrasevault.app/download](https://phrasevault.app/download).
 
-### Works Great With
+## Requirements
 
-Microsoft Office (Word, Excel, Outlook) • Gmail • Chrome, Firefox, Edge • VS Code, Visual Studio • ChatGPT, MidJourney • and many more
+- Windows 10/11 x64 or macOS 13+ (arm64)
+- [Node.js](https://nodejs.org/) **22.12 or newer**
+- [pnpm](https://pnpm.io/) **10** (this repo pins `pnpm@10.28.2`)
+- Native build tools for `sqlite3`, `@hurdlegroup/robotjs`, and `node-window-manager` (Visual Studio Build Tools on Windows; Xcode CLI tools on macOS)
+- Optional, for installers only: [.NET SDK](https://dotnet.microsoft.com/download/dotnet) and [Velopack `vpk`](https://docs.velopack.io/) (`dotnet tool install -g vpk`)
 
-## Use Cases
+On Windows, run install / start / make from **PowerShell**. WSL can edit files but native Electron rebuilds fail there.
 
-### Office Work
+## Build
 
-PhraseVault is an ideal companion for business professionals who deal with repetitive text tasks. Whether you're drafting emails, creating reports, or filling out forms, PhraseVault allows you to:
-
-- Quickly search for and insert pre-defined email templates.
-- Store and manage frequently used phrases and signatures.
-- Ensure consistency and save time by avoiding retyping common text.
-
-### Coding and Development
-
-For developers, PhraseVault provides an efficient way to manage code snippets and reusable components. You can:
-
-- Store and quickly access snippets of code.
-- Maintain a library of reusable code blocks.
-- Reduce errors and increase productivity by using pre-tested code.
-
-### Working with AI Tools
-
-PhraseVault is also excellent for storing and managing prompts for AI tools like **ChatGPT** and **MidJourney**. You can:
-
-- Keep a library of effective prompts for various AI tools.
-- Quickly insert prompts into your workflow.
-- Experiment with and refine prompts for better AI interactions.
-
-## Key Features
-
-### ⚡ Quick Access
-
-- **Global Keyboard Shortcut** (`Ctrl + .` on Windows, `Cmd + .` on macOS): Instantly open PhraseVault from any application.
-- **Fuzzy Search**: Find phrases quickly even with partial or misspelled queries.
-- **Full Keyboard Navigation**: Navigate and insert phrases without touching the mouse.
-- **Seamless Clipboard Integration**: Phrases are inserted directly into your active text field.
-
-### 🔄 Dynamic Inserts
-
-Phrases support dynamic placeholders that are resolved at insertion time:
-
-| Type | Syntax | Example |
-|------|--------|---------|
-| Date | `{{date}}` `{{date:long}}` `{{date:+7}}` | `2024-01-15`, `January 15, 2024` |
-| Date+Format | `{{date:-7\|long}}` `{{date:+30\|DD/MM/YYYY}}` | Offset with format |
-| Time | `{{time}}` `{{time:12h}}` | `14:30`, `2:30 PM` |
-| DateTime | `{{datetime}}` `{{datetime:-1\|short}}` | `2024-01-15 14:30` |
-| Clipboard | `{{clipboard}}` | Current clipboard content |
-| Input | `{{input:Name}}` `{{input:Email=default}}` | Prompts user for value |
-| Select | `{{select:Size=S,*M,L}}` | Dropdown (`*` = default) |
-| Textarea | `{{textarea:Notes}}` | Multi-line input |
-| Locale | `{{date@de}}` `{{date:long@en-US}}` | Localized formatting |
-| Cross-Insert | `{{phrase:a1b2c3d}}` | Embeds another phrase by ID |
-
-**Escape syntax:** `\{{date}}` inserts literal `{{date}}`
-
-**Cross-Insert:** Reference other phrases using their short ID (copy via three-dots menu → "Copy ID"). Nested phrases resolve recursively with cycle protection.
-
-### 🔒 Privacy-First & Source Available
-
-- **No Cloud Storage**: Your data stays on your device—nothing is sent to external servers.
-- **No Tracking or Telemetry**: We don't collect usage data or analytics.
-- **Source Code Transparency**: Full source code available on [GitHub](https://github.com/ptmrio/phrasevault) for review and audit.
-
-### 🎨 User-Friendly Interface
-
-- **Clean Modern Design**: Intuitive interface with no learning curve.
-- **Light & Dark Themes**: Choose the theme that suits your preference.
-- **Markdown & HTML Support**: Format your phrases with rich text.
-- **Flexible Organization**: Organize phrases your way.
-
-### 🌍 Universal Compatibility
-
-- **Works Everywhere**: Compatible with virtually any Windows or macOS application.
-- **Multi-Language Support**: Available in English, German, Spanish, French, Italian, and Portuguese.
-- **Flexible Database Location**: Store your database on a cloud drive (Google Drive, Dropbox, etc.) for sync across devices.
-
-## License
-
-This project is licensed under the **SPQRK SOFTWARE LICENSE v1.0**. For complete licensing terms, see the [LICENSE.md](LICENSE.md) file.
-
-### License Summary
-
-| ✅ What You Can Do                                              | ❌ What You Can't Do                                       |
-| --------------------------------------------------------------- | ---------------------------------------------------------- |
-| Use free for 14 days (trial period per seat)                    | Use after trial ends without purchasing a license          |
-| Purchase a lifetime license (one-time payment)                  | Redistribute, sell, sublicense, rent, or lend the software |
-| Install on unlimited devices per licensed seat                  | Distribute modified or unmodified versions externally      |
-| View and inspect the source code                                | Remove or alter proprietary notices or attribution         |
-| Modify source code for your own internal use                    | Share a single seat among multiple people                  |
-| Reassign a seat to a different person (e.g., employee transfer) | Develop a directly competing product                       |
-| Run on company servers for licensed seats                       | Falsify proof of purchase or seat count                    |
-
-### Important Notes
-
-- **Per-Seat Licensing**: Each named person using PhraseVault requires their own seat.
-- **Lifetime License**: Your license includes all future updates, except potential Major Version upgrades (e.g., v2.x to v3.0).
-- **No DRM**: There are no license keys or online activation. Your proof of purchase is your license.
-- **Source Available ≠ Open Source**: The code is available for transparency, but redistribution is not permitted.
-
-## Our Philosophy
-
-PhraseVault is built on transparency and trust. We believe you should be able to see exactly what software you're running—that's why our source code is publicly available. At the same time, we're a small team that relies on software sales to continue development. Our simple licensing model (14-day trial, then a one-time lifetime payment) keeps PhraseVault sustainable while giving you full ownership of your license forever.
-
-## Table of Contents
-
-- [Getting Started](#getting-started)
-- [Usage](#usage)
-- [Building from Source](#building-from-source)
-- [Troubleshooting](#troubleshooting)
-- [FAQs](#faqs)
-- [Contact and Support](#contact-and-support)
-
-## Getting Started
-
-### Prerequisites
-
-- Windows 10 or later, or macOS 11 (Big Sur) or later
-
-### Installation Instructions
-
-#### Download from the Website (Recommended)
-
-Visit [phrasevault.app/download](https://phrasevault.app/download) and download the installer for your platform:
-
-| Platform | Installer | Instructions                                                                                          |
-| -------- | --------- | ----------------------------------------------------------------------------------------------------- |
-| Windows  | `.exe`    | Double-click and follow the on-screen instructions. Launch from the Start Menu or desktop shortcut.   |
-| macOS    | `.pkg`    | Double-click and follow the on-screen instructions. Launch from the Applications folder or Spotlight. |
-
-#### Windows: Install via Winget
-
-```bash
-# Install PhraseVault
-winget install --id ptmrio.phrasevault -e
-
-# Upgrade to latest version
-winget upgrade --id ptmrio.phrasevault -e
-```
-
-#### Windows: Microsoft Store
-
-PhraseVault is also available on the [Microsoft Store](https://apps.microsoft.com/store/detail/XPDM5Q5S84T8KR).
-
-### Quick Start
-
-1. Open PhraseVault using `Ctrl + .` (Windows) or `Cmd + .` (macOS)
-2. Search for your desired phrase
-3. Press `Enter` to insert it
-
-## Usage
-
-### Basic Usage Instructions
-
-- **Open the App**: Use the shortcut `Ctrl + .` (Windows) or `Cmd + .` (macOS) to open the PhraseVault window.
-- **Search for a Phrase**: Start typing in the search bar to quickly find the phrase you need.
-- **Select the Desired Phrase**: Press the arrow down key to navigate through the search results and select the desired phrase.
-- **Insert the Phrase**: Press `Enter` to have PhraseVault paste the expanded phrase text into the active field.
-- **Manage Phrases**:
-    - **Add**: Click the "Add Phrase" button to open a modal for adding a new phrase.
-    - **Edit**: Click the "Edit" button next to a phrase to modify it.
-    - **Delete**: Click the "Delete" button next to a phrase to remove it from the database.
-    - **Copy to Clipboard**: Click the "Copy" button to copy the phrase to the clipboard.
-- **Minimize PhraseVault**: Press `Escape` to minimize the PhraseVault window. It will remain accessible from the system tray (Windows) or menu bar (macOS).
-- **Theme Selection**: Choose between light and dark themes to match your preference.
-- **Database Location**: You can freely choose the location of the database file, allowing it to be stored on a cloud drive (such as Google Drive, Dropbox, etc.) for easy access and synchronization across devices.
-
-## Troubleshooting
-
-- **Issue**: PhraseVault does not open with the shortcut.
-    - **Solution**: Ensure that the application is running in the background. Restart the app if necessary.
-
-## Building from Source
-
-PhraseVault's source code is available for transparency and personal modification. You can build the application yourself, but please note the following:
-
-> ⚠️ **License Reminder**: Building from source does not grant you a free license. The compiled application is still subject to the [SPQRK SOFTWARE LICENSE v1.0](LICENSE.md). You must purchase a license after the 14-day trial period. **Redistribution of compiled binaries is not permitted.**
-
-### Prerequisites
-
-- [Node.js](https://nodejs.org/) (LTS version recommended)
-- [Git](https://git-scm.com/)
-- [.NET SDK](https://dotnet.microsoft.com/download/dotnet) (required for the `vpk` packaging tool)
-- Windows 10/11 or macOS 11+
-
-### Install Velopack CLI
-
-The build process uses Velopack for packaging. Install the `vpk` CLI tool globally:
-
-```bash
-dotnet tool install -g vpk
-```
-
-### Build Steps
-
-```bash
-# Clone the repository
+```powershell
 git clone https://github.com/ptmrio/phrasevault.git
 cd phrasevault
-
-# Install dependencies
-npm install
-
-# Run in development mode
-npm start
-
-# Run tests
-npm test
-
-# Build for production (creates installer in Releases folder)
-npm run make --nosign
+pnpm install
 ```
 
-### Notes
+| Command | What it does |
+|---------|----------------|
+| `pnpm dev` | CSS + renderer + Electron Forge start |
+| `pnpm typecheck` | `tsc --noEmit` for the app and shared |
+| `pnpm test` | Vitest (app + shared) |
+| `pnpm test:e2e` | Playwright against a local build (optional) |
+| `pnpm make` | **Unsigned** package + Velopack installer (`--yes --nosign`) |
 
-- Use `--nosign` flag if you don't have a code signing certificate.
-- The build process uses [Electron Forge](https://www.electronforge.io/) and [Velopack](https://velopack.io/) for packaging.
-- Native modules (robotjs, node-window-manager) are rebuilt automatically during installation.
+`pnpm make` is the supported from-source package path. It will not Azure-sign or Apple-notarize. Do not point it at publisher credentials. Output: `apps/phrasevault/out/` (packaged app) and `apps/phrasevault/Releases/` (installer).
 
-## FAQs
+Quit any installed PhraseVault before `pnpm dev` or `pnpm make`. Two instances look like a native crash.
 
-- **Is there a free trial?**
-    - Yes! PhraseVault includes a **14-day free trial** with full functionality. No credit card required.
+### Layout
 
-- **How do I purchase a license?**
-    - Visit [phrasevault.app](https://phrasevault.app) and follow the purchase instructions. It's a one-time payment for lifetime access.
+```
+.
+├── apps/phrasevault/     # Electron app
+├── packages/shared/      # @spqrkapps/shared (licensed under LICENSE.md)
+├── pnpm-workspace.yaml   # includes the Electron pnpm catalog
+└── LICENSE.md
+```
 
-- **What happens after I purchase?**
-    - You receive a proof of purchase (receipt/invoice). There are no license keys to enter—PhraseVault trusts you to comply with the license terms.
+Workspace protocol: `@spqrkapps/shared` is `workspace:*`. Electron is `catalog:` → **44.2.0**. Paths such as `../../tsconfig.base.json` and `../../../../packages/shared/...` (from `assets/css/`) are intentional.
 
-- **Can I use PhraseVault on multiple devices?**
-    - Yes! A single seat license allows you to install PhraseVault on all devices you personally use.
+## License summary
 
-- **How do I sync phrases across devices?**
-    - Go to Settings and choose a database location on a cloud drive (Google Drive, Dropbox, OneDrive, etc.).
+| You may | You may not |
+|---------|-------------|
+| Run the 14-day trial | Use it commercially after the trial without a seat |
+| Buy a lifetime per-seat license | Redistribute, sell, or publish this source or your builds |
+| Install on every device **you** use | Share one seat across people |
+| Read and (as a licensed seat) privately modify the source | Strip notices, bypass license checks, or ship a competing product from this code |
 
-- **Is my data sent to the cloud?**
-    - No. PhraseVault stores all data locally. We don't have servers that collect or store your phrases.
-
-- **Can I build PhraseVault from source?**
-    - Yes, the source code is available on GitHub. However, built binaries are still subject to the license terms (14-day trial, then purchase required). See [Building from Source](#building-from-source).
-
-## Contact and Support
-
-For support, please visit our [Contact page](https://phrasevault.app/imprint) or open an issue on [GitHub](https://github.com/ptmrio/phrasevault/issues).
+Full terms: [LICENSE.md](LICENSE.md). Product site: [phrasevault.app](https://phrasevault.app). Issues: [github.com/ptmrio/phrasevault/issues](https://github.com/ptmrio/phrasevault/issues).

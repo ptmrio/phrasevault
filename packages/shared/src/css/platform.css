@@ -1,0 +1,118 @@
+/**
+ * Platform-specific styles
+ * Adjusts UI for Windows vs macOS differences
+ */
+
+/* App header with title bar integration */
+.app-header {
+  padding-top: 32px; /* Account for title bar */
+}
+
+/* Scrollbar styles - customizable via CSS variables
+ * Apps can override these by defining:
+ *   --scrollbar-width, --scrollbar-thumb, --scrollbar-track,
+ *   --scrollbar-radius, --scrollbar-thumb-hover
+ */
+::-webkit-scrollbar {
+  width: var(--scrollbar-width, 8px);
+  height: var(--scrollbar-width, 8px);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track, transparent);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb, var(--text-tertiary));
+  border-radius: var(--scrollbar-radius, 4px);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover, var(--text-secondary));
+}
+
+/* macOS-style thin scrollbars */
+[data-platform="darwin"] ::-webkit-scrollbar {
+  width: var(--scrollbar-width-mac, 6px);
+  height: var(--scrollbar-width-mac, 6px);
+}
+
+/* Firefox scrollbar support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb, var(--text-tertiary)) var(--scrollbar-track, transparent);
+}
+
+/* Selection color */
+::selection {
+  background-color: color-mix(in srgb, var(--color-primary-500) 30%, transparent);
+  color: inherit;
+}
+
+/* =============================================================================
+   Focus Styles
+   A solid, opaque 2px outline on the theme-aware --focus-ring is the keyboard
+   indicator; forced-colors mode substitutes the system colour for it.
+   Z-index ensures focus ring appears above titlebar (z-index: 100).
+   ============================================================================= */
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: var(--focus-ring-offset, -2px);
+  position: relative;
+  z-index: var(--focus-z, 101);
+}
+
+/* Remove focus ring for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Filled buttons carry the ring in their own legible foreground: a primary
+   focus colour on a primary fill would be the same hue. These selectors are
+   unlayered, so they beat the unlayered rule above without relying on the
+   layered Tailwind utilities that paint the fill. */
+.btn-primary:focus-visible,
+.btn-danger:focus-visible,
+.btn-success:focus-visible {
+  outline-color: currentColor;
+}
+
+/* Disable text selection on interactive elements */
+button,
+[role="button"],
+.no-select {
+  user-select: none;
+}
+
+/* Platform-specific font rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Windows-specific system font */
+[data-platform="win32"] body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* macOS-specific system font */
+[data-platform="darwin"] body {
+  font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+/* =============================================================================
+   Electron Drag Regions
+   ============================================================================= */
+
+/* Draggable region (for title bar) */
+.drag-region {
+  -webkit-app-region: drag;
+}
+
+/* Non-draggable elements within drag region */
+.no-drag {
+  -webkit-app-region: no-drag;
+}

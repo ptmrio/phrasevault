@@ -1,0 +1,333 @@
+/**
+ * Modal Component - Shared across all apps
+ * =========================================
+ *
+ * STANDARD HTML STRUCTURE:
+ * ------------------------
+ * <div id="modal-{name}" class="modal-overlay [modal-sm|modal-md|modal-lg|modal-xl]" data-testid="modal-{name}">
+ *   <div class="modal">
+ *     <div class="modal-header">
+ *       <h2>Modal Title</h2>
+ *       <button id="btn-{name}-close" class="modal-close" data-testid="btn-{name}-close">&times;</button>
+ *     </div>
+ *     <div class="modal-body">
+ *       <!-- Content here -->
+ *     </div>
+ *     <div class="modal-footer">
+ *       <button id="btn-{name}-cancel" class="btn btn-secondary" data-testid="btn-{name}-cancel">Cancel</button>
+ *       <button id="btn-{name}-save" class="btn btn-primary" data-testid="btn-{name}-save">Save</button>
+ *     </div>
+ *   </div>
+ * </div>
+ *
+ * NAMING CONVENTIONS:
+ * -------------------
+ * - Modal container ID: modal-{name} (e.g., modal-settings, modal-confirm)
+ * - Close button ID: btn-{name}-close (e.g., btn-settings-close)
+ * - Cancel button ID: btn-{name}-cancel
+ * - Save/Confirm button ID: btn-{name}-save or btn-{name}-confirm
+ * - Always include data-testid matching the ID for E2E testing
+ * - Attribute order: id, class, data-testid, other attributes
+ *
+ * SIZE VARIANTS:
+ * --------------
+ * - modal-sm: 24rem (384px) - Alerts, confirmations
+ * - modal-md: 28rem (448px) - Simple forms
+ * - (default): 32rem (512px) - Standard modals
+ * - modal-lg: 40rem (640px) - Complex forms, settings
+ * - modal-xl: 56rem (896px) - Large content
+ *
+ * JAVASCRIPT USAGE:
+ * -----------------
+ * import { showModal, hideModal } from '@spqrkapps/shared/renderer'
+ *
+ * // Show modal
+ * const modal = document.getElementById('modal-settings')
+ * showModal(modal)
+ *
+ * // Hide modal
+ * hideModal(modal)
+ *
+ * // Event delegation (recommended for i18n compatibility):
+ * modal.addEventListener('click', (e) => {
+ *   const target = e.target as HTMLElement
+ *   if (target.closest('#btn-settings-close') || target.closest('#btn-settings-cancel')) {
+ *     hideModal(modal)
+ *   }
+ * })
+ *
+ * NOTES:
+ * ------
+ * - Use event delegation for close buttons to handle i18n DOM re-rendering
+ * - Pattern uses .modal-overlay (backdrop) > .modal (box) with .active class
+ * - Escape key and backdrop click are handled by showModal/hideModal automatically
+ */
+
+/* Backdrop */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  place-items: center;
+  background-color: rgb(0 0 0 / 0.55);
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  backdrop-filter: blur(2px);
+
+  &.active {
+    display: grid;
+    opacity: 1;
+  }
+
+  &:not(.active) {
+    pointer-events: none;
+  }
+
+  /* Inner .modal is the dialog box */
+  & > .modal {
+    position: relative;
+    inset: auto;
+    z-index: auto;
+    place-items: normal;
+    padding: 0;
+
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-elevated, var(--bg-primary));
+    border-radius: 0.75rem;
+    border: 1px solid var(--border-light, rgba(0, 0, 0, 0.08));
+    box-shadow: var(--shadow-lg, 0 20px 40px -20px rgb(0 0 0 / 0.35));
+    max-width: min(32rem, calc(100vw - 2rem));
+    width: 100%;
+    max-height: calc(100vh - var(--modal-inset, 2rem));
+    min-height: 0;
+    overflow: hidden;
+    transform: translateY(-0.5rem) scale(0.98);
+    opacity: 0;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  &.active > .modal {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  border-bottom: 1px solid var(--border-light, rgba(0, 0, 0, 0.08));
+  flex-shrink: 0;
+
+  h2 {
+    font-size: var(--font-size-xl, 1.125rem);
+    font-weight: var(--font-weight-semibold, 600);
+    color: var(--text-primary);
+    margin: 0;
+    line-height: var(--line-height-tight, 1.25);
+  }
+}
+
+.modal-body {
+  padding: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  color: var(--text-primary);
+  font-size: var(--font-size-md, 0.9375rem);
+  line-height: var(--line-height-normal, 1.5);
+}
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border-top: 1px solid var(--border-light, rgba(0, 0, 0, 0.08));
+  flex-shrink: 0;
+}
+
+/* Modal size variants - support both patterns */
+.modal-sm > .modal {
+  max-width: min(24rem, calc(100vw - 2rem));
+}
+
+.modal-md > .modal {
+  max-width: min(28rem, calc(100vw - 2rem));
+}
+
+.modal-lg > .modal {
+  max-width: min(40rem, calc(100vw - 2rem));
+}
+
+.modal-xl > .modal {
+  max-width: min(56rem, calc(100vw - 2rem));
+}
+
+.modal-fullscreen > .modal {
+  max-width: none;
+  max-height: none;
+  width: calc(100vw - 2rem);
+  height: calc(100vh - 2rem);
+  border-radius: 0.75rem;
+}
+
+/* Scrollable modal container (slightly tighter max height) */
+.modal-scrollable > .modal {
+  max-height: calc(100vh - var(--modal-inset, 4rem));
+}
+
+/* Modal close button */
+.modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  flex-shrink: 0;
+
+  &:hover {
+    background-color: var(--bg-secondary, rgba(0, 0, 0, 0.1));
+    color: var(--text-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+.modal-close svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Markdown content styling */
+.markdown-content {
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
+  h3 { font-size: 1.125rem; }
+  h4, h5, h6 { font-size: 1rem; }
+
+  p {
+    margin: 0.75em 0;
+    line-height: 1.6;
+  }
+
+  a {
+    color: var(--primary-500, #3b82f6);
+    text-decoration: underline;
+
+    &:hover {
+      color: var(--primary-600, #2563eb);
+    }
+  }
+
+  ul, ol {
+    margin: 0.75em 0;
+    padding-left: 1.5em;
+  }
+
+  li {
+    margin: 0.25em 0;
+  }
+
+  code {
+    background-color: var(--bg-secondary, rgba(0, 0, 0, 0.05));
+    padding: 0.125em 0.25em;
+    border-radius: 0.25rem;
+    font-family: ui-monospace, monospace;
+    font-size: 0.875em;
+  }
+
+  pre {
+    background-color: var(--bg-secondary, rgba(0, 0, 0, 0.05));
+    padding: 1rem;
+    border-radius: 0.375rem;
+    overflow-x: auto;
+    margin: 1em 0;
+
+    code {
+      background: none;
+      padding: 0;
+    }
+  }
+
+  blockquote {
+    border-left: 3px solid var(--border-color, #e5e7eb);
+    padding-left: 1rem;
+    margin: 1em 0;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--border-color, #e5e7eb);
+    margin: 1.5em 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+  }
+
+  th, td {
+    border: 1px solid var(--border-color, #e5e7eb);
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+  }
+
+  th {
+    background-color: var(--bg-secondary, rgba(0, 0, 0, 0.05));
+    font-weight: 600;
+  }
+
+  .loading {
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  .error {
+    color: var(--danger-500, #ef4444);
+  }
+}
+
+/* Modal input field */
+.modal-input {
+  width: 100%;
+  margin-top: 0.5rem;
+}

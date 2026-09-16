@@ -1,0 +1,11 @@
+{
+  "appName": "PhraseVault",
+  "outputDir": "./assets/img",
+  "colors": {
+    "start": "#E85D04",
+    "end": "#9D4A04"
+  },
+  "iconContent": "<g fill=\"none\" stroke=\"white\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3\"/><path d=\"M9 4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V4z\"/></g><g transform=\"translate(7.5, 9) scale(0.54)\" fill=\"white\" stroke=\"white\" stroke-width=\"0.4mm\" stroke-linecap=\"round\"><path d=\"M 0 0 L 3.211 0 L 3.211 0.047 Q 3.188 0.105 3.176 0.223 Q 3.164 0.34 3.164 0.434 Q 3.164 0.797 3.264 1.236 Q 3.363 1.676 3.645 2.332 L 8.836 14.039 L 13.852 2.426 Q 14.027 1.992 14.227 1.477 Q 14.426 0.961 14.426 0.434 Q 14.426 0.293 14.402 0.193 Q 14.379 0.094 14.355 0.047 L 14.355 0 L 16.758 0 L 16.758 0.047 Q 16.535 0.27 16.219 0.844 Q 15.902 1.418 15.527 2.262 L 8.813 17.168 L 7.875 17.168 L 1.512 2.836 Q 1.289 2.332 1.049 1.863 Q 0.809 1.395 0.598 1.014 Q 0.387 0.633 0.223 0.375 Q 0.059 0.117 0 0.047 L 0 0 Z\" vector-effect=\"non-scaling-stroke\"/></g>",
+  "iconCenter": { "x": 12, "y": 12.5 },
+  "generateTray": true
+}
