@@ -1,6 +1,6 @@
 **SPQRK SOFTWARE LICENSE v1.1**
 
-*Applies to: PhraseVault, including the `@spqrkapps/shared` source included in this repository*
+*Applies to: PhraseVault and the supporting source in this repository*
 
 ---
 

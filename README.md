@@ -26,13 +26,13 @@
 
 PhraseVault is for people who type the same things all day: support replies, email templates, code snippets, and AI prompts. Open it with a global shortcut, fuzzy-search a phrase, press Enter, and it pastes into whatever app you were already in. Data stays on your machine. There is no account, no telemetry, and no cloud.
 
-This repository is the **source-available** tree for PhraseVault 3.0 (the app plus `@spqrkapps/shared` so you can rebuild it). It is a small pnpm workspace, **not** OSI open source. Signed installers: [phrasevault.app/download](https://phrasevault.app/download).
+This repository is the **source-available** tree for PhraseVault 3.0. It is **not** OSI open source. Signed installers: [phrasevault.app/download](https://phrasevault.app/download).
 
 ![PhraseVault](screenshots/phrasevault-3.0.png)
 
 ## License
 
-[SPQRK Software License v1.1](LICENSE.md) covers PhraseVault **and** the `@spqrkapps/shared` source in `packages/shared/`. You may inspect the code and, with a licensed seat, modify it for your own internal use. You may **not** redistribute PhraseVault (source or binaries, original or modified) without written permission. Third-party libraries keep their own licenses; see `apps/phrasevault/THIRD_PARTY_NOTICES.md`.
+[SPQRK Software License v1.1](LICENSE.md) covers everything in this repository. You may inspect the code and, with a licensed seat, modify it for your own internal use. You may **not** redistribute PhraseVault (source or binaries, original or modified) without written permission. Third-party libraries keep their own licenses; see `apps/phrasevault/THIRD_PARTY_NOTICES.md`.
 
 Building from this tree does **not** grant a free commercial license. The app still uses a 14-day trial, then a purchased license key (`PV-…`). Keys are verified on-device; there is no online activation.
 
@@ -64,21 +64,11 @@ pnpm install
 | Command | What it does |
 |---------|----------------|
 | `pnpm dev` | CSS + renderer + Electron Forge start |
-| `pnpm typecheck` | `tsc --noEmit` for the app and shared |
-| `pnpm test` | Vitest (app + shared) |
+| `pnpm typecheck` | `tsc --noEmit` |
+| `pnpm test` | Vitest |
 | `pnpm test:e2e` | Playwright against a local build (optional) |
 | `pnpm make` | **Unsigned** package + Velopack installer (`--yes --nosign`) |
 
 `pnpm make` will not Azure-sign or Apple-notarize. Do not point it at publisher credentials. Output: `apps/phrasevault/out/` (packaged app) and `apps/phrasevault/Releases/` (installer). Quit any installed PhraseVault first — two instances look like a native crash.
-
-```
-.
-├── apps/phrasevault/     # Electron app
-├── packages/shared/      # @spqrkapps/shared (licensed under LICENSE.md)
-├── pnpm-workspace.yaml   # includes the Electron pnpm catalog
-└── LICENSE.md
-```
-
-`@spqrkapps/shared` is `workspace:*`. Electron is `catalog:` → **44.2.0**. Paths such as `../../tsconfig.base.json` and `../../../../packages/shared/...` (from `assets/css/`) are intentional.
 
 Issues: [github.com/ptmrio/phrasevault/issues](https://github.com/ptmrio/phrasevault/issues).
